@@ -7,9 +7,8 @@
 
 import Foundation
 
-let api = URL(string: "https://mymanga-acacademy-5607149ebe3d.herokuapp.com/docs#")!
+let api = URL(string: "https://mymanga-acacademy-5607149ebe3d.herokuapp.com")!
 
-/// Type-safe extension
 extension URL {
     // MARK: - Base paths
     private static let listBase = api.appending(path: "list")
@@ -23,7 +22,47 @@ extension URL {
     static let getGenres = listBase.appending(path: "genres")
     static let getThemes = listBase.appending(path: "themes")
     
-    // Funciones que necesitan parámetros dinámicos
+    static func mangaByAuthor(id: String) -> URL {
+        listBase.appending(path: "mangaByAuthor").appending(path: id)
+    }
+    
+    static func mangaByDemographic(demographic: Demographic) -> URL {
+        listBase.appending(path: "mangaByDemographic").appending(path: "\(demographic)")
+    }
+    
+    static func mangaByGenre(genre: Genre) -> URL {
+        listBase.appending(path: "mangaByGenre").appending(path: "\(genre)")
+    }
+    
+    static func mangaByTheme(theme: Theme) -> URL {
+        listBase.appending(path: "mangaByTheme").appending(path: "\(theme)")
+    }
+    
+    // MARK: - Search endpoints
+    static func mangasBeginsWith(_ title: String) -> URL {
+        searchBase.appending(path: "mangasBeginsWith").appending(path: title)
+    }
+    
+    static func mangasContains(_ title: String) -> URL {
+        searchBase.appending(path: "mangasContains").appending(path: title)
+    }
+    
+    static func manga(id: Int) -> URL {
+        searchBase.appending(path: "manga").appending(path: "\(id)")
+    }
+    
+    static func author(_ name: String) -> URL {
+        searchBase.appending(path: "author").appending(path: name)
+    }
+    
+    static let customSearch = searchBase.appending(path: "manga")
+    
+    // MARK: - Authentication endpoints
+    static let register = api.appendingPathComponent("users")
+    static let login = api.appendingPathComponent("users/login")
+    static let renewToken = api.appendingPathComponent("users/renew")
+    
+    // MARK: - Pagination helper
     static func getMangas(page: Int, itemsPerPage: Int = 10) -> URL {
         listBase
             .appending(path: "mangas")
@@ -32,45 +71,9 @@ extension URL {
                 URLQueryItem(name: "page", value: "\(page)")
             ])
     }
-    
-    static func mangaByAuthor(id: String) -> URL {
-        listBase.appending(path: "mangaByAuthor/\(id)")
-    }
-    
-    static func mangaByDemographic(demographic: Demographic) -> URL {
-        listBase.appending(path: "mangaByDemographic/\(demographic)")
-    }
-    
-    static func mangaByGenre(genre: Genre) -> URL {
-        listBase.appending(path: "mangaByGenre/\(genre)")
-    }
-    
-    static func mangaByTheme(theme: Theme) -> URL {
-        listBase.appending(path: "mangaByTheme/\(theme)")
-    }
-    
-    // MARK: - Search endpoints
-    static func mangasBeginsWith(_ title: String) -> URL {
-        searchBase.appending(path: "mangasBeginsWith/\(title)")
-    }
-    
-    static func mangasContains(_ title: String) -> URL {
-        searchBase.appending(path: "mangasContains/\(title)")
-    }
-    
-    static func manga(id: Int) -> URL {
-        searchBase.appending(path: "manga/\(id)")
-    }
-    
-    static func author(_ name: String) -> URL {
-        searchBase.appending(path: "author/\(name)")
-    }
-    
-    //TODO: comprobar para el CustomSearch
-    static let customSearch = searchBase.appending(path: "manga")
 }
 
-//TODO: estudiar cómo incoroporarlo
+//TODO: estudiar cómo incorporarlo
 struct CustomSearch: Codable {
     var searchTitle: String?
     var searchAuthorFirstName: String?

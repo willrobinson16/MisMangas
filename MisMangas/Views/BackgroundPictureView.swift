@@ -18,8 +18,7 @@ struct BackgroundPictureView: View {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFill()
-                    .blur(radius: 60)
-                    .ignoresSafeArea()
+                    .stretchy()
             }
         }
         .onAppear {
