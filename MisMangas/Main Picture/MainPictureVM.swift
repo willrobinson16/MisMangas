@@ -1,15 +1,16 @@
 //
-//  PictureVM.swift
+//  MainPictureVM.swift
 //  MisMangas
 //
 //  Created by Guillermo Robinson on 23/12/25.
 //
 
 import SwiftUI
+import NetworkAPI
 
 @Observable
 final class MainPictureVM {
-    var mainPicture: UIImage?
+    var image: UIImage?
     
     func getImage(mainPicture: URL?) {
         guard let mainPicture else { return }
@@ -21,8 +22,7 @@ final class MainPictureVM {
             } else {
                 Task {
                     do {
-                        image = try await
-                        ImageDownloader.shared.image(for: mainPicture)
+                        image = try await ImageDownloader.shared.image(for: mainPicture)
                     } catch {
                         print(error)
                     }
