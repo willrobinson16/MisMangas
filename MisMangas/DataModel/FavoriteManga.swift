@@ -6,3 +6,15 @@
 //
 
 import Foundation
+import SwiftData
+
+@Model
+final class FavoriteManga {
+    @Attribute(.unique) var id: Int
+    var dataAdded: Date
+    
+    init(id: Int) {
+        self.id = id
+        self.dataAdded = Date()
+    }
+}

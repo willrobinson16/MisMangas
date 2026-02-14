@@ -18,7 +18,6 @@ struct BackgroundPictureView: View {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFill()
-                    .stretchy()
             }
         }
         .onAppear {

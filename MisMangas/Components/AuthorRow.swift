@@ -8,11 +8,20 @@
 import SwiftUI
 
 struct AuthorRow: View {
+    let authors: [Author]
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack(alignment: .leading) {
+            ForEach(authors) { author in
+                HStack {
+                    Text(author.firstName)
+                    Text(author.lastName)
+                }
+            }
+        }
     }
 }
 
-#Preview {
-    AuthorRow()
+#Preview(traits: .sampleData) {
+    AuthorRow(authors: Author.test)
 }

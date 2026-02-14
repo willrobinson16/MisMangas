@@ -11,7 +11,17 @@ import SwiftData
 struct PreviewContainer: PreviewModifier {
     static func makeSharedContext() async throws -> ModelContainer {
         let configuration = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try ModelContainer(for: Manga.self, configurations: configuration)
+        let container = try ModelContainer(
+            for:
+                Manga.self,
+                FavoriteManga.self,
+                Author.self,
+                Theme.self,
+                Genre.self,
+                Demographic.self,
+                configurations: configuration
+        )
+        
         Manga.sampleMangas.forEach { manga in
             container.mainContext.insert(manga)
         }

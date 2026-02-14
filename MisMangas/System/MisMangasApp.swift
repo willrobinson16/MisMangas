@@ -10,11 +10,14 @@ import SwiftData
 
 @main
 struct MisMangasApp: App {
+    @State private var favoritesVM = FavoritesViewModel()
+    
     var body: some Scene {
         WindowGroup {
             MainTab()
+                .environment(favoritesVM)
         }
-        .modelContainer(for: Manga.self) { result in
+        .modelContainer(for: [FavoriteManga.self, Manga.self]) { result in
             guard case .success(let container) = result else {
                 return
             }

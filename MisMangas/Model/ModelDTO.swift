@@ -10,10 +10,18 @@ import Foundation
 //MARK: - Preestruct para poder recuperar la información de items
 struct Items: Codable {
     let items: [MangaDTO]
+    let metadata: MetadataDTO
+}
+
+//MARK: - Metadata cuya estructura nos informará del total de datos de la consulta, la página devuelta y cuántos datos ha devuelto para esta.
+struct MetadataDTO: Codable {
+    let total: Int
+    let page: Int
+    let per: Int
 }
 
 //MARK: - Manga Response DTO: Complete manga information with related data
-struct MangaDTO: Codable, Identifiable {
+struct MangaDTO: Codable, Identifiable, Hashable {
     let id: Int
     let status: MangaStatus
     let background: String?
@@ -24,10 +32,10 @@ struct MangaDTO: Codable, Identifiable {
     let chapters: Int?
     let startDate: String?
     let themes: [ThemeDTO]
-    let mainPicture: URL?
+    let mainPicture: String?
     let authors: [AuthorDTO]
     let synopsis: String?
-    let url: URL?
+    let url: String?
     let genres: [GenreDTO]
     let volumes: Int?
     let endDate: String?
@@ -39,74 +47,67 @@ struct MangaDTO: Codable, Identifiable {
         case synopsis = "sypnosis"
         case url, genres, volumes, endDate, demographics
     }
+}
+
+extension MangaDTO {
+    var toManga: Manga {
+        Manga(
+            id: id,
+            status: status.rawValue,
+            background: background,
+            title: title,
+            titleEnglish: titleEnglish,
+            titleJapanese: titleJapanese,
+            score: score,
+            chapters: chapters,
+            startDate: startDate,
+            endDate: endDate,
+            mainPicture: mainPicture.flatMap { URL(string: $0.cleanedURL) },
+            synopsis: synopsis ?? "",
+            url: url.flatMap { URL(string: $0.cleanedURL) },
+            volumes: volumes,
+            themes: themes.map { Theme(id: $0.id, theme: $0.theme) },
+            authors: authors.map (\.toAuthor),
+            genres: genres.map { Genre(id: $0.id, genre: $0.genre)},
+            demographics: demographics.map { Demographic(id: $0.id, demographic: $0.demographic)}
+        )
+    }
     
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        
-        // Decodificar campos normales
-        id = try container.decode(Int.self, forKey: .id)
-        status = try container.decode(MangaStatus.self, forKey: .status)
-        background = try container.decodeIfPresent(String.self, forKey: .background)
-        title = try container.decode(String.self, forKey: .title)
-        titleEnglish = try container.decodeIfPresent(String.self, forKey: .titleEnglish)
-        titleJapanese = try container.decodeIfPresent(String.self, forKey: .titleJapanese)
-        score = try container.decode(Double.self, forKey: .score)
-        chapters = try container.decodeIfPresent(Int.self, forKey: .chapters)
-        startDate = try container.decodeIfPresent(String.self, forKey: .startDate)
-        themes = try container.decode([ThemeDTO].self, forKey: .themes)
-        authors = try container.decode([AuthorDTO].self, forKey: .authors)
-        genres = try container.decode([GenreDTO].self, forKey: .genres)
-        demographics = try container.decode([DemographicDTO].self, forKey: .demographics)
-        volumes = try container.decodeIfPresent(Int.self, forKey: .volumes)
-        endDate = try container.decodeIfPresent(String.self, forKey: .endDate)
-        
-        // Decodificar synopsis (limpiando comillas si existen)
-        if let synopsisString = try container.decodeIfPresent(String.self, forKey: .synopsis) {
-            synopsis = synopsisString.trimmingCharacters(in: CharacterSet(charactersIn: "\""))
-        } else {
-            synopsis = nil
-        }
-        
-        // Decodificar mainPicture como String y convertir a URL (limpiando comillas)
-        if let mainPictureString = try container.decodeIfPresent(String.self, forKey: .mainPicture) {
-            let cleaned = mainPictureString.trimmingCharacters(in: CharacterSet(charactersIn: "\""))
-            mainPicture = URL(string: cleaned)
-        } else {
-            mainPicture = nil
-        }
-        
-        // Decodificar url como String y convertir a URL (limpiando comillas)
-        if let urlString = try container.decodeIfPresent(String.self, forKey: .url) {
-            let cleaned = urlString.trimmingCharacters(in: CharacterSet(charactersIn: "\""))
-            url = URL(string: cleaned)
-        } else {
-            url = nil
-        }
+    nonisolated var mainPictureURL: URL? {
+        mainPicture.flatMap { URL(string: $0.cleanedURL) }
+    }
+    
+    nonisolated var urlCleaned: URL? {
+        url.flatMap { URL(string: $0.cleanedURL) }
     }
 }
 
 //MARK: - Theme Response DTO: Theme or setting
-struct ThemeDTO: Codable, Identifiable {
+struct ThemeDTO: Codable, Identifiable, Hashable {
     let id: UUID
     let theme: String
 }
 
 //MARK: - Author Response DTO: Author information
-struct AuthorDTO: Codable, Identifiable {
+struct AuthorDTO: Codable, Identifiable, Hashable {
     let id: UUID
     let firstName: String
     let lastName: String
     let role: String
+    
+    var toAuthor: Author {
+        Author(id: id, firstName: firstName, lastName: lastName, role: role)
+    }
 }
 
 //MARK: - Genre Response DTO: Genre classification
-struct GenreDTO: Codable, Identifiable {
+struct GenreDTO: Codable, Identifiable, Hashable {
     let id: UUID
     let genre: String
 }
 
 //MARK: - Demographic Response DTO: Target demographic
-struct DemographicDTO: Codable, Identifiable {
+struct DemographicDTO: Codable, Identifiable, Hashable {
     let id: UUID
     let demographic: String
 }
@@ -119,3 +120,13 @@ enum MangaStatus: String, Codable {
     case finished = "finished"
     case none = "none"
 }
+
+//MARK: - Helper extension
+extension String {
+    nonisolated var cleanedURL: String {
+        self
+           .replacingOccurrences(of: "\\", with: "")
+           .replacingOccurrences(of: "\"", with: "")
+   }
+}
+

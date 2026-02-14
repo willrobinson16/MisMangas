@@ -9,26 +9,7 @@ import Foundation
 import NetworkAPI
 
 /// Repositorio que implementa las operaciones de red con la API de mangas.
-
-protocol NetworkRepository: Sendable, NetworkInteractor {
-    func getAuthors() async throws -> [AuthorDTO]
-    func getBestMangas() async throws -> [MangaDTO]
-    func getMangaByAuthor(id: String) async throws -> [MangaDTO]
-    func getMangaByTheme(theme: Theme) async throws -> [MangaDTO]
-    func getDemographics() async throws -> [DemographicDTO]
-    func getMangaByDemographic(demographic: Demographic) async throws -> [MangaDTO]
-    func getMangaByGenre(genre: Genre) async throws -> [MangaDTO]
-    func getGenres() async throws -> [GenreDTO]
-    func getMangas() async throws -> [MangaDTO]
-    func getMangasPage(page: Int, itemsPerPage: Int) async throws -> [MangaDTO]
-    func getThemes() async throws -> [ThemeDTO]
-    func searchMangasBeginsWith(_ title: String) async throws -> [MangaDTO]
-    func searchMangasContains(_ title: String) async throws -> [MangaDTO]
-    func getManga(id: Int) async throws -> MangaDTO
-    func searchAuthor(_ name: String) async throws -> AuthorDTO
-    func customSearch(_ search: CustomSearch) async throws -> [MangaDTO]
-}
-struct Network: NetworkRepository {
+struct Network: NetworkInteractor {
     
     // MARK: - List Endpoints
     
@@ -39,7 +20,7 @@ struct Network: NetworkRepository {
     
     /// Obtiene los mejores mangas.
     func getBestMangas() async throws -> [MangaDTO] {
-        try await getJSON(.get(url: .getBestMangas), type: Items.self).items
+        try await getJSON(.get(url: .getBestMangas), type: [MangaDTO].self)
     }
     
     /// Obtiene los mangas de un autor específico.
@@ -74,7 +55,7 @@ struct Network: NetworkRepository {
     
     /// Obtiene la lista completa de mangas.
     func getMangas() async throws -> [MangaDTO] {
-        try await getJSON(.get(url: .getMangas), type: Items.self).items
+        try await getJSON(.get(url: .getMangas), type: [MangaDTO].self)
     }
     
     /// Obtiene la lista de mangas de una página específica.

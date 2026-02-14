@@ -6,10 +6,14 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @MainActor let isiPhone = UIDevice.current.userInterfaceIdiom == .phone
 
 struct MainTab: View {
+    @Environment(\.modelContext) private var modelContext
+    @Environment(FavoritesViewModel.self) private var favoritesVM
+    
     var body: some View {
         TabView {
             Tab("Mangas", systemImage: "book") {
@@ -19,23 +23,28 @@ struct MainTab: View {
                     ContentView()
                 }
             }
-            Tab("By Author", systemImage: "person") {
+            Tab("Favoritos", systemImage: "star") {
                 if !isiPhone {
                     
                 } else {
-                    //ListByAuthor()
+                    FavoritesView()
                 }
             }
             Tab("Search", systemImage: "magnifyingglass", role: .search) {
-                //SearchView()
+                SearchView()
             }
         }
         .tabBarMinimizeBehavior(.onScrollDown)
         .tabViewStyle(.sidebarAdaptable)
         .defaultAdaptableTabBarPlacement(.tabBar)
+        .task {
+            favoritesVM.setModelContext(modelContext)
+        }
     }
 }
 
 #Preview(traits: .sampleData) {
     MainTab()
+        .environment(FavoritesViewModel())
+        .modelContainer(for: [Manga.self, FavoriteManga.self])
 }

@@ -6,24 +6,27 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MangaView: View {
     let manga: Manga
     let namespace: Namespace.ID
     
+    @Environment(FavoritesViewModel.self) private var favoritesVM
     @State private var mainPictureVM = MainPictureVM()
+    
+    @Query private var favoriteMangas: [FavoriteManga]
+    
+    private var isFavorite: Bool {
+        favoriteMangas.contains { $0.id == manga.id }
+    }
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 10) {
-                if let image = mainPictureVM.image {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFit()
-                        .stretchy()
-                }
-//                MainPictureView(picture: manga.mainPicture, namespace: namespace, big: true)
-//                    .frame(maxWidth: .infinity, alignment: .trailing)
+                MainPictureView(picture: manga.mainPicture, namespace: namespace, big: true)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                
                 VStack(alignment: .leading, spacing: 10) {
                     Text(manga.title)
                         .font(.largeTitle)
@@ -32,6 +35,16 @@ struct MangaView: View {
                     Text(manga.authorsString)
                         .font(.title)
                         .foregroundStyle(.secondary)
+                    
+                    Spacer()
+                    
+                    Button {
+                        favoritesVM.toggleFavorite(manga)
+                    } label: {
+                        Image(systemName: isFavorite ? "star.fill" : "star")
+                            .font(.title)
+                            .foregroundStyle(isFavorite ? .yellow : .gray)
+                    }
                     
                     if let chapters = manga.chapters {
                         Text("Capítulos: \(chapters)")
@@ -52,16 +65,15 @@ struct MangaView: View {
                 .padding(.horizontal)
             }
         }
-        .ignoresSafeArea()
         .onAppear {
             mainPictureVM.getImage(mainPicture: manga.mainPicture)
         }
     }
 }
 
-#Preview(traits: .sampleData) {
+#Preview {
     @Previewable @Namespace var namespace
-    NavigationStack {
-        MangaView(manga: .test, namespace: namespace)
-    }
+    MangaView(manga: .test, namespace: namespace)
+        .environment(FavoritesViewModel())
+        .modelContainer(for: FavoriteManga.self)
 }

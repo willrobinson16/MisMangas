@@ -23,7 +23,7 @@ extension Manga {
         endDate: "2014-11-10T00:00:00Z",
         mainPicture: URL(string: "https://cdn.myanimelist.net/images/manga/3/249658.jpg"),
         synopsis: "Naruto Uzumaki, a hyperactive and knuckle-headed ninja, lives in Konohagakure, the Hidden Leaf village. Moments prior to his birth, a huge demon known as the Kyuubi, the Nine-tailed Fox, attacked Konohagakure and wreaked havoc. In order to put an end to the Kyuubi's rampage, the leader of the village sealed the beast inside Naruto's body.",
-        url: "https://myanimelist.net/manga/11/Naruto",
+        url: URL(string: "https://myanimelist.net/manga/11/Naruto"),
         volumes: 72,
         themes: [
             Theme(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440010")!, theme: "Martial Arts"),
@@ -56,7 +56,7 @@ extension Manga {
         endDate: "2006-05-15T00:00:00Z",
         mainPicture: URL(string: "https://cdn.myanimelist.net/images/manga/2/253153.jpg"),
         synopsis: "Light Yagami is an ace student with great prospects—and he's bored out of his mind. One day he finds the Death Note, a notebook held by a shinigami. With the Death Note in hand, Light decides to create a perfect world. A world without crime or criminals. But when criminals start dropping dead one by one, the authorities send a brilliant detective known as L to track down the killer.",
-        url: "https://myanimelist.net/manga/21/Death_Note",
+        url: URL(string: "https://myanimelist.net/manga/21/Death_Note"),
         volumes: 12,
         themes: [
             Theme(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440020")!, theme: "Psychological"),
@@ -90,7 +90,7 @@ extension Manga {
         endDate: "2021-04-09T00:00:00Z",
         mainPicture: URL(string: "https://cdn.myanimelist.net/images/manga/2/37846.jpg"),
         synopsis: "In this post-apocalyptic sci-fi story, humanity has been devastated by the bizarre, giant humanoids known as the Titans. Little is known about where they came from or why they are bent on consuming mankind. For the past century, what's left of man has hidden in a giant, three-walled city. People believe their 50-meter-high walls will protect them from the Titans, but the sudden appearance of an immense Titan is about to change everything.",
-        url: "https://myanimelist.net/manga/53390/Shingeki_no_Kyojin",
+        url: URL(string: "https://myanimelist.net/manga/53390/Shingeki_no_Kyojin"),
         volumes: 34,
         themes: [
             Theme(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440030")!, theme: "Military"),
@@ -123,7 +123,7 @@ extension Manga {
         endDate: "2021-05-21T00:00:00Z",
         mainPicture: URL(string: "https://cdn.myanimelist.net/images/manga/1/157897.jpg"),
         synopsis: "Guts, a former mercenary now known as the Black Swordsman, is out for revenge. After a tumultuous childhood, he finally finds someone he respects and believes he can trust, only to have everything fall apart when this person takes away everything important to Guts for the purpose of fulfilling his own desires. Now marked for death, Guts becomes condemned to a fate in which he is relentlessly pursued by demonic beings.",
-        url: "https://myanimelist.net/manga/2/Berserk",
+        url: URL(string: "https://myanimelist.net/manga/2/Berserk"),
         volumes: 41,
         themes: [
             Theme(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440040")!, theme: "Gore"),
@@ -159,7 +159,7 @@ extension Manga {
         endDate: "2010-09-11T00:00:00Z",
         mainPicture: URL(string: "https://cdn.myanimelist.net/images/manga/3/243675.jpg"),
         synopsis: "Alchemists are knowledgeable and naturally talented individuals who can manipulate and modify matter due to their art. Yet despite the wide range of possibilities, alchemy is not as all-powerful as most would believe. Human transmutation is strictly forbidden, and whoever attempts it risks severe consequences. Even so, siblings Edward and Alphonse Elric decide to ignore this ban and bring their mother back to life. Unfortunately, not only do they fail in resurrecting her, they also pay an extremely high price for their arrogance.",
-        url: "https://myanimelist.net/manga/25/Fullmetal_Alchemist",
+        url: URL(string: "https://myanimelist.net/manga/25/Fullmetal_Alchemist"),
         volumes: 27,
         themes: [
             Theme(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440050")!, theme: "Military")
@@ -192,7 +192,7 @@ extension Manga {
         endDate: "2006-11-20T00:00:00Z",
         mainPicture: URL(string: "https://cdn.myanimelist.net/images/manga/2/35018.jpg"),
         synopsis: "After the accident in which she lost her mother, 16-year-old Tooru moves in with her grandfather, but due to his home being renovated, is unable to continue living with him. Claiming she will find someone to stay with but also fearing the criticism of her family and not wanting to burden any of her friends, Tooru resorts to secretly living on her own in a tent in the woods.",
-        url: "https://myanimelist.net/manga/120/Fruits_Basket",
+        url: URL(string: "https://myanimelist.net/manga/120/Fruits_Basket"),
         volumes: 23,
         themes: [
             Theme(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440060")!, theme: "Romantic Subtext")
@@ -224,7 +224,7 @@ extension Manga {
         endDate: "2015-05-21T00:00:00Z",
         mainPicture: URL(string: "https://cdn.myanimelist.net/images/manga/1/259070.jpg"),
         synopsis: "In 16th-century Japan, Shinmen Takezou is a wild, rough young man, in both his appearance and his actions. His aggressive nature has won him the collective reproach and fear of his village, leading him and his best friend, Matahachi Honiden, to run away in search of something grander than provincial life. The pair enlist in the Toyotomi army, yearning for glory—but when the Toyotomi suffer a crushing defeat at the hands of the Tokugawa Clan at the Battle of Sekigahara, the friends barely make it out alive.",
-        url: "https://myanimelist.net/manga/656/Vagabond",
+        url: URL(string: "https://myanimelist.net/manga/656/Vagabond"),
         volumes: 37,
         themes: [
             Theme(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440070")!, theme: "Historical"),
@@ -258,7 +258,7 @@ extension Manga {
         endDate: "2024-12-12T00:00:00Z",
         mainPicture: URL(string: "https://cdn.myanimelist.net/images/manga/3/258245.jpg"),
         synopsis: "For the agent known as Twilight, no order is too tall if it is for the sake of peace. Operating as Westalis' master spy, Twilight works tirelessly to prevent extremists from sparking a war with neighboring country Ostania. For his latest mission, he must investigate Ostanian politician Donovan Desmond by infiltrating his son's school: the prestigious Eden Academy. Thus, the agent faces the most difficult task of his career: get married, have a child, and play family.",
-        url: "https://myanimelist.net/manga/119161/Spy_x_Family",
+        url: URL(string: "https://myanimelist.net/manga/119161/Spy_x_Family"),
         volumes: 14,
         themes: [
             Theme(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440080")!, theme: "Childcare")

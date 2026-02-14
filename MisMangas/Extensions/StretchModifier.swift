@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+//MARK: - SEGURAMENTE SE ELIMINARÁ
 extension View {
     func stretchy() -> some View {
         visualEffect { effect, geometry in

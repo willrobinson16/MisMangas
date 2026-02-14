@@ -56,8 +56,7 @@ struct MainPictureView: View {
     private var placeholder: some View {
         Image(systemName: "book")
             .font(.largeTitle)
-            .padding(.horizontal, 10)
-            .padding(.vertical, 30)
+            .frame(width: big ? 180 : 90, height: big ? 300 : 150)
             .background(.gray.opacity(0.3), in: .rect(cornerRadius: 11))
     }
 }

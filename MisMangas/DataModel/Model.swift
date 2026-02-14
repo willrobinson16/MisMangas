@@ -24,14 +24,14 @@ final class Manga {
     var endDate: String?
     var mainPicture: URL?
     var synopsis: String?
-    var url: String?
+    var url: URL?
     var volumes: Int?
     @Relationship var themes: [Theme]
     @Relationship var authors: [Author]
     @Relationship var genres: [Genre]
     @Relationship var demographics: [Demographic]
     
-    init(id: Int, status: String, background: String?, title: String, titleEnglish: String?, titleJapanese: String?, score: Double, chapters: Int?, startDate: String?, endDate: String?, mainPicture: URL?, synopsis: String?, url: String?, volumes: Int?, themes: [Theme], authors: [Author], genres: [Genre], demographics: [Demographic]) {
+    init(id: Int, status: String, background: String?, title: String, titleEnglish: String?, titleJapanese: String?, score: Double, chapters: Int?, startDate: String?, endDate: String?, mainPicture: URL?, synopsis: String?, url: URL?, volumes: Int?, themes: [Theme], authors: [Author], genres: [Genre], demographics: [Demographic]) {
         self.id = id
         self.status = status
         self.background = background
@@ -80,7 +80,7 @@ extension Manga {
         endDate: nil,
         mainPicture: URL(string: "https://cdn.myanimelist.net/images/manga/2/253146.jpg"),
         synopsis: "Gol D. Roger was known as the Pirate King, the strongest and most infamous being to have sailed the Grand Line. The capture and execution of Roger by the World Government brought a change throughout the world. His last words before his death revealed the existence of the greatest treasure in the world, One Piece.",
-        url: "https://myanimelist.net/manga/13/One_Piece",
+        url: URL(string: "https://myanimelist.net/manga/13/One_Piece"),
         volumes: 107,
         themes: [
             Theme(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440002")!, theme: "Adventure")
@@ -114,6 +114,39 @@ final class Author {
         self.role = role
         self.mangas = []
     }
+}
+
+extension Author {
+    /// Test authors
+    @MainActor static let eiichiroOda = Author(
+        id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440000")!,
+        firstName: "Eiichiro",
+        lastName: "Oda",
+        role: "Story & Art"
+    )
+    
+    @MainActor static let masashiKishimoto = Author(
+        id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440012")!,
+        firstName: "Masashi",
+        lastName: "Kishimoto",
+        role: "Story & Art"
+    )
+    
+    @MainActor static let tsugumiOhba = Author(
+        id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440022")!,
+        firstName: "Tsugumi",
+        lastName: "Ohba",
+        role: "Story"
+    )
+    
+    @MainActor static let takeshiObata = Author(
+        id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440023")!,
+        firstName: "Takeshi",
+        lastName: "Obata",
+        role: "Art"
+    )
+    
+    @MainActor static let test = [eiichiroOda, masashiKishimoto, tsugumiOhba, takeshiObata]
 }
 
 @Model

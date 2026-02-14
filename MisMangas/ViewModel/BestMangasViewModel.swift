@@ -14,9 +14,10 @@ final class BestMangasViewModel {
     var bestMangas: [MangaDTO] = []
     var isLoading = false
     var errorMessage: String?
+    private var hasLoaded = false
     
     func loadBestMangas() async {
-        guard !isLoading else { return }
+        guard !hasLoaded, !isLoading else { return }
         
         isLoading = true
         errorMessage = nil
@@ -25,6 +26,7 @@ final class BestMangasViewModel {
             print("🔍 Llamando a getBestMangas()...")
             bestMangas = try await network.getBestMangas()
             print("✅ Recibidos \(bestMangas.count) mangas")
+            hasLoaded = true
         } catch {
             errorMessage = "No se pudieron cargar los mejores mangas"
             print("❌ Error loading best mangas: \(error)")  // ← Este print debería aparecer
@@ -34,6 +36,7 @@ final class BestMangasViewModel {
     }
     
     func retry() async {
+        hasLoaded = false
         await loadBestMangas()
     }
 }

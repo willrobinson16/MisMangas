@@ -6,19 +6,41 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MangaRow: View {
+    @Environment(\.modelContext) var context
+    @Environment(FavoritesViewModel.self) private var favoritesVM
+    
+    @Query private var favoritesMangas: [FavoriteManga]
+    
     let manga: Manga
     let namespace: Namespace.ID
+    
+    private var favoritesIDs: Set<Int> {
+        Set(favoritesMangas.map { $0.id })
+    }
     
     @State private var image: UIImage?
     
     var body: some View {
-        HStack {
+        HStack(spacing: 12) {
+            MainPictureView(picture: manga.mainPicture, namespace: namespace)
             VStack(alignment: .leading) {
-                Text(manga.title)
-                    .font(.title3)
-                    .bold()
+                HStack {
+                    Text(manga.title)
+                        .font(.title3)
+                        .bold()
+                    
+                    Spacer()
+                    
+                    if favoritesIDs.contains(manga.id) {
+                        withAnimation {
+                            Image(systemName: "star.fill")
+                                .foregroundStyle(.yellow)
+                        }
+                    }
+                }
                 if let titleJapanese = manga.titleJapanese {
                     Text(titleJapanese)
                         .font(.footnote)
@@ -32,16 +54,22 @@ struct MangaRow: View {
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
+                HStack {
+                    Image(systemName: "star.fill")
+                        .foregroundStyle(.yellow)
+                        .font(.footnote)
+                    Text(manga.scoreS)
+                        .font(.callout)
+                }
             }
             Spacer()
-            MainPictureView(picture: manga.mainPicture, namespace: namespace)
         }
         .padding()
-        .background(.green.opacity(0.3), in: .rect(cornerRadius: 35))
     }
 }
 
 #Preview(traits: .sampleData) {
     @Previewable @Namespace var namespace
     MangaRow(manga: .test, namespace: namespace)
+        .environment(FavoritesViewModel())
 }
