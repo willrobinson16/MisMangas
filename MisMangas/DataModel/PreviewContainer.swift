@@ -15,6 +15,7 @@ struct PreviewContainer: PreviewModifier {
             for:
                 Manga.self,
                 FavoriteManga.self,
+                UserMangaCollection.self,
                 Author.self,
                 Theme.self,
                 Genre.self,

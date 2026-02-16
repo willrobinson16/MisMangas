@@ -56,7 +56,6 @@ struct ContentView: View {
                 .listStyle(.plain)
             }
             .navigationTitle("Mis Mangas")
-            .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: Manga.self) { manga in
                 MangaView(manga: manga, namespace: namespace)
             }

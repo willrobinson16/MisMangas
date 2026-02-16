@@ -9,8 +9,8 @@ import Foundation
 
 //MARK: - Author Role
 enum AuthorRole: String, Codable {
-    case art = "art"
-    case storyAndArt = "storyAndArt"
-    case story = "story"
-    case none = "none"
+    case art = "Art"
+    case storyAndArt = "Story & Art"
+    case story = "Story"
+    case none = "None"  
 }

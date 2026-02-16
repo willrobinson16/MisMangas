@@ -13,6 +13,7 @@ import SwiftData
 struct MainTab: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(FavoritesViewModel.self) private var favoritesVM
+    @Environment(UserCollectionViewModel.self) private var userCollectionVM
     
     var body: some View {
         TabView {
@@ -23,11 +24,18 @@ struct MainTab: View {
                     ContentView()
                 }
             }
-            Tab("Favoritos", systemImage: "star") {
+            Tab("Favoritos", systemImage: "heart.fill") {
                 if !isiPhone {
                     
                 } else {
                     FavoritesView()
+                }
+            }
+            Tab("Mi colección", systemImage: "books.vertical.fill") {
+                if !isiPhone {
+                    
+                } else {
+                    UserCollectionView()
                 }
             }
             Tab("Search", systemImage: "magnifyingglass", role: .search) {
@@ -39,6 +47,7 @@ struct MainTab: View {
         .defaultAdaptableTabBarPlacement(.tabBar)
         .task {
             favoritesVM.setModelContext(modelContext)
+            userCollectionVM.setModelContext(modelContext)
         }
     }
 }
@@ -46,5 +55,6 @@ struct MainTab: View {
 #Preview(traits: .sampleData) {
     MainTab()
         .environment(FavoritesViewModel())
-        .modelContainer(for: [Manga.self, FavoriteManga.self])
+        .environment(UserCollectionViewModel())
+        .modelContainer(for: [Manga.self, FavoriteManga.self, UserMangaCollection.self])
 }

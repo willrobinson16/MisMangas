@@ -11,7 +11,7 @@ import Foundation
 enum MangaStatus: String, Codable {
     case discontinued = "discontinued"
     case onHiatus = "on_hiatus"
-    case currentlyPublishing = "publishing"
+    case currentlyPublishing = "currently_publishing"
     case finished = "finished"
     case none = "none"
 }

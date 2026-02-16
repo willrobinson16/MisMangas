@@ -18,16 +18,16 @@ actor DataContainer {
     func loadInitialData() async throws {
         let (mangas, authors) = try await getMangasAndAuthors()
         try loadAuthors(authors: authors)
-        try loadMangas(mangas: mangas)
+        try loadMangas(mangas: mangas.items)
     }
     
-    func getMangasAndAuthors() async throws -> ([MangaDTO], [AuthorDTO]) {
+    func getMangasAndAuthors() async throws -> (MangaPageDTO, [AuthorDTO]) {
         async let getAuthors = network.getAuthors()
         async let getMangas = network.getMangasPage(page: actualPage)
         return try await (getMangas, getAuthors)
     }
     
-    func getBestMangas() async throws -> [MangaDTO] {
+    func getBestMangas() async throws -> MangaPageDTO {
         try await network.getBestMangas()
     }
     
@@ -44,7 +44,7 @@ actor DataContainer {
                 if let existingAuthor = queryAuthor.first {
                     mangaAuthors.append(existingAuthor)
                 } else {
-                    let newAuthor = Author(id: authorDTO.id, firstName: authorDTO.firstName, lastName: authorDTO.lastName, role: authorDTO.role)
+                    let newAuthor = Author(id: authorDTO.id, firstName: authorDTO.firstName, lastName: authorDTO.lastName, role: authorDTO.role.rawValue)
                     modelContext.insert(newAuthor)
                     mangaAuthors.append(newAuthor)
                 }
@@ -164,7 +164,7 @@ actor DataContainer {
         
         // Insertar solo los nuevos
         for author in authors where !existingIDs.contains(author.id) {
-            let newAuthor = Author(id: author.id, firstName: author.firstName, lastName: author.lastName, role: author.role)
+            let newAuthor = Author(id: author.id, firstName: author.firstName, lastName: author.lastName, role: author.role.rawValue)
             modelContext.insert(newAuthor)
         }
         
@@ -181,14 +181,14 @@ actor DataContainer {
             let mangas = try await network.getMangasPage(page: actualPage)
             
             // Si no devuelve mangas, es que no hay más
-            if mangas.isEmpty {
+            if mangas.items.isEmpty {
                 print("ℹ️ No hay más mangas en la página \(actualPage)")
                 actualPage -= 1  // Volver a la página anterior
                 return
             }
             
-            try loadMangas(mangas: mangas)
-            print("✅ Cargada página \(actualPage) con \(mangas.count) mangas")
+            try loadMangas(mangas: mangas.items)
+            print("✅ Cargada página \(actualPage) con \(mangas.items.count) mangas")
         } catch {
             print("❌ Error cargando página \(actualPage): \(error)")
             actualPage -= 1  // Volver a la página anterior

@@ -26,6 +26,10 @@ struct MangaRow: View {
     var body: some View {
         HStack(spacing: 12) {
             MainPictureView(picture: manga.mainPicture, namespace: namespace)
+                .frame(width: 60, height: 90)
+            
+            Spacer()
+            
             VStack(alignment: .leading) {
                 HStack {
                     Text(manga.title)
@@ -36,8 +40,8 @@ struct MangaRow: View {
                     
                     if favoritesIDs.contains(manga.id) {
                         withAnimation {
-                            Image(systemName: "star.fill")
-                                .foregroundStyle(.yellow)
+                            Image(systemName: "heart.fill")
+                                .foregroundStyle(.red)
                         }
                     }
                 }

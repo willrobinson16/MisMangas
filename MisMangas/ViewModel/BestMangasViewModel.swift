@@ -24,7 +24,8 @@ final class BestMangasViewModel {
         
         do {
             print("🔍 Llamando a getBestMangas()...")
-            bestMangas = try await network.getBestMangas()
+            let result = try await network.getBestMangas()
+            bestMangas = result.items
             print("✅ Recibidos \(bestMangas.count) mangas")
             hasLoaded = true
         } catch {

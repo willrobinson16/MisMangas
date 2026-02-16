@@ -12,15 +12,15 @@ import NetworkAPI
 
 protocol NetworkRepository: Sendable, NetworkInteractor {
     func getAuthors() async throws -> [AuthorDTO]
-    func getBestMangas() async throws -> [MangaDTO]
+    func getBestMangas() async throws -> MangaPageDTO
     func getMangaByAuthor(id: String) async throws -> [MangaDTO]
     func getMangaByTheme(theme: Theme) async throws -> [MangaDTO]
     func getDemographics() async throws -> [DemographicDTO]
     func getMangaByDemographic(demographic: Demographic) async throws -> [MangaDTO]
     func getMangaByGenre(genre: Genre) async throws -> [MangaDTO]
     func getGenres() async throws -> [GenreDTO]
-    func getMangas() async throws -> [MangaDTO]
-    func getMangasPage(page: Int, itemsPerPage: Int) async throws -> [MangaDTO]
+    func getMangas() async throws -> MangaPageDTO
+    func getMangasPage(page: Int, itemsPerPage: Int) async throws -> MangaPageDTO
     func getThemes() async throws -> [ThemeDTO]
     func searchMangasBeginsWith(_ title: String) async throws -> [MangaDTO]
     func searchMangasContains(_ title: String) async throws -> [MangaDTO]
@@ -38,8 +38,8 @@ struct Network: NetworkRepository {
     }
     
     /// Obtiene los mejores mangas.
-    func getBestMangas() async throws -> [MangaDTO] {
-        try await getJSON(.get(url: .getBestMangas), type: Items.self).items
+    func getBestMangas() async throws -> MangaPageDTO {
+        try await getJSON(.get(url: .getBestMangas), type: MangaPageDTO.self)
     }
     
     /// Obtiene los mangas de un autor específico.
@@ -73,13 +73,13 @@ struct Network: NetworkRepository {
     }
     
     /// Obtiene la lista completa de mangas.
-    func getMangas() async throws -> [MangaDTO] {
-        try await getJSON(.get(url: .getMangas), type: Items.self).items
+    func getMangas() async throws -> MangaPageDTO {
+        try await getJSON(.get(url: .getMangas), type: MangaPageDTO.self)
     }
     
     /// Obtiene la lista de mangas de una página específica.
-    func getMangasPage(page: Int, itemsPerPage: Int = 10) async throws -> [MangaDTO] {
-        try await getJSON(.get(url: .getMangas(page: page, itemsPerPage: itemsPerPage)), type: Items.self).items
+    func getMangasPage(page: Int, itemsPerPage: Int = 10) async throws -> MangaPageDTO {
+        try await getJSON(.get(url: .getMangas(page: page, itemsPerPage: itemsPerPage)), type: MangaPageDTO.self)
     }
     
     /// Obtiene la lista de temas.

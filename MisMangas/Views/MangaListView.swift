@@ -11,12 +11,18 @@ import SwiftData
 struct MangaListView: View {
     @Environment(\.modelContext) var context
     @Environment(FavoritesViewModel.self) private var favoritesVM
+    @Environment(UserCollectionViewModel.self) private var collectionVM
     
     @Query private var mangas: [Manga]
     @Query private var favoritesMangas: [FavoriteManga]
+    @Query private var userCollection: [UserMangaCollection]
     
     private var favoritesIDs: Set<Int> {
         Set(favoritesMangas.map { $0.id })
+    }
+    
+    private var collectionIDs: Set<Int> {
+        Set(userCollection.map { $0.mangaID })
     }
     
     var mangasSorted: [Manga] {
@@ -28,6 +34,8 @@ struct MangaListView: View {
     var body: some View {
         ForEach(mangasSorted) { manga in
             let isFavorite = favoritesIDs.contains(manga.id)
+            let isInCollection = collectionIDs.contains(manga.id)
+            
             NavigationLink(value: manga) {
                 MangaRow(manga: manga, namespace: namespace)
             }
@@ -40,6 +48,16 @@ struct MangaListView: View {
                 }
                 .tint(isFavorite ? .secondary : .red)
             }
+            .swipeActions(edge: .leading) {
+                Button {
+                    collectionVM.toggleInCollection(manga)
+                } label: {
+                    Label(isInCollection ? "Quitar" : "Añadir",
+                          systemImage: isInCollection ? "bookmark.slash.fill" : "bookmark.fill")
+                }
+                .tint(isInCollection ? .secondary : .blue)
+            }
+            
         }
         if mangasSorted.count > 1 {
             ProgressView()
@@ -62,5 +80,6 @@ struct MangaListView: View {
     NavigationStack {
         MangaListView(namespace: namespace)
             .environment(FavoritesViewModel())
+            .environment(UserCollectionViewModel())
     }
 }

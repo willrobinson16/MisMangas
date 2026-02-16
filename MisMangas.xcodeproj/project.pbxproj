@@ -17,7 +17,6 @@
 		4A8096262F3FD5180021993F /* MangaListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8096252F3FD5180021993F /* MangaListView.swift */; };
 		4A8096282F408F7C0021993F /* BestMangasViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8096272F408F7C0021993F /* BestMangasViewModel.swift */; };
 		4AA4A4012F0C0AF500835A49 /* BackgroundPictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AA4A4002F0C0AF500835A49 /* BackgroundPictureView.swift */; };
-		4AA4A4042F0C0EC600835A49 /* StretchModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AA4A4032F0C0EC600835A49 /* StretchModifier.swift */; };
 		4AAE821E2EFABBA600B870C6 /* MangaRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AAE821D2EFABBA600B870C6 /* MangaRow.swift */; };
 		4AAE82202EFAC65F00B870C6 /* MainPictureVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AAE821F2EFAC65F00B870C6 /* MainPictureVM.swift */; };
 		4AAE82222EFADD8B00B870C6 /* MainTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AAE82212EFADD8B00B870C6 /* MainTab.swift */; };
@@ -28,11 +27,36 @@
 		4ACB65E42F0D2BA300F552FF /* FavoritesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ACB65E32F0D2BA300F552FF /* FavoritesViewModel.swift */; };
 		4ACB65E62F0D2C1500F552FF /* FavoriteManga.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ACB65E52F0D2C1500F552FF /* FavoriteManga.swift */; };
 		4ACB65E82F0D2E4C00F552FF /* FavoritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ACB65E72F0D2E4C00F552FF /* FavoritesView.swift */; };
+		4AF16A462F41FABE003D43BB /* mangas.icon in Resources */ = {isa = PBXBuildFile; fileRef = 4AF16A452F41FABE003D43BB /* mangas.icon */; };
+		4AF16A482F4255FA003D43BB /* PageMetadataDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A472F4255FA003D43BB /* PageMetadataDTO.swift */; };
+		4AF16A4A2F4255FA003D43BB /* MangaPageDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A492F4255FA003D43BB /* MangaPageDTO.swift */; };
+		4AF16A4C2F4255FA003D43BB /* MangaDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A4B2F4255FA003D43BB /* MangaDTO.swift */; };
+		4AF16A4E2F4255FA003D43BB /* MangaStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A4D2F4255FA003D43BB /* MangaStatus.swift */; };
+		4AF16A502F4255FB003D43BB /* AuthorDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A4F2F4255FB003D43BB /* AuthorDTO.swift */; };
+		4AF16A522F4255FB003D43BB /* AuthorRole.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A512F4255FB003D43BB /* AuthorRole.swift */; };
+		4AF16A542F4255FB003D43BB /* AuthorPageDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A532F4255FB003D43BB /* AuthorPageDTO.swift */; };
+		4AF16A562F4255FB003D43BB /* AuthorIdsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A552F4255FB003D43BB /* AuthorIdsRequest.swift */; };
+		4AF16A582F4255FB003D43BB /* ThemeDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A572F4255FB003D43BB /* ThemeDTO.swift */; };
+		4AF16A5A2F4255FB003D43BB /* GenreDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A592F4255FB003D43BB /* GenreDTO.swift */; };
+		4AF16A5C2F4255FB003D43BB /* DemographicDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A5B2F4255FB003D43BB /* DemographicDTO.swift */; };
+		4AF16A5E2F4255FB003D43BB /* UserMangaCollectionDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A5D2F4255FB003D43BB /* UserMangaCollectionDTO.swift */; };
+		4AF16A602F4255FB003D43BB /* UserMangaCollectionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A5F2F4255FB003D43BB /* UserMangaCollectionRequest.swift */; };
+		4AF16A622F4255FB003D43BB /* CustomSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A612F4255FB003D43BB /* CustomSearch.swift */; };
+		4AF16A642F4255FB003D43BB /* UsersCreate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A632F4255FB003D43BB /* UsersCreate.swift */; };
+		4AF16A662F4255FB003D43BB /* UserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A652F4255FB003D43BB /* UserResponse.swift */; };
+		4AF16A682F4255FC003D43BB /* JWTTokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A672F4255FC003D43BB /* JWTTokenResponse.swift */; };
+		4AF16A6A2F4255FC003D43BB /* TokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A692F4255FC003D43BB /* TokenResponse.swift */; };
+		4AF16A6C2F4255FC003D43BB /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A6B2F4255FC003D43BB /* StringExtensions.swift */; };
+		4AF16A722F425B9E003D43BB /* UserMangaCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A712F425B9E003D43BB /* UserMangaCollection.swift */; };
+		4AF16A742F425BCD003D43BB /* UserCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A732F425BCD003D43BB /* UserCollectionViewModel.swift */; };
+		4AF16A782F425CFD003D43BB /* UserCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A772F425CFD003D43BB /* UserCollectionView.swift */; };
+		4AF16A7A2F425EC6003D43BB /* EditCollectionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A792F425EC6003D43BB /* EditCollectionSheet.swift */; };
+		4AF16A7C2F425EF5003D43BB /* VolumeChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A7B2F425EF5003D43BB /* VolumeChip.swift */; };
+		4AF16A7E2F425F00003D43BB /* CollectionEntryRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A7D2F425F00003D43BB /* CollectionEntryRow.swift */; };
 		4AF3D08C2F0C05F3009342FE /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF3D08B2F0C05F3009342FE /* RatingView.swift */; };
 		4AF9E6472EE6CE77005801A6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF9E6442EE6CE77005801A6 /* ContentView.swift */; };
 		4AF9E6482EE6CE77005801A6 /* MisMangasApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF9E6452EE6CE77005801A6 /* MisMangasApp.swift */; };
 		4AF9E6492EE6CE77005801A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4AF9E6432EE6CE77005801A6 /* Assets.xcassets */; };
-		4AF9E6522EE6CFDC005801A6 /* ModelDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF9E6512EE6CFDC005801A6 /* ModelDTO.swift */; };
 		4AF9E6542EE6DEB5005801A6 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF9E6532EE6DEB5005801A6 /* Model.swift */; };
 		4AF9E6572EE6E8F9005801A6 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF9E6562EE6E8F9005801A6 /* URL.swift */; };
 		4AF9E66D2EE820D7005801A6 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF9E66C2EE820D7005801A6 /* Network.swift */; };
@@ -51,7 +75,6 @@
 		4A8096252F3FD5180021993F /* MangaListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaListView.swift; sourceTree = "<group>"; };
 		4A8096272F408F7C0021993F /* BestMangasViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BestMangasViewModel.swift; sourceTree = "<group>"; };
 		4AA4A4002F0C0AF500835A49 /* BackgroundPictureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundPictureView.swift; sourceTree = "<group>"; };
-		4AA4A4032F0C0EC600835A49 /* StretchModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StretchModifier.swift; sourceTree = "<group>"; };
 		4AAE821D2EFABBA600B870C6 /* MangaRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaRow.swift; sourceTree = "<group>"; };
 		4AAE821F2EFAC65F00B870C6 /* MainPictureVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPictureVM.swift; sourceTree = "<group>"; };
 		4AAE82212EFADD8B00B870C6 /* MainTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTab.swift; sourceTree = "<group>"; };
@@ -61,11 +84,36 @@
 		4ACB65E32F0D2BA300F552FF /* FavoritesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewModel.swift; sourceTree = "<group>"; };
 		4ACB65E52F0D2C1500F552FF /* FavoriteManga.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteManga.swift; sourceTree = "<group>"; };
 		4ACB65E72F0D2E4C00F552FF /* FavoritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesView.swift; sourceTree = "<group>"; };
+		4AF16A452F41FABE003D43BB /* mangas.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = mangas.icon; sourceTree = "<group>"; };
+		4AF16A472F4255FA003D43BB /* PageMetadataDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMetadataDTO.swift; sourceTree = "<group>"; };
+		4AF16A492F4255FA003D43BB /* MangaPageDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaPageDTO.swift; sourceTree = "<group>"; };
+		4AF16A4B2F4255FA003D43BB /* MangaDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaDTO.swift; sourceTree = "<group>"; };
+		4AF16A4D2F4255FA003D43BB /* MangaStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaStatus.swift; sourceTree = "<group>"; };
+		4AF16A4F2F4255FB003D43BB /* AuthorDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorDTO.swift; sourceTree = "<group>"; };
+		4AF16A512F4255FB003D43BB /* AuthorRole.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorRole.swift; sourceTree = "<group>"; };
+		4AF16A532F4255FB003D43BB /* AuthorPageDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorPageDTO.swift; sourceTree = "<group>"; };
+		4AF16A552F4255FB003D43BB /* AuthorIdsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorIdsRequest.swift; sourceTree = "<group>"; };
+		4AF16A572F4255FB003D43BB /* ThemeDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeDTO.swift; sourceTree = "<group>"; };
+		4AF16A592F4255FB003D43BB /* GenreDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreDTO.swift; sourceTree = "<group>"; };
+		4AF16A5B2F4255FB003D43BB /* DemographicDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemographicDTO.swift; sourceTree = "<group>"; };
+		4AF16A5D2F4255FB003D43BB /* UserMangaCollectionDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMangaCollectionDTO.swift; sourceTree = "<group>"; };
+		4AF16A5F2F4255FB003D43BB /* UserMangaCollectionRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMangaCollectionRequest.swift; sourceTree = "<group>"; };
+		4AF16A612F4255FB003D43BB /* CustomSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSearch.swift; sourceTree = "<group>"; };
+		4AF16A632F4255FB003D43BB /* UsersCreate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersCreate.swift; sourceTree = "<group>"; };
+		4AF16A652F4255FB003D43BB /* UserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserResponse.swift; sourceTree = "<group>"; };
+		4AF16A672F4255FC003D43BB /* JWTTokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JWTTokenResponse.swift; sourceTree = "<group>"; };
+		4AF16A692F4255FC003D43BB /* TokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenResponse.swift; sourceTree = "<group>"; };
+		4AF16A6B2F4255FC003D43BB /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
+		4AF16A712F425B9E003D43BB /* UserMangaCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMangaCollection.swift; sourceTree = "<group>"; };
+		4AF16A732F425BCD003D43BB /* UserCollectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCollectionViewModel.swift; sourceTree = "<group>"; };
+		4AF16A772F425CFD003D43BB /* UserCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCollectionView.swift; sourceTree = "<group>"; };
+		4AF16A792F425EC6003D43BB /* EditCollectionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCollectionSheet.swift; sourceTree = "<group>"; };
+		4AF16A7B2F425EF5003D43BB /* VolumeChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeChip.swift; sourceTree = "<group>"; };
+		4AF16A7D2F425F00003D43BB /* CollectionEntryRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionEntryRow.swift; sourceTree = "<group>"; };
 		4AF3D08B2F0C05F3009342FE /* RatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingView.swift; sourceTree = "<group>"; };
 		4AF9E6432EE6CE77005801A6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4AF9E6442EE6CE77005801A6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		4AF9E6452EE6CE77005801A6 /* MisMangasApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MisMangasApp.swift; sourceTree = "<group>"; };
-		4AF9E6512EE6CFDC005801A6 /* ModelDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelDTO.swift; sourceTree = "<group>"; };
 		4AF9E6532EE6DEB5005801A6 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		4AF9E6562EE6E8F9005801A6 /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		4AF9E66C2EE820D7005801A6 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
@@ -103,7 +151,7 @@
 		4AA4A4022F0C0E9F00835A49 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				4AA4A4032F0C0EC600835A49 /* StretchModifier.swift */,
+				4AF16A6B2F4255FC003D43BB /* StringExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -127,12 +175,13 @@
 				4AF9E64E2EE6CEA1005801A6 /* ViewModel */,
 				4AF9E64C2EE6CE90005801A6 /* Network */,
 				4AF9E6552EE6E005005801A6 /* DataModel */,
-				4AF9E64B2EE6CE8A005801A6 /* Model */,
+				4AF9E64B2EE6CE8A005801A6 /* DTO */,
 				4AF9E64A2EE6CE7C005801A6 /* System */,
 				4AF9E6432EE6CE77005801A6 /* Assets.xcassets */,
 				4AAE82212EFADD8B00B870C6 /* MainTab.swift */,
 				4AF9E6442EE6CE77005801A6 /* ContentView.swift */,
 				4A4937142F3FBA600043A186 /* TestView.swift */,
+				4AF16A452F41FABE003D43BB /* mangas.icon */,
 			);
 			path = MisMangas;
 			sourceTree = "<group>";
@@ -145,12 +194,29 @@
 			path = System;
 			sourceTree = "<group>";
 		};
-		4AF9E64B2EE6CE8A005801A6 /* Model */ = {
+		4AF9E64B2EE6CE8A005801A6 /* DTO */ = {
 			isa = PBXGroup;
 			children = (
-				4AF9E6512EE6CFDC005801A6 /* ModelDTO.swift */,
+				4AF16A472F4255FA003D43BB /* PageMetadataDTO.swift */,
+				4AF16A492F4255FA003D43BB /* MangaPageDTO.swift */,
+				4AF16A4B2F4255FA003D43BB /* MangaDTO.swift */,
+				4AF16A4D2F4255FA003D43BB /* MangaStatus.swift */,
+				4AF16A4F2F4255FB003D43BB /* AuthorDTO.swift */,
+				4AF16A512F4255FB003D43BB /* AuthorRole.swift */,
+				4AF16A532F4255FB003D43BB /* AuthorPageDTO.swift */,
+				4AF16A552F4255FB003D43BB /* AuthorIdsRequest.swift */,
+				4AF16A572F4255FB003D43BB /* ThemeDTO.swift */,
+				4AF16A592F4255FB003D43BB /* GenreDTO.swift */,
+				4AF16A5B2F4255FB003D43BB /* DemographicDTO.swift */,
+				4AF16A5D2F4255FB003D43BB /* UserMangaCollectionDTO.swift */,
+				4AF16A5F2F4255FB003D43BB /* UserMangaCollectionRequest.swift */,
+				4AF16A612F4255FB003D43BB /* CustomSearch.swift */,
+				4AF16A632F4255FB003D43BB /* UsersCreate.swift */,
+				4AF16A652F4255FB003D43BB /* UserResponse.swift */,
+				4AF16A672F4255FC003D43BB /* JWTTokenResponse.swift */,
+				4AF16A692F4255FC003D43BB /* TokenResponse.swift */,
 			);
-			path = Model;
+			path = DTO;
 			sourceTree = "<group>";
 		};
 		4AF9E64C2EE6CE90005801A6 /* Network */ = {
@@ -169,6 +235,7 @@
 				4ACB65E32F0D2BA300F552FF /* FavoritesViewModel.swift */,
 				4A49370A2F3122E10043A186 /* SearchViewModel.swift */,
 				4A4937122F3E72CB0043A186 /* MangasViewModel.swift */,
+				4AF16A732F425BCD003D43BB /* UserCollectionViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -182,6 +249,8 @@
 				4A49370C2F3123660043A186 /* SearchView.swift */,
 				4A8096232F3FD0C10021993F /* BestMangasGridView.swift */,
 				4A8096252F3FD5180021993F /* MangaListView.swift */,
+				4AF16A792F425EC6003D43BB /* EditCollectionSheet.swift */,
+				4AF16A772F425CFD003D43BB /* UserCollectionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -189,9 +258,11 @@
 		4AF9E6502EE6CEAB005801A6 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				4AF16A7D2F425F00003D43BB /* CollectionEntryRow.swift */,
 				4AAE821D2EFABBA600B870C6 /* MangaRow.swift */,
 				4AF3D08B2F0C05F3009342FE /* RatingView.swift */,
 				4ACB65E12F0D268300F552FF /* AuthorRow.swift */,
+				4AF16A7B2F425EF5003D43BB /* VolumeChip.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -204,6 +275,7 @@
 				4A64974F2EEC1C8100986CDF /* PreviewContainer.swift */,
 				4A6497552EF15D9E00986CDF /* DataContainer.swift */,
 				4ACB65E52F0D2C1500F552FF /* FavoriteManga.swift */,
+				4AF16A712F425B9E003D43BB /* UserMangaCollection.swift */,
 			);
 			path = DataModel;
 			sourceTree = "<group>";
@@ -274,6 +346,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4AF9E6492EE6CE77005801A6 /* Assets.xcassets in Resources */,
+				4AF16A462F41FABE003D43BB /* mangas.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,31 +360,54 @@
 				4A4937152F3FBA600043A186 /* TestView.swift in Sources */,
 				4ACB65E82F0D2E4C00F552FF /* FavoritesView.swift in Sources */,
 				4AF9E6572EE6E8F9005801A6 /* URL.swift in Sources */,
+				4AF16A742F425BCD003D43BB /* UserCollectionViewModel.swift in Sources */,
 				4A4937132F3E72CB0043A186 /* MangasViewModel.swift in Sources */,
 				4AAE82222EFADD8B00B870C6 /* MainTab.swift in Sources */,
 				4AAE82202EFAC65F00B870C6 /* MainPictureVM.swift in Sources */,
+				4AF16A602F4255FB003D43BB /* UserMangaCollectionRequest.swift in Sources */,
 				4ACB65E22F0D268400F552FF /* AuthorRow.swift in Sources */,
+				4AF16A782F425CFD003D43BB /* UserCollectionView.swift in Sources */,
 				4AF3D08C2F0C05F3009342FE /* RatingView.swift in Sources */,
+				4AF16A642F4255FB003D43BB /* UsersCreate.swift in Sources */,
 				4AAE82292EFAE3D700B870C6 /* MainPictureView.swift in Sources */,
+				4AF16A5A2F4255FB003D43BB /* GenreDTO.swift in Sources */,
 				4AAE821E2EFABBA600B870C6 /* MangaRow.swift in Sources */,
 				4A6497502EEC1C8100986CDF /* PreviewContainer.swift in Sources */,
 				4AF9E6472EE6CE77005801A6 /* ContentView.swift in Sources */,
 				4ACB65E42F0D2BA300F552FF /* FavoritesViewModel.swift in Sources */,
-				4AF9E6522EE6CFDC005801A6 /* ModelDTO.swift in Sources */,
+				4AF16A4A2F4255FA003D43BB /* MangaPageDTO.swift in Sources */,
+				4AF16A622F4255FB003D43BB /* CustomSearch.swift in Sources */,
+				4AF16A5E2F4255FB003D43BB /* UserMangaCollectionDTO.swift in Sources */,
+				4AF16A7C2F425EF5003D43BB /* VolumeChip.swift in Sources */,
+				4AF16A582F4255FB003D43BB /* ThemeDTO.swift in Sources */,
+				4AF16A662F4255FB003D43BB /* UserResponse.swift in Sources */,
 				4ACB65E62F0D2C1500F552FF /* FavoriteManga.swift in Sources */,
 				4A49370D2F3123660043A186 /* SearchView.swift in Sources */,
+				4AF16A482F4255FA003D43BB /* PageMetadataDTO.swift in Sources */,
 				4A8096242F3FD0C10021993F /* BestMangasGridView.swift in Sources */,
 				4A6497562EF15D9E00986CDF /* DataContainer.swift in Sources */,
 				4AF9E67E2EE9D094005801A6 /* PreviewData.swift in Sources */,
 				4AF9E6482EE6CE77005801A6 /* MisMangasApp.swift in Sources */,
 				4A49370B2F3122E10043A186 /* SearchViewModel.swift in Sources */,
+				4AF16A5C2F4255FB003D43BB /* DemographicDTO.swift in Sources */,
 				4AAE822C2EFAEAFE00B870C6 /* MangaView.swift in Sources */,
 				4AA4A4012F0C0AF500835A49 /* BackgroundPictureView.swift in Sources */,
-				4AA4A4042F0C0EC600835A49 /* StretchModifier.swift in Sources */,
+				4AF16A722F425B9E003D43BB /* UserMangaCollection.swift in Sources */,
+				4AF16A682F4255FC003D43BB /* JWTTokenResponse.swift in Sources */,
+				4AF16A7A2F425EC6003D43BB /* EditCollectionSheet.swift in Sources */,
 				4AF9E66D2EE820D7005801A6 /* Network.swift in Sources */,
+				4AF16A542F4255FB003D43BB /* AuthorPageDTO.swift in Sources */,
 				4A8096282F408F7C0021993F /* BestMangasViewModel.swift in Sources */,
+				4AF16A522F4255FB003D43BB /* AuthorRole.swift in Sources */,
 				4AF9E6542EE6DEB5005801A6 /* Model.swift in Sources */,
+				4AF16A502F4255FB003D43BB /* AuthorDTO.swift in Sources */,
+				4AF16A4C2F4255FA003D43BB /* MangaDTO.swift in Sources */,
+				4AF16A6A2F4255FC003D43BB /* TokenResponse.swift in Sources */,
+				4AF16A4E2F4255FA003D43BB /* MangaStatus.swift in Sources */,
+				4AF16A6C2F4255FC003D43BB /* StringExtensions.swift in Sources */,
 				4A8096262F3FD5180021993F /* MangaListView.swift in Sources */,
+				4AF16A7E2F425F00003D43BB /* CollectionEntryRow.swift in Sources */,
+				4AF16A562F4255FB003D43BB /* AuthorIdsRequest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -450,8 +546,9 @@
 		4A7D62182EE43966005006CE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = mangas;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 2WATSHBXAF;
@@ -482,8 +579,9 @@
 		4A7D62192EE43966005006CE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = mangas;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 2WATSHBXAF;

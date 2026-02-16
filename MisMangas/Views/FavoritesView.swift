@@ -17,8 +17,17 @@ struct FavoritesView: View {
     @Namespace private var namespace
     
     private var favorites: [Manga] {
-        let favoriteIDs = Set(favoriteMangas.map { $0.id })
-        return mangas.filter { favoriteIDs.contains($0.id) }
+//        let favoriteIDs = Set(favoriteMangas.map { $0.id })
+        let favoritesDict = Dictionary(uniqueKeysWithValues: favoriteMangas.map { ($0.id, $0.dataAdded) })
+
+        return mangas
+//            .filter { favoriteIDs.contains($0.id) }
+//            .filter { favoritesDict[$0.id] != nil }
+            .filter { favoritesDict.keys.contains($0.id) }
+            .sorted { favoritesDict[$0.id] ?? .distantPast > favoritesDict[$1.id] ?? .distantPast }
+//            .sorted { favoritesDict[$0.id] ?? .distantPast > favoritesDict[$1.id] ?? .distantPast }
+            
+            
     }
     
     private var favoriteIDs: Set<Int> {
@@ -29,7 +38,7 @@ struct FavoritesView: View {
         NavigationStack {
             Group {
                 if favorites.isEmpty {
-                    ContentUnavailableView("Favoritos", systemImage: "star.circle", description: Text("Aún no has añadido mangas a favoritos"))
+                    ContentUnavailableView("Favoritos", systemImage: "heart.circle", description: Text("Aún no has añadido mangas a favoritos"))
                 } else {
                     List {
                         ForEach(favorites) { manga in
