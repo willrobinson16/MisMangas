@@ -11,10 +11,8 @@ import SwiftData
 /// Sheet para editar una entrada de la colección del usuario
 struct EditCollectionSheet: View {
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.modelContext) private var modelContext
 
-    @Bindable var collection: UserMangaCollection
-    
+    let entry: UserMangaCollection
     let manga: Manga
     let collectionVM: UserCollectionViewModel
 
@@ -40,13 +38,6 @@ struct EditCollectionSheet: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cerrar") {
-                        dismiss()
-                    }
-                }
-
-                ToolbarItem(placement: .primaryAction) {
-                    Button("Guardar") {
-                        saveChanges()
                         dismiss()
                     }
                 }
@@ -79,36 +70,25 @@ struct EditCollectionSheet: View {
                 Spacer()
 
                 Button {
-                    if let current = collection.readingVolume, current > 0 {
-                        collection.readingVolume = current - 1
-                    } else if collection.readingVolume == 0 {
-                        collection.readingVolume = nil
-                    }
+                    collectionVM.decrementReadingVolume(mangaID: entry.mangaID)
                 } label: {
                     Image(systemName: "minus.circle")
                 }
-                .disabled(collection.readingVolume == nil || collection.readingVolume == 0)
+                .disabled((entry.readingVolume ?? 0) == 0)
 
-                Text("\(collection.readingVolume ?? 0)")
+                Text("\(entry.readingVolume ?? 0)")
                     .font(.headline)
                     .frame(minWidth: 30)
 
                 Button {
-                    if let current = collection.readingVolume {
-                        collection.readingVolume = current + 1
-                    } else {
-                        collection.readingVolume = 1
-                    }
+                    collectionVM.incrementReadingVolume(mangaID: entry.mangaID)
                 } label: {
                     Image(systemName: "plus.circle")
                 }
-                .disabled(
-                    manga.volumes != nil &&
-                    (collection.readingVolume ?? 0) >= manga.volumes!
-                )
+                .disabled(!canIncreaseReadingVolume)
             }
 
-            if let readingVolume = collection.readingVolume,
+            if let readingVolume = entry.readingVolume,
                readingVolume > 0,
                let totalVolumes = manga.volumes {
                 VStack(alignment: .leading, spacing: 4) {
@@ -126,11 +106,11 @@ struct EditCollectionSheet: View {
             }
 
             Button {
-                collection.readingVolume = nil
+                collectionVM.updateReadingVolume(mangaID: entry.mangaID, volume: nil)
             } label: {
                 Label("Reiniciar lectura", systemImage: "arrow.counterclockwise")
             }
-            .disabled(collection.readingVolume == nil)
+            .disabled(entry.readingVolume == nil)
         }
     }
 
@@ -138,23 +118,27 @@ struct EditCollectionSheet: View {
 
     private var volumesOwnedSection: some View {
         Section("Volúmenes en Posesión") {
-            Toggle("Colección completa", isOn: $collection.completeCollection)
+            Toggle("Colección completa", isOn: Binding(
+                get: { entry.completeCollection },
+                set: { collectionVM.setCompleteCollection(mangaID: entry.mangaID, isComplete: $0) }
+            ))
 
-            if !collection.completeCollection {
+            if !entry.completeCollection {
                 VStack(alignment: .leading, spacing: 8) {
-                    // Añadir volumen
                     HStack {
                         TextField("Número de volumen", text: $newVolumeNumber)
                             .keyboardType(.numberPad)
 
                         Button("Añadir") {
-                            addVolume()
+                            if let volumeNumber = Int(newVolumeNumber) {
+                                collectionVM.addVolume(mangaID: entry.mangaID, volumeNumber: volumeNumber)
+                                newVolumeNumber = ""
+                            }
                         }
                         .disabled(newVolumeNumber.isEmpty)
                     }
 
-                    // Lista de volúmenes
-                    let volumes = collection.volumesOwned
+                    let volumes = entry.volumesOwned
                     if !volumes.isEmpty {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 8) {
@@ -162,7 +146,7 @@ struct EditCollectionSheet: View {
                                     VolumeChip(
                                         volumeNumber: volume,
                                         onRemove: {
-                                            collection.removeVolume(volume)
+                                            collectionVM.removeVolume(mangaID: entry.mangaID, volumeNumber: volume)
                                         }
                                     )
                                 }
@@ -183,23 +167,31 @@ struct EditCollectionSheet: View {
 
     private var statisticsSection: some View {
         Section("Estadísticas") {
-            LabeledContent("Volúmenes poseídos", value: collection.completeCollection ? "\(manga.volumes ?? 0)": "\(collection.volumesOwnedCount)")
-            LabeledContent("Fecha de añadido", value: collection.dateAdded.formatted(date: .abbreviated, time: .omitted))
-            LabeledContent("Última actualización", value: collection.lastUpdated.formatted(date: .abbreviated, time: .omitted))
+            LabeledContent("Volúmenes poseídos", value: entry.completeCollection ? "\(manga.volumes ?? 0)": "\(entry.volumesOwnedCount)")
+            LabeledContent("Fecha de añadido", value: entry.dateAdded.formatted(date: .abbreviated, time: .omitted))
+            LabeledContent("Última actualización", value: entry.lastUpdated.formatted(date: .abbreviated, time: .omitted))
         }
     }
 
-    // MARK: - Actions
+    // MARK: - Computed Properties
 
-    private func addVolume() {
-        guard let volumeNumber = Int(newVolumeNumber) else { return }
-        collection.addVolume(volumeNumber)
-        newVolumeNumber = ""
-    }
+    private var canIncreaseReadingVolume: Bool {
+        let currentVolume = entry.readingVolume ?? 0
 
-    private func saveChanges() {
-        // Actualizar timestamp
-        collection.lastUpdated = Date()
+        if entry.completeCollection {
+            if let totalVolumes = manga.volumes {
+                return currentVolume < totalVolumes
+            }
+            return true
+        }
+
+        let ownedVolumes = entry.volumesOwned
+        if ownedVolumes.isEmpty {
+            return false
+        }
+
+        let maxOwnedVolume = ownedVolumes.max() ?? 0
+        return currentVolume < maxOwnedVolume
     }
 }
 
@@ -207,7 +199,7 @@ struct EditCollectionSheet: View {
     @Previewable @State var collectionVM = UserCollectionViewModel()
 
     EditCollectionSheet(
-        collection: .test,
+        entry: .test,
         manga: .test,
         collectionVM: collectionVM
     )

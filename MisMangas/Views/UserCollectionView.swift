@@ -19,12 +19,18 @@ struct UserCollectionView: View {
 
     @Namespace private var namespace
 
-    @State private var selectedEntry: UserMangaCollection?
+    @State private var selectedEntryID: UUID?
     @State private var showEditSheet = false
 
     // Diccionario para acceso rápido a mangas por ID
     private var mangasDict: [Int: Manga] {
         Dictionary(uniqueKeysWithValues: mangas.map { ($0.id, $0) })
+    }
+
+    // Encuentra la entrada seleccionada del @Query (no una copia)
+    private var selectedEntry: UserMangaCollection? {
+        guard let id = selectedEntryID else { return nil }
+        return collectionEntries.first { $0.id == id }
     }
 
     var body: some View {
@@ -50,7 +56,7 @@ struct UserCollectionView: View {
                 if let collection = selectedEntry,
                    let manga = mangasDict[collection.mangaID] {
                     EditCollectionSheet(
-                        collection: collection,
+                        entry: collection,
                         manga: manga,
                         collectionVM: collectionVM
                     )
@@ -74,7 +80,7 @@ struct UserCollectionView: View {
                         namespace: namespace
                     )
                     .onTapGesture {
-                        selectedEntry = entry
+                        selectedEntryID = entry.id
                         showEditSheet = true
                     }
                     .swipeActions(edge: .trailing) {

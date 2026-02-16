@@ -115,6 +115,27 @@ final class UserCollectionViewModel {
         updateReadingVolume(mangaID: mangaID, volume: nextVolume)
     }
 
+    /// Increments the reading volume by 1
+    /// - Parameter mangaID: The ID of the manga
+    func incrementReadingVolume(mangaID: Int) {
+        guard let collection = getCollectionEntry(mangaID) else { return }
+
+        let nextVolume = (collection.readingVolume ?? 0) + 1
+        updateReadingVolume(mangaID: mangaID, volume: nextVolume)
+    }
+
+    /// Decrements the reading volume by 1
+    /// - Parameter mangaID: The ID of the manga
+    func decrementReadingVolume(mangaID: Int) {
+        guard let collection = getCollectionEntry(mangaID) else { return }
+
+        if let current = collection.readingVolume, current > 0 {
+            updateReadingVolume(mangaID: mangaID, volume: current - 1)
+        } else {
+            updateReadingVolume(mangaID: mangaID, volume: nil)
+        }
+    }
+
     /// Gets the current reading volume
     /// - Parameter mangaID: The ID of the manga
     /// - Returns: The current reading volume number, or nil if not reading
