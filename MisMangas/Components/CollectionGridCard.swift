@@ -17,7 +17,7 @@ struct CollectionGridCard: View {
     var body: some View {
         VStack(spacing: 8) {
             // Imagen del manga con badges
-            MainPictureView(picture: manga.mainPictureS, namespace: namespace)
+            MainPictureView(picture: manga.mainPicture, namespace: namespace)
                 .frame(width: 150, height: 225)
                 .overlay(alignment: .topTrailing) {
                     badges
@@ -28,7 +28,7 @@ struct CollectionGridCard: View {
                 .font(.subheadline.bold())
                 .lineLimit(2)
                 .multilineTextAlignment(.center)
-                .frame(maxWidth: .infinity)
+                .frame(maxWidth: .infinity, minHeight: 34)
 
             // Info de colección
             VStack(spacing: 4) {
@@ -38,7 +38,7 @@ struct CollectionGridCard: View {
                         .font(.caption2)
                         .foregroundStyle(.orange)
 
-                    Text("\(entry.volumesOwnedCount)")
+                    Text("\(entry.completeCollection ? (manga.volumes ?? 0) : entry.volumesOwnedCount)")
                         .font(.caption)
 
                     if let totalVolumes = manga.volumes {
@@ -49,25 +49,35 @@ struct CollectionGridCard: View {
                 }
 
                 // Progreso de lectura
-                if let readingVolume = entry.readingVolume {
-                    HStack(spacing: 4) {
-                        Image(systemName: "book.pages")
-                            .font(.caption2)
-                            .foregroundStyle(.blue)
+                HStack(spacing: 4) {
+                    Image(systemName: "book.pages")
+                        .font(.caption2)
+                        .foregroundStyle(entry.readingVolume != nil ? .blue : .clear)
 
+                    if let readingVolume = entry.readingVolume {
                         Text("Vol. \(readingVolume)")
+                            .font(.caption)
+                    } else {
+                        Text(" ")
                             .font(.caption)
                     }
                 }
+                .frame(minHeight: 16)
 
-                // Barra de progreso
-                if let totalVolumes = manga.volumes,
-                   let progress = entry.collectionProgress(totalVolumes: totalVolumes) {
-                    ProgressView(value: progress)
-                        .tint(.orange)
+                // Barra de progreso de lectura
+                if let readingVolume = entry.readingVolume,
+                   readingVolume > 0,
+                   let totalVolumes = totalVolumesForProgress {
+                    ProgressView(value: Double(readingVolume), total: Double(totalVolumes))
+                        .tint(.blue)
+                } else {
+                    ProgressView(value: 0)
+                        .tint(.clear)
                 }
             }
+            .frame(minHeight: 70)
         }
+        .frame(height: 380)
         .padding(12)
         .background(Color(.secondarySystemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -90,6 +100,19 @@ struct CollectionGridCard: View {
             }
         }
         .padding(8)
+    }
+
+    /// Total de volúmenes para calcular el progreso de lectura
+    private var totalVolumesForProgress: Int? {
+        if entry.completeCollection {
+            return manga.volumes
+        } else {
+            let ownedVolumes = entry.volumesOwned
+            if !ownedVolumes.isEmpty {
+                return ownedVolumes.max()
+            }
+            return manga.volumes
+        }
     }
 }
 

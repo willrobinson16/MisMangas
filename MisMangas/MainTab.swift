@@ -24,18 +24,18 @@ struct MainTab: View {
                     ContentView()
                 }
             }
-            Tab("Favoritos", systemImage: "heart.fill") {
-                if !isiPhone {
-                    
-                } else {
-                    FavoritesView()
-                }
-            }
             Tab("Mi colección", systemImage: "books.vertical.fill") {
                 if !isiPhone {
                     
                 } else {
                     UserCollectionView()
+                }
+            }
+            Tab("Usuario", systemImage: "person.circle.fill") {
+                if !isiPhone {
+                    UserProfileView()
+                } else {
+                    UserProfileView()
                 }
             }
             Tab("Search", systemImage: "magnifyingglass", role: .search) {

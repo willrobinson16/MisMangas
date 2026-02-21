@@ -8,6 +8,12 @@
 import Foundation
 import SwiftData
 
+// NOTA: Existen DOS tipos llamados "Manga":
+// 1. struct Manga en /Model/Manga.swift (DTO para red)
+// 2. @Model class Manga en /DataModel/Model.swift (SwiftData)
+// El parámetro de addToCollection recibe el struct DTO
+// FetchDescriptor usa automáticamente la clase SwiftData
+
 /// ViewModel for managing the user's manga collection
 /// Tracks ownership, reading progress, and volume possession
 @Observable @MainActor
@@ -23,7 +29,7 @@ final class UserCollectionViewModel {
 
     /// Adds a manga to the user's collection
     /// - Parameters:
-    ///   - manga: The manga to add
+    ///   - manga: The manga struct (DTO) to add
     ///   - volumes: Optional array of volume numbers already owned
     func addToCollection(manga: Manga, volumes: [Int] = []) {
         guard let context = modelContext else { return }
@@ -33,6 +39,10 @@ final class UserCollectionViewModel {
             return
         }
 
+        // Crear o encontrar el Manga SwiftData
+        ensureMangaExists(manga, in: context)
+
+        // Crear entrada de colección
         let collection = UserMangaCollection(
             mangaID: manga.id,
             volumesOwned: volumes
@@ -40,6 +50,49 @@ final class UserCollectionViewModel {
 
         context.insert(collection)
         try? context.save()
+    }
+
+    /// Asegura que el Manga SwiftData existe en la base de datos
+    private func ensureMangaExists(_ mangaDTO: Manga, in context: ModelContext) {
+        // Verificar si ya existe usando FetchDescriptor (que usa la clase @Model automáticamente)
+        let descriptor = FetchDescriptor<Manga>(
+            predicate: #Predicate { $0.id == mangaDTO.id }
+        )
+
+        // Si ya existe, no hacer nada
+        if (try? context.fetch(descriptor).first) != nil {
+            return
+        }
+
+        // Crear entidades relacionadas
+        let themesSD = mangaDTO.themes.map { Theme(id: $0.id, theme: $0.theme) }
+        let authorsSD = mangaDTO.authors.map { Author(id: $0.id, firstName: $0.firstName, lastName: $0.lastName, role: $0.role) }
+        let genresSD = mangaDTO.genres.map { Genre(id: $0.id, genre: $0.genre) }
+        let demographicsSD = mangaDTO.demographics.map { Demographic(id: $0.id, demographic: $0.demographic) }
+
+        // Crear Manga SwiftData (la clase, no el struct)
+        let mangaSD = Manga(
+            id: mangaDTO.id,
+            status: mangaDTO.status.rawValue,
+            background: mangaDTO.background,
+            title: mangaDTO.title,
+            titleEnglish: mangaDTO.titleEnglish,
+            titleJapanese: mangaDTO.titleJapanese,
+            score: mangaDTO.score,
+            chapters: mangaDTO.chapters,
+            startDate: mangaDTO.startDate,
+            endDate: mangaDTO.endDate,
+            mainPicture: mangaDTO.mainPictureURL,
+            synopsis: mangaDTO.synopsis,
+            url: mangaDTO.urlCleaned,
+            volumes: mangaDTO.volumes,
+            themes: themesSD,
+            authors: authorsSD,
+            genres: genresSD,
+            demographics: demographicsSD
+        )
+
+        context.insert(mangaSD)
     }
 
     /// Removes a manga from the user's collection

@@ -37,8 +37,17 @@ struct EditCollectionSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cerrar") {
+                    Button {
                         dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "checkmark")
                     }
                 }
             }
@@ -65,32 +74,21 @@ struct EditCollectionSheet: View {
 
     private var readingProgressSection: some View {
         Section("Progreso de Lectura") {
-            HStack {
-                Text("Volumen actual:")
-                Spacer()
-
-                Button {
-                    collectionVM.decrementReadingVolume(mangaID: entry.mangaID)
-                } label: {
-                    Image(systemName: "minus.circle")
+            Picker("Volumen actual", selection: Binding(
+                get: { entry.readingVolume ?? 0 },
+                set: { newValue in
+                    collectionVM.updateReadingVolume(mangaID: entry.mangaID, volume: newValue == 0 ? nil : newValue)
                 }
-                .disabled((entry.readingVolume ?? 0) == 0)
-
-                Text("\(entry.readingVolume ?? 0)")
-                    .font(.headline)
-                    .frame(minWidth: 30)
-
-                Button {
-                    collectionVM.incrementReadingVolume(mangaID: entry.mangaID)
-                } label: {
-                    Image(systemName: "plus.circle")
+            )) {
+                Text("No iniciado").tag(0)
+                ForEach(availableVolumes, id: \.self) { volume in
+                    Text("Vol. \(volume)").tag(volume)
                 }
-                .disabled(!canIncreaseReadingVolume)
             }
 
             if let readingVolume = entry.readingVolume,
                readingVolume > 0,
-               let totalVolumes = manga.volumes {
+               let totalVolumes = totalVolumesForProgress {
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
                         Text("Progreso")
@@ -167,7 +165,7 @@ struct EditCollectionSheet: View {
 
     private var statisticsSection: some View {
         Section("Estadísticas") {
-            LabeledContent("Volúmenes poseídos", value: entry.completeCollection ? "\(manga.volumes ?? 0)": "\(entry.volumesOwnedCount)")
+            LabeledContent("Volúmenes poseídos", value: entry.completeCollection ? "\(manga.volumes ?? 0)" : "\(entry.volumesOwnedCount)")
             LabeledContent("Fecha de añadido", value: entry.dateAdded.formatted(date: .abbreviated, time: .omitted))
             LabeledContent("Última actualización", value: entry.lastUpdated.formatted(date: .abbreviated, time: .omitted))
         }
@@ -175,23 +173,41 @@ struct EditCollectionSheet: View {
 
     // MARK: - Computed Properties
 
-    private var canIncreaseReadingVolume: Bool {
-        let currentVolume = entry.readingVolume ?? 0
-
+    /// Volúmenes disponibles para seleccionar en el Picker
+    private var availableVolumes: [Int] {
         if entry.completeCollection {
+            // Colección completa: todos los volúmenes del manga
             if let totalVolumes = manga.volumes {
-                return currentVolume < totalVolumes
+                return Array(1...totalVolumes)
             }
-            return true
+            // Si no se conoce el total, permitir hasta 100
+            return Array(1...100)
+        } else {
+            // Solo volúmenes en posesión
+            let ownedVolumes = entry.volumesOwned
+            if !ownedVolumes.isEmpty {
+                return ownedVolumes.sorted()
+            }
+            // Si no hay volúmenes especificados pero hay total del manga, usar ese límite
+            if let totalVolumes = manga.volumes {
+                return Array(1...totalVolumes)
+            }
+            // Por defecto, permitir hasta 50 volúmenes
+            return Array(1...50)
         }
+    }
 
-        let ownedVolumes = entry.volumesOwned
-        if ownedVolumes.isEmpty {
-            return false
+    /// Total de volúmenes para calcular el progreso
+    private var totalVolumesForProgress: Int? {
+        if entry.completeCollection {
+            return manga.volumes
+        } else {
+            let ownedVolumes = entry.volumesOwned
+            if !ownedVolumes.isEmpty {
+                return ownedVolumes.max()
+            }
+            return manga.volumes
         }
-
-        let maxOwnedVolume = ownedVolumes.max() ?? 0
-        return currentVolume < maxOwnedVolume
     }
 }
 
