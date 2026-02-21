@@ -17,7 +17,7 @@ struct CollectionGridCard: View {
     var body: some View {
         VStack(spacing: 8) {
             // Imagen del manga con badges
-            MainPictureView(picture: manga.mainPicture, namespace: namespace)
+            MainPictureView(picture: manga.mainPictureS, namespace: namespace)
                 .frame(width: 150, height: 225)
                 .overlay(alignment: .topTrailing) {
                     badges

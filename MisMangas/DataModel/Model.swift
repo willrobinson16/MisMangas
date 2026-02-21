@@ -66,6 +66,11 @@ extension Manga {
         authors.map { "\($0.firstName) \($0.lastName) (\($0.role))" }.joined(separator: " • ")
     }
     
+    var mainPictureS: String {
+        guard let url else { return "N/A" }
+        return url.absoluteString
+    }
+    
     /// Test manga
     @MainActor static let test = Manga(
         id: 13,
