@@ -86,7 +86,7 @@ extension Manga {
             Theme(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440002")!, theme: "Adventure")
         ],
         authors: [
-            Author(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440000")!, firstName: "Eiichiro", lastName: "Oda", role: "Story & Art")
+            Author(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440000")!, firstName: "Eiichiro", lastName: "Oda", role: .storyAndArt)
         ],
         genres: [
             Genre(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440001")!, genre: "Action")
@@ -103,11 +103,11 @@ final class Author {
     @Attribute(.unique) var id: UUID
     var firstName: String
     var lastName: String
-    var role: String
+    var role: AuthorRole
     
     @Relationship(deleteRule: .cascade, inverse: \Manga.authors) var mangas: [Manga]
     
-    init(id: UUID, firstName: String, lastName: String, role: String) {
+    init(id: UUID, firstName: String, lastName: String, role: AuthorRole) {
         self.id = id
         self.firstName = firstName
         self.lastName = lastName
@@ -122,28 +122,28 @@ extension Author {
         id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440000")!,
         firstName: "Eiichiro",
         lastName: "Oda",
-        role: "Story & Art"
+        role: .storyAndArt
     )
     
     @MainActor static let masashiKishimoto = Author(
         id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440012")!,
         firstName: "Masashi",
         lastName: "Kishimoto",
-        role: "Story & Art"
+        role: .storyAndArt
     )
     
     @MainActor static let tsugumiOhba = Author(
         id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440022")!,
         firstName: "Tsugumi",
         lastName: "Ohba",
-        role: "Story"
+        role: .story
     )
     
     @MainActor static let takeshiObata = Author(
         id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440023")!,
         firstName: "Takeshi",
         lastName: "Obata",
-        role: "Art"
+        role: .art
     )
     
     @MainActor static let test = [eiichiroOda, masashiKishimoto, tsugumiOhba, takeshiObata]

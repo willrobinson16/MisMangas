@@ -17,6 +17,8 @@ struct UserProfileView: View {
     @Query private var mangas: [Manga]
     @Query private var favoriteManga: [FavoriteManga]
     @Query private var userCollection: [UserMangaCollection]
+    
+    @Namespace private var namespace
 
     @State private var userName: String = "Usuario"
 
@@ -42,6 +44,10 @@ struct UserProfileView: View {
                 .padding()
             }
             .navigationTitle("Mi Perfil")
+            .navigationDestination(for: Manga.self) { manga in
+                MangaView(manga: manga, namespace: namespace)
+            }
+            .toolbarTitleDisplayMode(.inlineLarge)
         }
         .onAppear {
             collectionVM.setModelContext(modelContext)
@@ -187,13 +193,17 @@ struct UserProfileView: View {
                     .padding()
             } else {
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 12) {
+                    LazyHGrid(rows: [GridItem(.fixed(150))], spacing: 12) {
                         ForEach(completeCollectionEntries.prefix(5)) { entry in
                             if let manga = mangas.first(where: { $0.id == entry.mangaID }) {
-                                CompleteMangaCard(manga: manga)
+                                NavigationLink(value: manga) {
+                                    CompleteMangaCard(manga: manga)
+                                }
+                                .buttonStyle(.plain)
                             }
                         }
                     }
+                    .padding(.horizontal, 4)
                 }
             }
         }
@@ -219,10 +229,13 @@ struct UserProfileView: View {
         ScrollView {
             LazyVGrid(columns: [
                 GridItem(.adaptive(minimum: 100, maximum: 150), spacing: 16)
-            ], spacing: 16) {
+            ], spacing: 20) {
                 ForEach(completeCollectionEntries) { entry in
                     if let manga = mangas.first(where: { $0.id == entry.mangaID }) {
-                        CompleteMangaCard(manga: manga)
+                        NavigationLink(value: manga) {
+                            CompleteMangaCard(manga: manga)
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
             }

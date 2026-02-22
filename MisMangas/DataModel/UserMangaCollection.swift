@@ -74,7 +74,7 @@ extension UserMangaCollection {
               let current = readingVolume else {
             return nil
         }
-        return Double(current) / Double(total)
+        return max(0.0, min(1.0, Double(current) / Double(total)))
     }
 
     /// Collection completion percentage (0.0 - 1.0)
@@ -83,7 +83,7 @@ extension UserMangaCollection {
         guard let total = totalVolumes, total > 0 else {
             return nil
         }
-        return Double(volumesOwnedCount) / Double(total)
+        return max(0.0, min(1.0, Double(volumesOwnedCount) / Double(total)))
     }
 
     /// Whether a specific volume is owned

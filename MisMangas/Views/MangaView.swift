@@ -82,6 +82,11 @@ struct MangaView: View {
             }
         }
         .onAppear {
+            print(manga.mainPicture?.absoluteString ?? "")
+            print(manga.url?.absoluteString ?? "")
+            print(manga.genres)
+            print(manga.demographics)
+            print(manga.themes)
             mainPictureVM.getImage(mainPicture: manga.mainPicture)
         }
     }

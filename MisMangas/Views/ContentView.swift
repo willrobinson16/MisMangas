@@ -59,7 +59,8 @@ struct ContentView: View {
             .navigationDestination(for: Manga.self) { manga in
                 MangaView(manga: manga, namespace: namespace)
             }
-            .toolbarRole(.editor)
+//            .toolbarRole(.editor)
+            .toolbarTitleDisplayMode(.inlineLarge)
         }
         .onAppear {
             favoritesVM.setModelContext(context)

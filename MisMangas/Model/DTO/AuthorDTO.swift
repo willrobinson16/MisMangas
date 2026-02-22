@@ -16,6 +16,6 @@ struct AuthorDTO: Codable, Identifiable, Hashable {
     let role: AuthorRole
     
     var toAuthor: Author {
-        Author(id: id, firstName: firstName, lastName: lastName, role: role.rawValue)
+        Author(id: id, firstName: firstName, lastName: lastName, role: role)
     }
 }

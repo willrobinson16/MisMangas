@@ -52,47 +52,10 @@ final class UserCollectionViewModel {
         try? context.save()
     }
 
-    /// Asegura que el Manga SwiftData existe en la base de datos
-    private func ensureMangaExists(_ mangaDTO: Manga, in context: ModelContext) {
-        // Verificar si ya existe usando FetchDescriptor (que usa la clase @Model automáticamente)
-        let descriptor = FetchDescriptor<Manga>(
-            predicate: #Predicate { $0.id == mangaDTO.id }
-        )
-
-        // Si ya existe, no hacer nada
-        if (try? context.fetch(descriptor).first) != nil {
-            return
-        }
-
-        // Crear entidades relacionadas
-        let themesSD = mangaDTO.themes.map { Theme(id: $0.id, theme: $0.theme) }
-        let authorsSD = mangaDTO.authors.map { Author(id: $0.id, firstName: $0.firstName, lastName: $0.lastName, role: $0.role) }
-        let genresSD = mangaDTO.genres.map { Genre(id: $0.id, genre: $0.genre) }
-        let demographicsSD = mangaDTO.demographics.map { Demographic(id: $0.id, demographic: $0.demographic) }
-
-        // Crear Manga SwiftData (la clase, no el struct)
-        let mangaSD = Manga(
-            id: mangaDTO.id,
-            status: mangaDTO.status.rawValue,
-            background: mangaDTO.background,
-            title: mangaDTO.title,
-            titleEnglish: mangaDTO.titleEnglish,
-            titleJapanese: mangaDTO.titleJapanese,
-            score: mangaDTO.score,
-            chapters: mangaDTO.chapters,
-            startDate: mangaDTO.startDate,
-            endDate: mangaDTO.endDate,
-            mainPicture: mangaDTO.mainPictureURL,
-            synopsis: mangaDTO.synopsis,
-            url: mangaDTO.urlCleaned,
-            volumes: mangaDTO.volumes,
-            themes: themesSD,
-            authors: authorsSD,
-            genres: genresSD,
-            demographics: demographicsSD
-        )
-
-        context.insert(mangaSD)
+    /// Asegura que el Manga existe en la base de datos
+    private func ensureMangaExists(_ manga: Manga, in context: ModelContext) {
+        // Usar la función global para insertar/actualizar el manga
+        try? insertOrUpdateManga(in: context, manga)
     }
 
     /// Removes a manga from the user's collection

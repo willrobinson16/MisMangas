@@ -15,7 +15,7 @@ struct DemographicDTO: Codable, Identifiable, Hashable {
 }
 
 extension DemographicDTO {
-    var toDemographic:  Demographic {
+    var toDemographic: Demographic {
         Demographic(id: id, demographic: demographic)
     }
 }

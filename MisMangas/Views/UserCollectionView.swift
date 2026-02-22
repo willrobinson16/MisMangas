@@ -8,13 +8,17 @@
 import SwiftUI
 import SwiftData
 
+enum ViewMode {
+    case list
+    case grid
+}
+
 /// Vista principal de la colección del usuario
 struct UserCollectionView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(UserCollectionViewModel.self) private var collectionVM
 
     @Query(sort: \UserMangaCollection.lastUpdated, order: .reverse) private var collectionEntries: [UserMangaCollection]
-    @Query private var mangas: [Manga]
 
     @Namespace private var namespace
 
@@ -26,14 +30,20 @@ struct UserCollectionView: View {
     @State private var selectedThemes: Set<String> = []
     @State private var selectedGenres: Set<String> = []
 
-    enum ViewMode {
-        case list
-        case grid
+    // Mangas solo de la colección del usuario (optimización de rendimiento)
+    private var collectionMangas: [Manga] {
+        let mangaIDs = collectionEntries.map { $0.mangaID }
+        let descriptor = FetchDescriptor<Manga>(
+            predicate: #Predicate<Manga> { manga in
+                mangaIDs.contains(manga.id)
+            }
+        )
+        return (try? modelContext.fetch(descriptor)) ?? []
     }
 
     // Diccionario para acceso rápido a mangas por ID
     private var mangasDict: [Int: Manga] {
-        Dictionary(uniqueKeysWithValues: mangas.map { ($0.id, $0) })
+        Dictionary(uniqueKeysWithValues: collectionMangas.map { ($0.id, $0) })
     }
 
     // Entradas filtradas (solo las que tienen manga existente)
@@ -66,24 +76,24 @@ struct UserCollectionView: View {
         }
     }
 
-    // Listas únicas para filtros
+    // Listas únicas para filtros (solo de mangas en la colección)
     private var allAuthors: [String] {
-        let authorSet = Set(mangas.flatMap { $0.authors }.map { "\($0.firstName) \($0.lastName)" })
+        let authorSet = Set(collectionMangas.flatMap { $0.authors }.map { "\($0.firstName) \($0.lastName)" })
         return authorSet.sorted()
     }
 
     private var allDemographics: [String] {
-        let demoSet = Set(mangas.flatMap { $0.demographics }.map { $0.demographic })
+        let demoSet = Set(collectionMangas.flatMap { $0.demographics }.map { $0.demographic })
         return demoSet.sorted()
     }
 
     private var allThemes: [String] {
-        let themeSet = Set(mangas.flatMap { $0.themes }.map { $0.theme })
+        let themeSet = Set(collectionMangas.flatMap { $0.themes }.map { $0.theme })
         return themeSet.sorted()
     }
 
     private var allGenres: [String] {
-        let genreSet = Set(mangas.flatMap { $0.genres }.map { $0.genre })
+        let genreSet = Set(collectionMangas.flatMap { $0.genres }.map { $0.genre })
         return genreSet.sorted()
     }
 
@@ -113,7 +123,7 @@ struct UserCollectionView: View {
             }
             .animation(.default, value: viewMode)
             .navigationTitle("Mi Colección")
-            .navigationBarTitleDisplayMode(.large)
+//            .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     HStack(spacing: 16) {
@@ -122,6 +132,7 @@ struct UserCollectionView: View {
                     }
                 }
             }
+            .toolbarTitleDisplayMode(.inlineLarge)
             .sheet(isPresented: $showEditSheet) {
                 if let collection = selectedEntry,
                    let manga = mangasDict[collection.mangaID] {
@@ -140,6 +151,7 @@ struct UserCollectionView: View {
 
     // MARK: - List View
 
+    @ViewBuilder
     private var collectionListView: some View {
         List {
             ForEach(filteredEntries) { entry in
@@ -178,10 +190,13 @@ struct UserCollectionView: View {
 
     // MARK: - Grid View
 
+    @ViewBuilder
     private var collectionGridView: some View {
         ScrollView {
             LazyVGrid(columns: [
-                GridItem(.adaptive(minimum: 150, maximum: 200), spacing: 16)
+                GridItem(.flexible(), spacing: 12),
+                GridItem(.flexible(), spacing: 12),
+                GridItem(.flexible(), spacing: 12)
             ], spacing: 16) {
                 ForEach(filteredEntries) { entry in
                     if let manga = mangasDict[entry.mangaID] {
@@ -236,7 +251,11 @@ struct UserCollectionView: View {
                 Button {
                     selectedAuthors.removeAll()
                 } label: {
-                    Label("Todos", systemImage: selectedAuthors.isEmpty ? "checkmark" : "")
+                    if selectedAuthors.isEmpty {
+                        Label("Todos", systemImage: "checkmark")
+                    } else {
+                        Text("Todos")
+                    }
                 }
 
                 ForEach(allAuthors, id: \.self) { author in
@@ -247,7 +266,11 @@ struct UserCollectionView: View {
                             selectedAuthors.insert(author)
                         }
                     } label: {
-                        Label(author, systemImage: selectedAuthors.contains(author) ? "checkmark" : "")
+                        if selectedAuthors.contains(author) {
+                            Label(author, systemImage: "checkmark")
+                        } else {
+                            Text(author)
+                        }
                     }
                 }
             } label: {
@@ -258,7 +281,11 @@ struct UserCollectionView: View {
                 Button {
                     selectedGenres.removeAll()
                 } label: {
-                    Label("Todos", systemImage: selectedGenres.isEmpty ? "checkmark" : "")
+                    if selectedGenres.isEmpty {
+                        Label("Todos", systemImage: "checkmark")
+                    } else {
+                        Text("Todos")
+                    }
                 }
 
                 ForEach(allGenres, id: \.self) { genre in
@@ -269,7 +296,11 @@ struct UserCollectionView: View {
                             selectedGenres.insert(genre)
                         }
                     } label: {
-                        Label(genre, systemImage: selectedGenres.contains(genre) ? "checkmark" : "")
+                        if selectedGenres.contains(genre) {
+                            Label(genre, systemImage: "checkmark")
+                        } else {
+                            Text(genre)
+                        }
                     }
                 }
             } label: {
@@ -280,7 +311,11 @@ struct UserCollectionView: View {
                 Button {
                     selectedDemographics.removeAll()
                 } label: {
-                    Label("Todos", systemImage: selectedDemographics.isEmpty ? "checkmark" : "")
+                    if selectedDemographics.isEmpty {
+                        Label("Todos", systemImage: "checkmark")
+                    } else {
+                        Text("Todos")
+                    }
                 }
 
                 ForEach(allDemographics, id: \.self) { demographic in
@@ -291,7 +326,11 @@ struct UserCollectionView: View {
                             selectedDemographics.insert(demographic)
                         }
                     } label: {
-                        Label(demographic, systemImage: selectedDemographics.contains(demographic) ? "checkmark" : "")
+                        if selectedDemographics.contains(demographic) {
+                            Label(demographic, systemImage: "checkmark")
+                        } else {
+                            Text(demographic)
+                        }
                     }
                 }
             } label: {
@@ -302,7 +341,11 @@ struct UserCollectionView: View {
                 Button {
                     selectedThemes.removeAll()
                 } label: {
-                    Label("Todos", systemImage: selectedThemes.isEmpty ? "checkmark" : "")
+                    if selectedThemes.isEmpty {
+                        Label("Todos", systemImage: "checkmark")
+                    } else {
+                        Text("Todos")
+                    }
                 }
 
                 ForEach(allThemes, id: \.self) { theme in
@@ -313,7 +356,11 @@ struct UserCollectionView: View {
                             selectedThemes.insert(theme)
                         }
                     } label: {
-                        Label(theme, systemImage: selectedThemes.contains(theme) ? "checkmark" : "")
+                        if selectedThemes.contains(theme) {
+                            Label(theme, systemImage: "checkmark")
+                        } else {
+                            Text(theme)
+                        }
                     }
                 }
             } label: {

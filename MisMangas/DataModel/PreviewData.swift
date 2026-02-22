@@ -30,7 +30,7 @@ extension Manga {
             Theme(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440011")!, theme: "Super Power")
         ],
         authors: [
-            Author(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440012")!, firstName: "Masashi", lastName: "Kishimoto", role: "Story & Art")
+            Author(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440012")!, firstName: "Masashi", lastName: "Kishimoto", role: .storyAndArt)
         ],
         genres: [
             Genre(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440013")!, genre: "Action"),
@@ -63,8 +63,8 @@ extension Manga {
             Theme(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440021")!, theme: "Supernatural")
         ],
         authors: [
-            Author(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440022")!, firstName: "Tsugumi", lastName: "Ohba", role: "Story"),
-            Author(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440023")!, firstName: "Takeshi", lastName: "Obata", role: "Art")
+            Author(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440022")!, firstName: "Tsugumi", lastName: "Ohba", role: .story),
+            Author(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440023")!, firstName: "Takeshi", lastName: "Obata", role: .art)
         ],
         genres: [
             Genre(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440024")!, genre: "Mystery"),
@@ -97,7 +97,7 @@ extension Manga {
             Theme(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440031")!, theme: "Survival")
         ],
         authors: [
-            Author(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440032")!, firstName: "Hajime", lastName: "Isayama", role: "Story & Art")
+            Author(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440032")!, firstName: "Hajime", lastName: "Isayama", role: .storyAndArt)
         ],
         genres: [
             Genre(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440033")!, genre: "Action"),
@@ -131,7 +131,7 @@ extension Manga {
             Theme(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440042")!, theme: "Mythology")
         ],
         authors: [
-            Author(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440043")!, firstName: "Kentarou", lastName: "Miura", role: "Story & Art")
+            Author(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440043")!, firstName: "Kentarou", lastName: "Miura", role: .storyAndArt)
         ],
         genres: [
             Genre(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440044")!, genre: "Action"),
@@ -165,7 +165,7 @@ extension Manga {
             Theme(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440050")!, theme: "Military")
         ],
         authors: [
-            Author(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440051")!, firstName: "Hiromu", lastName: "Arakawa", role: "Story & Art")
+            Author(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440051")!, firstName: "Hiromu", lastName: "Arakawa", role: .storyAndArt)
         ],
         genres: [
             Genre(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440052")!, genre: "Action"),
@@ -198,7 +198,7 @@ extension Manga {
             Theme(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440060")!, theme: "Romantic Subtext")
         ],
         authors: [
-            Author(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440061")!, firstName: "Natsuki", lastName: "Takaya", role: "Story & Art")
+            Author(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440061")!, firstName: "Natsuki", lastName: "Takaya", role: .storyAndArt)
         ],
         genres: [
             Genre(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440062")!, genre: "Drama"),
@@ -232,7 +232,7 @@ extension Manga {
             Theme(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440072")!, theme: "Samurai")
         ],
         authors: [
-            Author(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440073")!, firstName: "Takehiko", lastName: "Inoue", role: "Story & Art")
+            Author(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440073")!, firstName: "Takehiko", lastName: "Inoue", role: .storyAndArt)
         ],
         genres: [
             Genre(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440074")!, genre: "Action"),
@@ -264,7 +264,7 @@ extension Manga {
             Theme(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440080")!, theme: "Childcare")
         ],
         authors: [
-            Author(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440081")!, firstName: "Tatsuya", lastName: "Endou", role: "Story & Art")
+            Author(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440081")!, firstName: "Tatsuya", lastName: "Endou", role: .storyAndArt)
         ],
         genres: [
             Genre(id: UUID(uuidString: "550E8400-E29B-41D4-A716-446655440082")!, genre: "Action"),

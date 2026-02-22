@@ -66,7 +66,7 @@ struct CollectionEntryRow: View {
                 .font(.caption2)
                 .foregroundStyle(.orange)
 
-            Text("\(entry.volumesOwnedCount)")
+            Text("\(entry.completeCollection ? (manga.volumes ?? 0) : entry.volumesOwnedCount)")
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
@@ -96,8 +96,8 @@ struct CollectionEntryRow: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
-                if let totalVolumes = manga.volumes,
-                   let progress = entry.readingProgress(totalVolumes: totalVolumes) {
+                if let totalVolumes = manga.volumes, totalVolumes > 0 {
+                    let progress = min(Double(currentVolume) / Double(totalVolumes), 1.0)
                     ProgressView(value: progress)
                         .frame(width: 40)
                         .tint(.blue)

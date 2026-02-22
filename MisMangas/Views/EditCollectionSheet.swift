@@ -11,12 +11,16 @@ import SwiftData
 /// Sheet para editar una entrada de la colección del usuario
 struct EditCollectionSheet: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
 
-    let entry: UserMangaCollection
+    @Bindable var entry: UserMangaCollection
     let manga: Manga
     let collectionVM: UserCollectionViewModel
 
     @State private var newVolumeNumber: String = ""
+    @State private var showValidationError: Bool = false
+    @State private var currentReadingVolume: Int = 0
+    @FocusState private var isTextFieldFocused: Bool
 
     var body: some View {
         NavigationStack {
@@ -32,6 +36,10 @@ struct EditCollectionSheet: View {
 
                 // Estadísticas
                 statisticsSection
+            }
+            .onAppear {
+                collectionVM.setModelContext(modelContext)
+                currentReadingVolume = entry.readingVolume ?? 0
             }
             .navigationTitle("Editar Colección")
             .navigationBarTitleDisplayMode(.inline)
@@ -50,7 +58,13 @@ struct EditCollectionSheet: View {
                         Image(systemName: "checkmark")
                     }
                 }
+                ToolbarItem(placement: .keyboard) {
+                    Button("Listo") {
+                        isTextFieldFocused = false
+                    }
+                }
             }
+            .scrollDismissesKeyboard(.interactively)
         }
     }
 
@@ -74,41 +88,41 @@ struct EditCollectionSheet: View {
 
     private var readingProgressSection: some View {
         Section("Progreso de Lectura") {
-            Picker("Volumen actual", selection: Binding(
-                get: { entry.readingVolume ?? 0 },
-                set: { newValue in
-                    collectionVM.updateReadingVolume(mangaID: entry.mangaID, volume: newValue == 0 ? nil : newValue)
-                }
-            )) {
+            Picker("Volumen actual", selection: $currentReadingVolume) {
                 Text("No iniciado").tag(0)
                 ForEach(availableVolumes, id: \.self) { volume in
                     Text("Vol. \(volume)").tag(volume)
                 }
             }
+            .onChange(of: currentReadingVolume) { _, newValue in
+                collectionVM.updateReadingVolume(mangaID: entry.mangaID, volume: newValue == 0 ? nil : newValue)
+            }
 
             if let readingVolume = entry.readingVolume,
                readingVolume > 0,
-               let totalVolumes = totalVolumesForProgress {
+               let totalVolumes = totalVolumesForProgress, totalVolumes > 0 {
+                let progress = min(Double(readingVolume) / Double(totalVolumes), 1.0)
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
                         Text("Progreso")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                         Spacer()
-                        Text("\(Int((Double(readingVolume) / Double(totalVolumes)) * 100))%")
+                        Text("\(Int(progress * 100))%")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
-                    ProgressView(value: Double(readingVolume), total: Double(totalVolumes))
+                    ProgressView(value: progress)
                 }
             }
 
             Button {
                 collectionVM.updateReadingVolume(mangaID: entry.mangaID, volume: nil)
+                currentReadingVolume = 0
             } label: {
                 Label("Reiniciar lectura", systemImage: "arrow.counterclockwise")
             }
-            .disabled(entry.readingVolume == nil)
+            .disabled(currentReadingVolume == 0)
         }
     }
 
@@ -126,14 +140,30 @@ struct EditCollectionSheet: View {
                     HStack {
                         TextField("Número de volumen", text: $newVolumeNumber)
                             .keyboardType(.numberPad)
+                            .focused($isTextFieldFocused)
+                            .onChange(of: newVolumeNumber) { _, _ in
+                                showValidationError = false
+                            }
 
                         Button("Añadir") {
                             if let volumeNumber = Int(newVolumeNumber) {
-                                collectionVM.addVolume(mangaID: entry.mangaID, volumeNumber: volumeNumber)
-                                newVolumeNumber = ""
+                                if isValidVolume(volumeNumber) {
+                                    collectionVM.addVolume(mangaID: entry.mangaID, volumeNumber: volumeNumber)
+                                    newVolumeNumber = ""
+                                    isTextFieldFocused = false
+                                    showValidationError = false
+                                } else {
+                                    showValidationError = true
+                                }
                             }
                         }
                         .disabled(newVolumeNumber.isEmpty)
+                    }
+
+                    if showValidationError {
+                        Text("El volumen debe estar entre 1 y \(manga.volumes ?? 999)")
+                            .font(.caption)
+                            .foregroundStyle(.red)
                     }
 
                     let volumes = entry.volumesOwned
@@ -169,6 +199,20 @@ struct EditCollectionSheet: View {
             LabeledContent("Fecha de añadido", value: entry.dateAdded.formatted(date: .abbreviated, time: .omitted))
             LabeledContent("Última actualización", value: entry.lastUpdated.formatted(date: .abbreviated, time: .omitted))
         }
+    }
+
+    // MARK: - Helper Functions
+
+    /// Valida que el volumen esté en el rango válido (1 a totalVolumes)
+    private func isValidVolume(_ volume: Int) -> Bool {
+        guard volume >= 1 else { return false }
+
+        if let totalVolumes = manga.volumes {
+            return volume <= totalVolumes
+        }
+
+        // Si no se conoce el total, permitir hasta 999
+        return volume <= 999
     }
 
     // MARK: - Computed Properties

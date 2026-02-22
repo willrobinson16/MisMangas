@@ -15,91 +15,49 @@ struct CollectionGridCard: View {
     let namespace: Namespace.ID
 
     var body: some View {
-        VStack(spacing: 8) {
-            // Imagen del manga con badges
+        VStack(spacing: 4) {
+            // Imagen con badge verde encima (como CompleteMangaCard)
             MainPictureView(picture: manga.mainPicture, namespace: namespace)
-                .frame(width: 150, height: 225)
+                .frame(width: 100, height: 150)
                 .overlay(alignment: .topTrailing) {
-                    badges
+                    if entry.completeCollection {
+                        Image(systemName: "checkmark.seal.fill")
+                            .symbolRenderingMode(.monochrome)
+                            .foregroundStyle(.green)
+                            .font(.title3)
+                            .shadow(radius: 2)
+                            .padding(6)
+                    }
                 }
 
             // Título
             Text(manga.title)
-                .font(.subheadline.bold())
+                .font(.caption)
                 .lineLimit(2)
+                .frame(width: 100)
                 .multilineTextAlignment(.center)
-                .frame(maxWidth: .infinity, minHeight: 34)
 
-            // Info de colección
-            VStack(spacing: 4) {
-                // Volúmenes poseídos
-                HStack(spacing: 4) {
-                    Image(systemName: "books.vertical.fill")
-                        .font(.caption2)
-                        .foregroundStyle(.orange)
+            // Volúmenes
+            HStack(spacing: 4) {
+                Image(systemName: "books.vertical.fill")
+                    .font(.caption2)
+                    .foregroundStyle(.orange)
 
-                    Text("\(entry.completeCollection ? (manga.volumes ?? 0) : entry.volumesOwnedCount)")
-                        .font(.caption)
-
-                    if let totalVolumes = manga.volumes {
-                        Text("/ \(totalVolumes)")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-
-                // Progreso de lectura
-                HStack(spacing: 4) {
-                    Image(systemName: "book.pages")
-                        .font(.caption2)
-                        .foregroundStyle(entry.readingVolume != nil ? .blue : .clear)
-
-                    if let readingVolume = entry.readingVolume {
-                        Text("Vol. \(readingVolume)")
-                            .font(.caption)
-                    } else {
-                        Text(" ")
-                            .font(.caption)
-                    }
-                }
-                .frame(minHeight: 16)
-
-                // Barra de progreso de lectura
-                if let readingVolume = entry.readingVolume,
-                   readingVolume > 0,
-                   let totalVolumes = totalVolumesForProgress {
-                    ProgressView(value: Double(readingVolume), total: Double(totalVolumes))
-                        .tint(.blue)
-                } else {
-                    ProgressView(value: 0)
-                        .tint(.clear)
-                }
-            }
-            .frame(minHeight: 70)
-        }
-        .frame(height: 380)
-        .padding(12)
-        .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-    }
-
-    private var badges: some View {
-        VStack(spacing: 4) {
-            if entry.completeCollection {
-                Image(systemName: "checkmark.seal.fill")
-                    .foregroundStyle(.green)
-                    .font(.title3)
-                    .shadow(radius: 2)
-            }
-
-            if entry.hasStartedReading {
-                Image(systemName: "book.pages.fill")
-                    .foregroundStyle(.blue)
+                Text("\(entry.completeCollection ? (manga.volumes ?? 0) : entry.volumesOwnedCount)")
                     .font(.caption)
-                    .shadow(radius: 2)
+                    .foregroundStyle(.secondary)
+            }
+
+            // Barra de progreso
+            if let readingVolume = entry.readingVolume,
+               readingVolume > 0,
+               let totalVolumes = totalVolumesForProgress, totalVolumes > 0 {
+                let progress = min(Double(readingVolume) / Double(totalVolumes), 1.0)
+                ProgressView(value: progress)
+                    .tint(.blue)
+                    .frame(width: 100, height: 3)
             }
         }
-        .padding(8)
     }
 
     /// Total de volúmenes para calcular el progreso de lectura
