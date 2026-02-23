@@ -8,7 +8,20 @@
 import Foundation
 
 //MARK: - Manga Response DTO
-/// Complete manga information with related data
+
+/// Data Transfer Object para información completa de un manga desde la API.
+///
+/// Contiene todos los datos de un manga incluyendo sus relaciones con autores,
+/// géneros, temas y demografías. Este DTO se convierte a `Manga` (@Model) para persistencia.
+///
+/// ## Conversión:
+/// ```swift
+/// let manga: Manga = mangaDTO.toManga
+/// ```
+///
+/// ## Campos especiales:
+/// - `synopsis`: Mapeado desde "sypnosis" en la API (typo en backend)
+/// - `mainPicture` y `url`: URLs que requieren limpieza con `.cleanedURL`
 struct MangaDTO: Codable, Identifiable, Hashable {
     let id: Int
     let status: MangaStatus
@@ -38,6 +51,13 @@ struct MangaDTO: Codable, Identifiable, Hashable {
 }
 
 extension MangaDTO {
+    /// Convierte el DTO a un modelo SwiftData `Manga`
+    ///
+    /// Crea todas las entidades relacionadas (Theme, Author, Genre, Demographic)
+    /// y establece las relaciones bidireccionales.
+    ///
+    /// - Note: Esta conversión crea instancias nuevas sin persistir. Use las funciones
+    ///         globales de `ModelContext+MangaPersistence.swift` para persistir correctamente.
     var toManga: Manga {
         Manga(
             id: id,
@@ -60,11 +80,13 @@ extension MangaDTO {
             demographics: demographics.map { Demographic(id: $0.id, demographic: $0.demographic) }
         )
     }
-    
+
+    /// URL limpia de la imagen principal del manga
     nonisolated var mainPictureURL: URL? {
         mainPicture.flatMap { URL(string: $0.cleanedURL) }
     }
-    
+
+    /// URL limpia de la página de MyAnimeList del manga
     nonisolated var urlCleaned: URL? {
         url.flatMap { URL(string: $0.cleanedURL) }
     }

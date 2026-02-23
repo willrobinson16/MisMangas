@@ -10,19 +10,30 @@ import SwiftData
 
 struct BestMangasGridView: View {
     @Environment(\.modelContext) var context
-    
+
+    /// Query de los mejores mangas, ordenados por score descendente
+    /// Lee directamente desde SwiftData para carga instantánea
+    @Query(sort: \Manga.score, order: .reverse) private var bestMangas: [Manga]
+
+    /// ViewModel para gestionar la carga de páginas adicionales
     @State private var bestMangasVM = BestMangasViewModel()
-    
+
     let namespace: Namespace.ID
-    
+
     var body: some View {
             LazyHStack {
-                ForEach(bestMangasVM.bestMangas) { manga in
-                    NavigationLink(value: manga.toManga) {
-                        MainPictureView(picture: manga.mainPictureURL, namespace: namespace)
+                ForEach(bestMangas) { manga in
+                    NavigationLink(value: manga) {
+                        MainPictureView(picture: manga.mainPicture, namespace: namespace)
                     }
                     .buttonStyle(.plain)
                     .padding(.horizontal, 5)
+                }
+
+                // Indicador de carga para paginación
+                if bestMangasVM.isLoading {
+                    ProgressView()
+                        .padding(.horizontal, 5)
                 }
             }
             .scrollTargetLayout()
@@ -30,10 +41,9 @@ struct BestMangasGridView: View {
             .defaultScrollAnchor(.leading)
             .scrollClipDisabled()
             .contentMargins(.horizontal, 30, for: .scrollContent)
-        
-        .task {
-            await bestMangasVM.loadBestMangas()
-        }
+            .onAppear {
+                bestMangasVM.setModelContext(context)
+            }
     }
 }
 
@@ -41,18 +51,3 @@ struct BestMangasGridView: View {
     @Previewable @Namespace var namespace
     BestMangasGridView(namespace: namespace)
 }
-
-
-//if bestMangasVM.bestMangas.count > 1 {
-//    ProgressView()
-//        .onAppear {
-//            let modelContainer = DataContainer(modelContainer: context.container)
-//            Task.detached {
-//                do {
-//                    try await modelContainer.loadNextPage()
-//                } catch {
-//                    print(error)
-//                }
-//            }
-//        }
-//}

@@ -71,4 +71,13 @@ extension URL {
                 URLQueryItem(name: "page", value: "\(page)")
             ])
     }
+
+    static func getBestMangas(page: Int, per: Int = 10) -> URL {
+        listBase
+            .appending(path: "bestMangas")
+            .appending(queryItems: [
+                URLQueryItem(name: "per", value: "\(per)"),
+                URLQueryItem(name: "page", value: "\(page)")
+            ])
+    }
 }

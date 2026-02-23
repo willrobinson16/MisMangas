@@ -8,7 +8,24 @@
 import Foundation
 import SwiftData
 
-//MARK: - Persistence models
+//MARK: - Modelos de Persistencia
+
+/// Modelo principal de Manga para persistencia con SwiftData.
+///
+/// Representa un manga completo con toda su información y relaciones.
+/// Utiliza el macro `@Model` de SwiftData para conversión automática a Core Data.
+///
+/// ## Características:
+/// - ID único con restricción de unicidad
+/// - Índice en el campo `title` para optimizar búsquedas
+/// - Relaciones bidireccionales con Theme, Author, Genre y Demographic
+/// - Propiedades opcionales para información que puede no estar disponible
+///
+/// ## Relaciones:
+/// - **themes**: Temas asociados al manga (ej. "Adventure", "Fantasy")
+/// - **authors**: Autores que participaron en la creación del manga
+/// - **genres**: Géneros del manga (ej. "Action", "Romance")
+/// - **demographics**: Demografía objetivo (ej. "Shounen", "Seinen")
 @Model
 final class Manga {
     #Index<Manga>([\.title])
@@ -54,14 +71,17 @@ final class Manga {
 }
 
 extension Manga {
+    /// Formatea el score del manga con 2 decimales
     var scoreS: String {
         score.formatted(.number.precision(.integerAndFractionLength(integer: 1, fraction: 2)))
     }
-    
+
+    /// Retorna una cadena con los nombres completos de todos los autores, separados por comas
     var authorsString: String {
         authors.map { "\($0.firstName) \($0.lastName)" }.joined(separator: ", ")
     }
-    
+
+    /// Retorna una cadena con los nombres completos de todos los autores y sus roles, separados por puntos medios
     var authorsWithRole: String {
         authors.map { "\($0.firstName) \($0.lastName) (\($0.role))" }.joined(separator: " • ")
     }
@@ -97,6 +117,18 @@ extension Manga {
     )
 }
 
+/// Modelo de Autor para persistencia con SwiftData.
+///
+/// Representa un autor de manga con su información personal y rol.
+///
+/// ## Características:
+/// - UUID único con restricción de unicidad
+/// - Índices en firstName y lastName para optimizar búsquedas
+/// - Relación inversa con Manga con regla de borrado en cascada
+/// - Rol específico del autor (Story, Art, o Story and Art)
+///
+/// ## Relaciones:
+/// - **mangas**: Lista de mangas en los que ha participado este autor
 @Model
 final class Author {
     #Index<Author>([\.firstName], [\.lastName])
@@ -149,6 +181,14 @@ extension Author {
     @MainActor static let test = [eiichiroOda, masashiKishimoto, tsugumiOhba, takeshiObata]
 }
 
+/// Modelo de Tema para persistencia con SwiftData.
+///
+/// Representa un tema narrativo o temática del manga (ej. "Adventure", "Fantasy", "School Life").
+///
+/// ## Características:
+/// - UUID único con restricción de unicidad
+/// - Índice en el campo `theme` para optimizar búsquedas
+/// - Relación muchos-a-muchos con Manga
 @Model
 final class Theme {
     #Index<Theme>([\.theme])
@@ -161,6 +201,14 @@ final class Theme {
     }
 }
 
+/// Modelo de Género para persistencia con SwiftData.
+///
+/// Representa un género del manga (ej. "Action", "Romance", "Horror").
+///
+/// ## Características:
+/// - UUID único con restricción de unicidad
+/// - Índice en el campo `genre` para optimizar búsquedas
+/// - Relación muchos-a-muchos con Manga
 @Model
 final class Genre {
     #Index<Genre>([\.genre])
@@ -173,6 +221,14 @@ final class Genre {
     }
 }
 
+/// Modelo de Demografía para persistencia con SwiftData.
+///
+/// Representa la demografía objetivo del manga (ej. "Shounen", "Seinen", "Shoujo").
+///
+/// ## Características:
+/// - UUID único con restricción de unicidad
+/// - Índice en el campo `demographic` para optimizar búsquedas
+/// - Relación muchos-a-muchos con Manga
 @Model
 final class Demographic {
     #Index<Demographic>([\.demographic])

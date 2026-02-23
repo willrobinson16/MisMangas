@@ -230,7 +230,7 @@ private nonisolated func updateManga(
     genres: [Genre],
     demographics: [Demographic]
 ) {
-    manga.status = statusToString(dto.status)
+    manga.status = dto.status.rawValue
     manga.background = dto.background
     manga.title = dto.title
     manga.titleEnglish = dto.titleEnglish
@@ -259,7 +259,7 @@ private nonisolated func createManga(
 ) -> Manga {
     Manga(
         id: dto.id,
-        status: statusToString(dto.status),
+        status: dto.status.rawValue,
         background: dto.background,
         title: dto.title,
         titleEnglish: dto.titleEnglish,
@@ -279,20 +279,3 @@ private nonisolated func createManga(
     )
 }
 
-// MARK: - Helper
-
-/// Convierte el enum MangaStatus a String para persistencia
-private nonisolated func statusToString(_ status: MangaStatus) -> String {
-    switch status {
-    case .discontinued:
-        "discontinued"
-    case .onHiatus:
-        "on_hiatus"
-    case .currentlyPublishing:
-        "currently_publishing"
-    case .finished:
-        "finished"
-    case .none:
-        "none"
-    }
-}

@@ -13,6 +13,7 @@ import NetworkAPI
 protocol NetworkRepository: Sendable, NetworkInteractor {
     func getAuthors() async throws -> [AuthorDTO]
     func getBestMangas() async throws -> MangaPageDTO
+    func getBestMangasPage(page: Int, per: Int) async throws -> MangaPageDTO
     func getMangaByAuthor(id: String) async throws -> [MangaDTO]
     func getMangaByTheme(theme: Theme) async throws -> [MangaDTO]
     func getDemographics() async throws -> [DemographicDTO]
@@ -41,7 +42,12 @@ struct Network: NetworkRepository {
     func getBestMangas() async throws -> MangaPageDTO {
         try await getJSON(.get(url: .getBestMangas), type: MangaPageDTO.self)
     }
-    
+
+    /// Obtiene los mejores mangas de una página específica.
+    func getBestMangasPage(page: Int, per: Int = 10) async throws -> MangaPageDTO {
+        try await getJSON(.get(url: .getBestMangas(page: page, per: per)), type: MangaPageDTO.self)
+    }
+
     /// Obtiene los mangas de un autor específico.
     func getMangaByAuthor(id: String) async throws -> [MangaDTO] {
         try await getJSON(.get(url: .mangaByAuthor(id: id)), type: [MangaDTO].self)

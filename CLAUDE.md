@@ -155,7 +155,9 @@ MisMangas/
 - ContentView with infinite scroll and pull-to-refresh
 - MangaView detail screen with stretchy header
 - SearchView with real-time search functionality
-- MainTab navigation structure (3 tabs)
+- UserCollectionView with list/grid modes, filters (authors, genres, demographics, themes)
+- EditCollectionSheet for managing collection entries
+- MainTab navigation structure (3+ tabs)
 
 **Components**:
 - MangaRow, MangaGridView for list/grid display
@@ -180,18 +182,18 @@ MisMangas/
 ### 🚧 In Progress
 
 **Views (Partially Implemented)**:
-- ListByAuthors (structure created, empty body)
-- FavoritesView (placeholder only)
+- ListByAuthors (pending implementation)
 
 ### ❌ Pending Implementation
 
 **Views**:
-- Complete ListByAuthors view implementation
-- Complete FavoritesView with grid/list toggle
+- Complete ListByAuthors view implementation (NEXT PRIORITY)
 - iPad adaptive layouts (sidebar, multi-column)
+- User authentication views (login, register, profile)
 
 **Network**:
-- POST request implementation (commented out in URLRequest.swift)
+- POST request implementation for authentication (commented out in URLRequest.swift)
+- User authentication endpoints (register, login, token renewal)
 - CustomSearch endpoint integration
 - NetworkError Sendable conformance
 - Search by "contains" integration (method exists but not used in UI)
@@ -200,10 +202,10 @@ MisMangas/
 - Error state views with retry mechanism
 - Loading state improvements (skeleton screens, shimmer)
 - Enhanced MangaView (synopsis, volumes, chapters display)
-- Filter controls (by genre, theme, demographic)
-- Sort controls (by score, date, title)
-- Favorites add/remove functionality
-- User Collection View (UI for UserMangaCollection management)
+- Sort controls in ContentView (by score, date, title)
+- User authentication system (login, register, session management)
+- Cloud sync for user collection (requires authentication)
+- Authors list and filtering by author
 
 ### 🔍 Recent Changes
 
@@ -437,25 +439,30 @@ Este plan organiza el desarrollo restante de la app en fases progresivas.
 ### FASE 1: Completar Funcionalidades Básicas 🎯
 **Prioridad**: ALTA | **Estimación**: 1-2 días
 
-#### 1.1 FavoritesView
-- [ ] Implementar lista/grid de favoritos usando `@Query` de FavoriteManga
-- [ ] Toggle entre vista lista y grid
-- [ ] Navegación a MangaView con hero animation
-- [ ] Empty state cuando no hay favoritos
-- [ ] Pull-to-refresh
+#### 1.1 UserCollectionView ✅ COMPLETADA
+- [x] Implementar lista/grid usando `@Query` de UserMangaCollection
+- [x] Toggle entre vista lista y grid
+- [x] Navegación con EditCollectionSheet
+- [x] Empty state cuando no hay mangas
+- [x] Filtros por autores, géneros, demographics, temas
+- [x] Swipe actions y context menu
+- [x] Gestión de volúmenes y progreso de lectura
 
-#### 1.2 Funcionalidad de Favoritos
-- [ ] Botón de favoritos en MangaView (corazón)
-- [ ] Lógica para añadir/eliminar favoritos en FavoritesViewModel
-- [ ] Conversión Manga → FavoriteManga
-- [ ] Feedback visual al añadir/eliminar
-
-#### 1.3 ListByAuthors View
+#### 1.2 ListByAuthors View (SIGUIENTE)
 - [ ] Lista de autores con SwiftData @Query
 - [ ] Navegación a lista de mangas del autor seleccionado
 - [ ] Contador de mangas por autor
 - [ ] Búsqueda/filtrado de autores
 - [ ] Secciones alfabéticas (A-Z)
+- [ ] Integración con endpoint `getMangaByAuthor`
+
+#### 1.3 User Authentication System (DESPUÉS DE AUTHORS)
+- [ ] Implementar POST request en URLRequest.swift
+- [ ] Endpoints de autenticación (register, login, renewToken)
+- [ ] UserAuthViewModel para gestión de sesión
+- [ ] Login/Register views
+- [ ] Token storage seguro (Keychain)
+- [ ] Session persistence
 
 ### FASE 2: Mejorar MangaView (Detalle) 📖
 **Prioridad**: ALTA | **Estimación**: 1 día
@@ -579,10 +586,10 @@ Este plan organiza el desarrollo restante de la app en fases progresivas.
 ## PRIORIZACIÓN RECOMENDADA
 
 ### Sprint 1 (Semana 1)
-1. ✅ FavoritesView completa
-2. ✅ Funcionalidad de añadir/eliminar favoritos
-3. ✅ ListByAuthors completa
-4. ✅ MangaView mejorada con toda la información
+1. ✅ UserCollectionView completa (lista/grid, filtros, gestión de volúmenes)
+2. ⏳ ListByAuthors completa (EN PROGRESO)
+3. ⏳ User Authentication System (login, register, session)
+4. ⏳ MangaView mejorada con toda la información
 
 ### Sprint 2 (Semana 2)
 1. ✅ Error handling completo
@@ -611,6 +618,16 @@ Este plan organiza el desarrollo restante de la app en fases progresivas.
 2. POST method comentado en URLRequest.swift
 3. Error handling con prints (reemplazar por logging apropiado)
 4. Algunos componentes sin tests
+
+### Documentación
+- ✅ **ARQUITECTURA.md** (600+ líneas): Documento completo de arquitectura del proyecto
+- ✅ **DOCUMENTACION_RESUMEN.md**: Índice de toda la documentación realizada
+- ✅ **Comentarios `///`**: 18+ archivos documentados con comentarios DocC-compatible
+  - DataModel: Model.swift, FavoriteManga.swift, DataContainer.swift
+  - ViewModels: BestMangasViewModel, SearchViewModel, FavoritesViewModel
+  - Network: NetworkRepository.swift (mejorado)
+  - DTOs: MangaDTO, AuthorDTO, ThemeDTO, GenreDTO, DemographicDTO, MangaPageDTO, MangaStatus
+  - Extensions: ModelContext+MangaPersistence (verificado)
 
 ---
 
@@ -653,7 +670,106 @@ Este plan organiza el desarrollo restante de la app en fases progresivas.
 - Documento limpio, mantenible y estructurado
 - Plan de desarrollo claro y accionable
 
-**Próximos Pasos**:
-- Comenzar FASE 1 del plan: Implementar FavoritesView completa
-- Implementar ListByAuthors con navegación y filtrado
-- Añadir funcionalidad de añadir/eliminar favoritos en MangaView
+**Próximos Pasos** (ACTUALIZADOS 2026-02-22):
+- ✅ UserCollectionView completada con filtros y gestión completa
+- ⏳ SIGUIENTE: Implementar ListByAuthors con navegación y contador de mangas
+- ⏳ DESPUÉS: Sistema de autenticación de usuario (POST requests, login, register)
+- ⏳ Cloud sync de colección de usuario con backend
+
+### Sesión 2026-02-22: Documentación Completa y Refactorización de Concurrencia
+
+**Objetivo**: Documentar todo el proyecto y solucionar warnings de concurrencia Swift 6
+
+**Cambios realizados**:
+
+1. ✅ **Solución de Warnings de Concurrencia Swift 6**
+   - Refactorización de `ModelContext+MangaPersistence.swift`
+   - Cambio de extension methods a funciones globales `nonisolated`
+   - Eliminación completa de warnings de data races
+   - Patrón: `context.insertOrUpdateManga(from:)` → `insertOrUpdateManga(in: context, from:)`
+   - ✅ **BUILD SUCCEEDED** con ZERO warnings de código
+
+2. ✅ **Documentación Masiva del Proyecto** (18+ archivos)
+
+   **DataModel** (4 archivos):
+   - `Model.swift`: Documentados Manga, Author, Theme, Genre, Demographic con características y relaciones
+   - `FavoriteManga.swift`: Documentado con ejemplo de uso
+   - `DataContainer.swift`: Cada método documentado con parámetros, returns y throws
+   - `UserMangaCollection.swift`: Verificado (ya bien documentado)
+
+   **ViewModels** (4 archivos):
+   - `BestMangasViewModel.swift`: Documentado con características y ejemplos SwiftUI
+   - `SearchViewModel.swift`: Documentado incluyendo explicación de debounce
+   - `FavoritesViewModel.swift`: Todas las funciones CRUD documentadas
+   - `UserCollectionViewModel.swift`: Verificado (ya bien documentado)
+
+   **Network** (3 archivos):
+   - `NetworkRepository.swift`: Mejorado con documentación completa de endpoints
+   - `NetworkError.swift`: Verificado (bien documentado)
+   - `ImageDownloader.swift`: Verificado (excelente documentación previa)
+
+   **DTOs** (7 archivos):
+   - `MangaDTO.swift`: Documentado con explicación de conversión y campos especiales
+   - `AuthorDTO.swift`: Documentado completamente
+   - `ThemeDTO.swift`: Documentado con ejemplo JSON
+   - `GenreDTO.swift`: Documentado con ejemplo JSON
+   - `DemographicDTO.swift`: Documentado con ejemplo JSON
+   - `MangaPageDTO.swift`: Documentado con estructura de paginación
+   - `MangaStatus.swift`: Todos los estados documentados
+
+3. ✅ **Creación de Documentación de Arquitectura**
+
+   **ARQUITECTURA.md** (600+ líneas):
+   - Descripción general del proyecto y tecnologías
+   - Estructura completa de directorios con explicaciones
+   - Capas de arquitectura detalladas (Presentación, Datos, DTOs)
+   - Flujos de datos completos (carga, búsqueda, favoritos, colección)
+   - Persistencia con funciones globales explicadas
+   - Concurrencia y aislamiento de actores
+   - Navegación y gestión de estado
+   - Optimizaciones implementadas
+   - Configuración de API con tabla de endpoints
+   - Próximas mejoras y deuda técnica
+   - Convenciones de código
+
+   **DOCUMENTACION_RESUMEN.md**:
+   - Índice completo de archivos documentados
+   - Estadísticas de documentación
+   - Formato utilizado
+   - Verificación de compilación
+   - Beneficios de la documentación
+
+4. ✅ **Mejoras Arquitectónicas**
+   - Funciones globales `nonisolated` para persistencia
+   - Compatible con @ModelActor y @MainActor
+   - Sin problemas de data races
+   - Código más limpio y mantenible
+
+**Estructura de Documentación**:
+- Comentarios `///` en todo el código (DocC-compatible)
+- Documentación completa de clases, structs, métodos, propiedades
+- Ejemplos de uso incluidos donde es relevante
+- Parámetros, returns y throws documentados
+- Secciones MARK para organización
+
+**Resultado**:
+- ✅ **18 archivos** con documentación completa en español
+- ✅ **2 documentos MD** nuevos (ARQUITECTURA.md, DOCUMENTACION_RESUMEN.md)
+- ✅ **ZERO warnings** de concurrencia Swift 6
+- ✅ **BUILD SUCCEEDED** sin errores
+- ✅ Proyecto completamente documentado y listo para desarrollo
+
+**Próximos Pasos** (Planificación actualizada):
+- ✅ **UserCollectionView**: Vista completada con lista/grid, filtros avanzados, gestión de volúmenes
+- ⏳ **ListByAuthors**: Próxima vista a implementar
+  - Lista de autores desde SwiftData
+  - Navegación a mangas del autor
+  - Contador de obras por autor
+  - Secciones alfabéticas
+- ⏳ **Sistema de Autenticación**:
+  - POST requests en URLRequest.swift
+  - Endpoints: register, login, renewToken
+  - UserAuthViewModel
+  - Login/Register views
+  - Almacenamiento seguro de tokens
+- ⏳ **Sincronización Cloud**: Integrar colección de usuario con backend (requiere auth)

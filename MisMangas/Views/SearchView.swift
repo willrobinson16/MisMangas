@@ -40,24 +40,13 @@ struct SearchView: View {
                         NavigationLink(value: mangaDTO) {
                             MangaRow(manga: mangaDTO.toManga, namespace: namespace)
                         }
-                        .swipeActions {
-                            Button {
-                                favoritesVM.toggleFavorite(mangaDTO.toManga)
-                            } label: {
-                                Label(isFavorite ? "Quitar" : "Añadir",
-                                      systemImage: isFavorite ? "heart.slash" : "heart.fill")
-                            }
-                            .tint(isFavorite ? .secondary : .red)
-                        }
-                        .swipeActions(edge: .leading) {
-                            Button {
-                                collectionVM.toggleInCollection(mangaDTO.toManga)
-                            } label: {
-                                Label(isInCollection ? "Quitar" : "Añadir",
-                                      systemImage: isInCollection ? "bookmark.slash.fill" : "bookmark.fill")
-                            }
-                            .tint(isInCollection ? .secondary : .blue)
-                        }
+                        .mangaSwipeActions(
+                            manga: mangaDTO.toManga,
+                            isFavorite: isFavorite,
+                            isInCollection: isInCollection,
+                            favoritesVM: favoritesVM,
+                            collectionVM: collectionVM
+                        )
                     }
                     .listStyle(.plain)
                 }

@@ -86,6 +86,21 @@ extension UserMangaCollection {
         return max(0.0, min(1.0, Double(volumesOwnedCount) / Double(total)))
     }
 
+    /// Total de volúmenes para calcular el progreso de lectura
+    /// - Parameter mangaTotalVolumes: Total de volúmenes del manga (opcional)
+    /// - Returns: Total de volúmenes considerando si la colección está completa o no
+    func totalVolumesForProgress(mangaTotalVolumes: Int?) -> Int? {
+        if completeCollection {
+            return mangaTotalVolumes
+        } else {
+            let ownedVolumes = volumesOwned
+            if !ownedVolumes.isEmpty {
+                return ownedVolumes.max()
+            }
+            return mangaTotalVolumes
+        }
+    }
+
     /// Whether a specific volume is owned
     func ownsVolume(_ volumeNumber: Int) -> Bool {
         volumesOwned.contains(volumeNumber)

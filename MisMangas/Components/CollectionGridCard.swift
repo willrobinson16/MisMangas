@@ -62,15 +62,7 @@ struct CollectionGridCard: View {
 
     /// Total de volúmenes para calcular el progreso de lectura
     private var totalVolumesForProgress: Int? {
-        if entry.completeCollection {
-            return manga.volumes
-        } else {
-            let ownedVolumes = entry.volumesOwned
-            if !ownedVolumes.isEmpty {
-                return ownedVolumes.max()
-            }
-            return manga.volumes
-        }
+        entry.totalVolumesForProgress(mangaTotalVolumes: manga.volumes)
     }
 }
 

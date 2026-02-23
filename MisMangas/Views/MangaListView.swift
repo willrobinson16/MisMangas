@@ -32,45 +32,36 @@ struct MangaListView: View {
     let namespace: Namespace.ID
     
     var body: some View {
-        ForEach(mangasSorted) { manga in
-            let isFavorite = favoritesIDs.contains(manga.id)
-            let isInCollection = collectionIDs.contains(manga.id)
-            
-            NavigationLink(value: manga) {
-                MangaRow(manga: manga, namespace: namespace)
-            }
-            .swipeActions {
-                Button {
-                    favoritesVM.toggleFavorite(manga)
-                } label: {
-                    Label(isFavorite ? "Quitar" : "Añadir",
-                          systemImage: isFavorite ? "heart.slash" : "heart.fill")
+        Group {
+            ForEach(mangasSorted) { manga in
+                let isFavorite = favoritesIDs.contains(manga.id)
+                let isInCollection = collectionIDs.contains(manga.id)
+
+                NavigationLink(value: manga) {
+                    MangaRow(manga: manga, namespace: namespace)
                 }
-                .tint(isFavorite ? .secondary : .red)
+                .mangaSwipeActions(
+                    manga: manga,
+                    isFavorite: isFavorite,
+                    isInCollection: isInCollection,
+                    favoritesVM: favoritesVM,
+                    collectionVM: collectionVM
+                )
+
             }
-            .swipeActions(edge: .leading) {
-                Button {
-                    collectionVM.toggleInCollection(manga)
-                } label: {
-                    Label(isInCollection ? "Quitar" : "Añadir",
-                          systemImage: isInCollection ? "bookmark.slash.fill" : "bookmark.fill")
-                }
-                .tint(isInCollection ? .secondary : .blue)
-            }
-            
-        }
-        if mangasSorted.count > 1 {
-            ProgressView()
-                .onAppear {
-                    let modelContainer = DataContainer(modelContainer: context.container)
-                    Task {
-                        do {
-                            try await modelContainer.loadNextPage()
-                        } catch {
-                            print(error)
+            if mangasSorted.count > 1 {
+                ProgressView()
+                    .onAppear {
+                        let modelContainer = DataContainer(modelContainer: context.container)
+                        Task {
+                            do {
+                                try await modelContainer.loadNextPage()
+                            } catch {
+                                print(error)
+                            }
                         }
                     }
-                }
+            }
         }
     }
 }

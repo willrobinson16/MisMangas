@@ -9,21 +9,45 @@ import Foundation
 import NetworkAPI
 
 /// Repositorio que implementa las operaciones de red con la API de mangas.
+///
+/// Proporciona métodos para todas las operaciones disponibles en la API REST,
+/// incluyendo listados, búsquedas, filtrados y autenticación.
+///
+/// ## Características principales:
+/// - Integración completa con la API de mangas
+/// - Métodos tipados con `async/await`
+/// - Manejo de errores con `NetworkError`
+/// - Soporte para paginación
+/// - Búsquedas por título (begins with / contains)
+/// - Filtrado por autor, tema, género y demografía
+///
+/// ## Uso típico:
+/// ```swift
+/// let network = Network()
+/// let mangas = try await network.getBestMangas()
+/// ```
 struct Network: NetworkInteractor {
     
     // MARK: - List Endpoints
-    
-    /// Obtiene la lista de autores.
+
+    /// Obtiene la lista completa de autores desde la API
+    /// - Returns: Array de autores disponibles
+    /// - Throws: `NetworkError` si falla la petición
     func getAuthors() async throws -> [AuthorDTO] {
         try await getJSON(.get(url: .getAuthors), type: [AuthorDTO].self)
     }
-    
-    /// Obtiene los mejores mangas.
+
+    /// Obtiene la lista de los mejores mangas (mejor puntuados)
+    /// - Returns: Array de mangas ordenados por score descendente
+    /// - Throws: `NetworkError` si falla la petición
     func getBestMangas() async throws -> [MangaDTO] {
         try await getJSON(.get(url: .getBestMangas), type: [MangaDTO].self)
     }
-    
-    /// Obtiene los mangas de un autor específico.
+
+    /// Obtiene todos los mangas de un autor específico
+    /// - Parameter id: ID del autor (UUID en formato String)
+    /// - Returns: Array de mangas del autor
+    /// - Throws: `NetworkError` si falla la petición
     func getMangaByAuthor(id: String) async throws -> [MangaDTO] {
         try await getJSON(.get(url: .mangaByAuthor(id: id)), type: [MangaDTO].self)
     }
@@ -57,8 +81,13 @@ struct Network: NetworkInteractor {
     func getMangas() async throws -> [MangaDTO] {
         try await getJSON(.get(url: .getMangas), type: [MangaDTO].self)
     }
-    
-    /// Obtiene la lista de mangas de una página específica.
+
+    /// Obtiene una página específica de mangas con paginación
+    /// - Parameters:
+    ///   - page: Número de página (comienza en 1)
+    ///   - itemsPerPage: Cantidad de items por página (por defecto 10)
+    /// - Returns: Array de mangas de la página solicitada
+    /// - Throws: `NetworkError` si falla la petición
     func getMangasPage(page: Int, itemsPerPage: Int = 10) async throws -> [MangaDTO] {
         try await getJSON(.get(url: .getMangas(page: page, itemsPerPage: itemsPerPage)), type: Items.self).items
     }
@@ -69,18 +98,27 @@ struct Network: NetworkInteractor {
     }
     
     // MARK: - Search Endpoints
-    
-    /// Busca mangas cuyo título comienza con el texto especificado.
+
+    /// Busca mangas cuyo título comienza con el texto especificado (case-insensitive)
+    /// - Parameter title: Texto de búsqueda (debe comenzar con este texto)
+    /// - Returns: Array de mangas que coinciden con el criterio
+    /// - Throws: `NetworkError` si falla la petición
     func searchMangasBeginsWith(_ title: String) async throws -> [MangaDTO] {
         try await getJSON(.get(url: .mangasBeginsWith(title)), type: [MangaDTO].self)
     }
-    
-    /// Busca mangas cuyo título contiene el texto especificado.
+
+    /// Busca mangas cuyo título contiene el texto especificado (case-insensitive)
+    /// - Parameter title: Texto de búsqueda (puede aparecer en cualquier parte del título)
+    /// - Returns: Array de mangas que coinciden con el criterio
+    /// - Throws: `NetworkError` si falla la petición
     func searchMangasContains(_ title: String) async throws -> [MangaDTO] {
         try await getJSON(.get(url: .mangasContains(title)), type: [MangaDTO].self)
     }
-    
-    /// Obtiene un manga específico por su ID.
+
+    /// Obtiene la información completa de un manga específico por su ID
+    /// - Parameter id: ID del manga
+    /// - Returns: Datos completos del manga
+    /// - Throws: `NetworkError` si falla la petición o el manga no existe
     func getManga(id: Int) async throws -> MangaDTO {
         try await getJSON(.get(url: .manga(id: id)), type: MangaDTO.self)
     }
@@ -89,8 +127,14 @@ struct Network: NetworkInteractor {
     func searchAuthor(_ name: String) async throws -> AuthorDTO {
         try await getJSON(.get(url: .author(name)), type: AuthorDTO.self)
     }
-    
-    /// Realiza una búsqueda personalizada de mangas con múltiples criterios.
+
+    /// Realiza una búsqueda personalizada de mangas con múltiples criterios
+    ///
+    /// Permite combinar filtros por género, tema, autor, demografía, etc.
+    ///
+    /// - Parameter search: Objeto con los criterios de búsqueda
+    /// - Returns: Array de mangas que cumplen todos los criterios
+    /// - Throws: `NetworkError` si falla la petición
     func customSearch(_ search: CustomSearch) async throws -> [MangaDTO] {
         let body = try JSONEncoder().encode(search)
         return try await getJSON(.post(url: .customSearch, body: body), type: [MangaDTO].self)

@@ -55,6 +55,7 @@
 		4AEE6D312F4B4CD200092CF2 /* ModelContext+MangaPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEE6D302F4B4CD200092CF2 /* ModelContext+MangaPersistence.swift */; };
 		4AF16A462F41FABE003D43BB /* mangas.icon in Resources */ = {isa = PBXBuildFile; fileRef = 4AF16A452F41FABE003D43BB /* mangas.icon */; };
 		4AF16A6C2F4255FC003D43BB /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A6B2F4255FC003D43BB /* StringExtensions.swift */; };
+		CA8AC9D70BA54AD8832C7AA6 /* MangaSwipeActionsModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00476804D0D04DF6BDFF03E4 /* MangaSwipeActionsModifier.swift */; };
 		4AF16A722F425B9E003D43BB /* UserMangaCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A712F425B9E003D43BB /* UserMangaCollection.swift */; };
 		4AF16A742F425BCD003D43BB /* UserCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A732F425BCD003D43BB /* UserCollectionViewModel.swift */; };
 		4AF16A782F425CFD003D43BB /* UserCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A772F425CFD003D43BB /* UserCollectionView.swift */; };
@@ -117,6 +118,7 @@
 		4AEE6D302F4B4CD200092CF2 /* ModelContext+MangaPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelContext+MangaPersistence.swift"; sourceTree = "<group>"; };
 		4AF16A452F41FABE003D43BB /* mangas.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = mangas.icon; sourceTree = "<group>"; };
 		4AF16A6B2F4255FC003D43BB /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
+		00476804D0D04DF6BDFF03E4 /* MangaSwipeActionsModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaSwipeActionsModifier.swift; sourceTree = "<group>"; };
 		4AF16A712F425B9E003D43BB /* UserMangaCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMangaCollection.swift; sourceTree = "<group>"; };
 		4AF16A732F425BCD003D43BB /* UserCollectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCollectionViewModel.swift; sourceTree = "<group>"; };
 		4AF16A772F425CFD003D43BB /* UserCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCollectionView.swift; sourceTree = "<group>"; };
@@ -161,6 +163,7 @@
 		4AA4A4022F0C0E9F00835A49 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				00476804D0D04DF6BDFF03E4 /* MangaSwipeActionsModifier.swift */,
 				4AEE6D302F4B4CD200092CF2 /* ModelContext+MangaPersistence.swift */,
 				4AF16A6B2F4255FC003D43BB /* StringExtensions.swift */,
 			);
@@ -421,6 +424,7 @@
 				4AEE6CF12F4A11FF00092CF2 /* VolumeChip.swift in Sources */,
 				4AEE6CF22F4A11FF00092CF2 /* CollectionGridCard.swift in Sources */,
 				4AEE6D312F4B4CD200092CF2 /* ModelContext+MangaPersistence.swift in Sources */,
+				CA8AC9D70BA54AD8832C7AA6 /* MangaSwipeActionsModifier.swift in Sources */,
 				4AEE6CF32F4A11FF00092CF2 /* StatCard.swift in Sources */,
 				4AEE6CF42F4A11FF00092CF2 /* CompleteMangaCard.swift in Sources */,
 				4AF9E6542EE6DEB5005801A6 /* Model.swift in Sources */,
