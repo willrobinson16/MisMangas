@@ -14,7 +14,7 @@ struct MainTab: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(FavoritesViewModel.self) private var favoritesVM
     @Environment(UserCollectionViewModel.self) private var userCollectionVM
-    
+
     var body: some View {
         TabView {
             Tab("Mangas", systemImage: "book") {
@@ -26,9 +26,16 @@ struct MainTab: View {
             }
             Tab("Mi colección", systemImage: "books.vertical.fill") {
                 if !isiPhone {
-                    
+
                 } else {
                     UserCollectionView()
+                }
+            }
+            Tab("Autores", systemImage: "person.2.fill") {
+                if !isiPhone {
+                    AuthorsListView()
+                } else {
+                    AuthorsListView()
                 }
             }
             Tab("Usuario", systemImage: "person.circle.fill") {

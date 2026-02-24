@@ -223,6 +223,7 @@ struct UserProfileView: View {
         }
         .listStyle(.plain)
         .navigationTitle("Leyendo Actualmente")
+        .navigationBarTitleDisplayMode(.inline)
     }
 
     private var completeCollectionsFullList: some View {
@@ -241,7 +242,8 @@ struct UserProfileView: View {
             }
             .padding()
         }
-        .navigationTitle("Colecciones Completas")
+        .navigationTitle("Colecciones Completadas")
+        .navigationBarTitleDisplayMode(.inline)
     }
 
     // MARK: - Computed Properties

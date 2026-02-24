@@ -130,7 +130,8 @@ final class SearchViewModel {
         )
 
         do {
-            mangaResult = try await network.customSearch(searchRequest)
+            let page = try await network.customSearch(searchRequest, page: 1, per: 20)
+            mangaResult = page.items
             print("✅ Búsqueda completada: \(mangaResult.count) resultados")
         } catch {
             print("❌ Error en búsqueda avanzada: \(error)")

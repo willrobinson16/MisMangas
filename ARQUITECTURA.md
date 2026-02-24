@@ -57,11 +57,17 @@ MisMangas/
 ├── Views/               - Vistas SwiftUI de pantalla completa
 │   ├── ContentView.swift            - Vista principal con lista de mangas
 │   ├── MangaView.swift              - Vista de detalle de un manga
-│   ├── SearchView.swift             - Vista de búsqueda
 │   ├── FavoritesView.swift          - Vista de favoritos
 │   ├── UserCollectionView.swift     - Vista de colección del usuario
 │   ├── EditCollectionSheet.swift    - Sheet para editar colección
 │   └── ...
+├── Search/              - Componentes de búsqueda avanzada
+│   ├── SearchView.swift                   - Vista principal de búsqueda
+│   ├── AdvancedSearchFiltersSheet.swift   - Sheet de filtros avanzados
+│   ├── MultiSelectGenresView.swift        - Selector multi-opción de géneros
+│   ├── MultiSelectThemesView.swift        - Selector multi-opción de temas
+│   ├── MultiSelectDemographicsView.swift  - Selector multi-opción de demografías
+│   └── FilterChip.swift                   - Chip visual para filtros activos
 ├── Components/          - Componentes reutilizables de SwiftUI
 │   ├── MangaRow.swift
 │   ├── RatingView.swift

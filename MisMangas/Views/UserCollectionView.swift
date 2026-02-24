@@ -30,20 +30,14 @@ struct UserCollectionView: View {
     @State private var selectedThemes: Set<String> = []
     @State private var selectedGenres: Set<String> = []
 
-    // Mangas solo de la colección del usuario (optimización de rendimiento)
-    private var collectionMangas: [Manga] {
-        let mangaIDs = collectionEntries.map { $0.mangaID }
-        let descriptor = FetchDescriptor<Manga>(
-            predicate: #Predicate<Manga> { manga in
-                mangaIDs.contains(manga.id)
-            }
-        )
-        return (try? modelContext.fetch(descriptor)) ?? []
-    }
+    // CACHE: Mangas y diccionario cacheados para evitar fetches repetidos
+    @State private var cachedMangas: [Manga] = []
+    @State private var cachedMangasDict: [Int: Manga] = [:]
+    @State private var lastCachedIDs: Set<Int> = []
 
-    // Diccionario para acceso rápido a mangas por ID
+    // Diccionario para acceso rápido a mangas por ID (usa cache)
     private var mangasDict: [Int: Manga] {
-        Dictionary(uniqueKeysWithValues: collectionMangas.map { ($0.id, $0) })
+        cachedMangasDict
     }
 
     // Entradas filtradas (solo las que tienen manga existente)
@@ -76,24 +70,24 @@ struct UserCollectionView: View {
         }
     }
 
-    // Listas únicas para filtros (solo de mangas en la colección)
+    // Listas únicas para filtros (usa cache para evitar recálculos)
     private var allAuthors: [String] {
-        let authorSet = Set(collectionMangas.flatMap { $0.authors }.map { "\($0.firstName) \($0.lastName)" })
+        let authorSet = Set(cachedMangas.flatMap { $0.authors }.map { "\($0.firstName) \($0.lastName)" })
         return authorSet.sorted()
     }
 
     private var allDemographics: [String] {
-        let demoSet = Set(collectionMangas.flatMap { $0.demographics }.map { $0.demographic })
+        let demoSet = Set(cachedMangas.flatMap { $0.demographics }.map { $0.demographic })
         return demoSet.sorted()
     }
 
     private var allThemes: [String] {
-        let themeSet = Set(collectionMangas.flatMap { $0.themes }.map { $0.theme })
+        let themeSet = Set(cachedMangas.flatMap { $0.themes }.map { $0.theme })
         return themeSet.sorted()
     }
 
     private var allGenres: [String] {
-        let genreSet = Set(collectionMangas.flatMap { $0.genres }.map { $0.genre })
+        let genreSet = Set(cachedMangas.flatMap { $0.genres }.map { $0.genre })
         return genreSet.sorted()
     }
 
@@ -143,10 +137,38 @@ struct UserCollectionView: View {
                     )
                 }
             }
-            .onAppear {
+            .task {
                 collectionVM.setModelContext(modelContext)
+                updateMangasCache()
+            }
+            .onChange(of: collectionEntries.map(\.mangaID)) { _, newIDs in
+                let newIDSet = Set(newIDs)
+
+                // Solo actualizar cache si los IDs realmente cambiaron
+                if newIDSet != lastCachedIDs {
+                    updateMangasCache()
+                    lastCachedIDs = newIDSet
+                }
             }
         }
+    }
+
+    // MARK: - Cache Management
+
+    /// Actualiza el cache de mangas desde SwiftData
+    /// Solo se ejecuta cuando la colección realmente cambia (añadir/eliminar mangas)
+    private func updateMangasCache() {
+        let mangaIDs = collectionEntries.map { $0.mangaID }
+        let descriptor = FetchDescriptor<Manga>(
+            predicate: #Predicate<Manga> { manga in
+                mangaIDs.contains(manga.id)
+            }
+        )
+
+        cachedMangas = (try? modelContext.fetch(descriptor)) ?? []
+        cachedMangasDict = Dictionary(uniqueKeysWithValues: cachedMangas.map { ($0.id, $0) })
+
+        print("🔄 Cache actualizado: \(cachedMangas.count) mangas")
     }
 
     // MARK: - List View

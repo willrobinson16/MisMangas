@@ -26,6 +26,7 @@ MisMangas/
 ├── ViewModel/           - ViewModels for complex view logic
 ├── Views/               - Full-screen SwiftUI views
 ├── Components/          - Reusable SwiftUI components
+├── Search/              - Advanced search components (filters, multi-select views)
 ├── Extensions/          - Swift extensions and custom modifiers
 ├── ContentView.swift    - Main manga list view
 └── MainTab.swift        - TabView navigation container
@@ -154,10 +155,17 @@ MisMangas/
 **Views**:
 - ContentView with infinite scroll and pull-to-refresh
 - MangaView detail screen with stretchy header
-- SearchView with real-time search functionality
+- SearchView with advanced search functionality (title, author, genres, themes, demographics)
 - UserCollectionView with list/grid modes, filters (authors, genres, demographics, themes)
 - EditCollectionSheet for managing collection entries
 - MainTab navigation structure (3+ tabs)
+
+**Search Components** (Search/ directory):
+- AdvancedSearchFiltersSheet - Main filters sheet with multiple sections
+- MultiSelectGenresView - Multi-selection for genres with checkmarks
+- MultiSelectThemesView - Multi-selection for themes with checkmarks
+- MultiSelectDemographicsView - Multi-selection for demographics with checkmarks
+- FilterChip - Visual chip component for active filters
 
 **Components**:
 - MangaRow, MangaGridView for list/grid display
@@ -167,7 +175,7 @@ MisMangas/
 - StretchModifier for parallax effects
 
 **ViewModels**:
-- SearchViewModel with search functionality
+- SearchViewModel with advanced search (title, author, genres, themes, demographics, debounce)
 - FavoritesViewModel for favorites management
 - UserCollectionViewModel for user's manga collection (volumes owned, reading progress)
 - MainPictureVM for image caching
@@ -194,9 +202,7 @@ MisMangas/
 **Network**:
 - POST request implementation for authentication (commented out in URLRequest.swift)
 - User authentication endpoints (register, login, token renewal)
-- CustomSearch endpoint integration
 - NetworkError Sendable conformance
-- Search by "contains" integration (method exists but not used in UI)
 
 **Features**:
 - Error state views with retry mechanism
@@ -208,6 +214,15 @@ MisMangas/
 - Authors list and filtering by author
 
 ### 🔍 Recent Changes
+
+**Advanced Search Implementation** (2026-02-24):
+- New `/Search/` directory with 6 components
+- SearchViewModel expanded with 7+ filters (title, author, genres, themes, demographics, contains)
+- CustomSearch POST endpoint with pagination (page, per parameters)
+- UI híbrida: chips visuales + sheet de filtros
+- Liquid Glass design: toolbar buttons with icons only
+- Network layer fixes: double encoding resolved, simplified list methods
+- getGenres/getThemes/getDemographics now return [String] directly
 
 **Architecture Changes** (2026-02-15):
 - DTOs reorganized from `Model/` to `DTO/` directory with separate files per DTO
@@ -364,11 +379,11 @@ if let progress = collectionVM.readingProgress(mangaID: mangaID, totalVolumes: m
 2. **Local Package Dependency**: NetworkAPI is a local package in iCloud Drive - may cause issues on different machines
 
 ### Implementation TODOs
-1. **Network/URLRequest.swift**: POST method implementation commented out (lines 118-147)
-2. **Network/URL.swift**: CustomSearch struct defined but endpoint not integrated in UI
-3. **MainTab.swift**: Placeholder views for iPad and additional tabs (empty implementations)
-4. **Error Logging**: Replace print statements with proper logging framework
-5. **Untracked Assets**: New icon files (`fondo_*.png`, `logoM.png`) in root need to be added to project or moved to Assets.xcassets
+1. **Network/URLRequest.swift**: POST method implementation commented out (authentication methods)
+2. **MainTab.swift**: Placeholder views for iPad and additional tabs (empty implementations)
+3. **Error Logging**: Replace print statements with proper logging framework
+4. **Untracked Assets**: New icon files (`fondo_*.png`, `logoM.png`) in root need to be added to project or moved to Assets.xcassets
+5. **SearchView Pagination**: Implement infinite scroll for search results (pagination ready)
 
 ## Testing
 
@@ -538,21 +553,25 @@ Este plan organiza el desarrollo restante de la app en fases progresivas.
 - [ ] Spacing adaptativo
 - [ ] Safe area handling mejorado
 
-### FASE 6: Búsqueda Avanzada 🔎
+### FASE 6: Búsqueda Avanzada 🔎 ✅ COMPLETADA
 **Prioridad**: BAJA | **Estimación**: 1 día
 
 #### 6.1 Mejoras de Búsqueda
-- [ ] Integrar `searchMangasContains` (búsqueda parcial)
+- [x] Integrar `searchMangasContains` (búsqueda parcial) - implementado con toggle
+- [x] Debounce en búsqueda (optimización) - 500ms debounce
+- [x] Búsqueda por autor - nombre y apellido
 - [ ] Historial de búsquedas recientes
 - [ ] Sugerencias de búsqueda
-- [ ] Búsqueda por autor
-- [ ] Debounce en búsqueda (optimización)
 
-#### 6.2 CustomSearch
-- [ ] Implementar CustomSearch struct
-- [ ] POST request en URLRequest.swift
-- [ ] Endpoint customSearch en NetworkRepository
-- [ ] UI para búsqueda avanzada multi-criterio
+#### 6.2 CustomSearch ✅ COMPLETADA
+- [x] Implementar CustomSearch struct
+- [x] POST request con paginación (page, per)
+- [x] Endpoint customSearch en NetworkRepository
+- [x] UI para búsqueda avanzada multi-criterio
+- [x] Filtros: título, autor, géneros, temas, demografías
+- [x] UI híbrida: chips visuales + sheet de filtros
+- [x] MultiSelect views con checkmarks (Liquid Glass design)
+- [x] Corrección de doble encoding en POST request
 
 ### FASE 7: Pulido Final ✨
 **Prioridad**: BAJA | **Estimación**: 1-2 días
@@ -773,3 +792,164 @@ Este plan organiza el desarrollo restante de la app en fases progresivas.
   - Login/Register views
   - Almacenamiento seguro de tokens
 - ⏳ **Sincronización Cloud**: Integrar colección de usuario con backend (requiere auth)
+
+### Sesión 2026-02-24: Implementación de Búsqueda Avanzada
+
+**Objetivo**: Implementar sistema completo de búsqueda avanzada con múltiples filtros y UI híbrida
+
+**Cambios realizados**:
+
+1. ✅ **Reorganización de Archivos de Búsqueda**
+   - Creada carpeta `/Search/` para componentes de búsqueda
+   - SearchView.swift movido a Search/
+   - SearchViewModel.swift se mantiene en ViewModel/ (decisión del usuario)
+   - Nueva estructura organizativa para búsqueda
+
+2. ✅ **Expansión de SearchViewModel**
+   - Agregados filtros avanzados:
+     - `searchTitle` con debounce de 500ms
+     - `authorFirstName` y `authorLastName` para búsqueda por autor
+     - `selectedGenres: Set<String>` - multi-selección de géneros
+     - `selectedThemes: Set<String>` - multi-selección de temas
+     - `selectedDemographics: Set<String>` - multi-selección de demografías
+     - `useContains: Bool` - toggle entre "begins with" y "contains"
+   - Método `performSearch()` usando `network.customSearch()`
+   - Propiedades computadas:
+     - `hasActiveFilters` - detecta filtros activos
+     - `activeFiltersCount` - cuenta filtros
+     - `activeFilterChips` - genera etiquetas para chips
+   - Métodos de gestión:
+     - `removeFilter()` - elimina filtro específico
+     - `clearAllFilters()` - limpia todos los filtros
+
+3. ✅ **Componentes de UI Creados**
+
+   **FilterChip.swift**:
+   - Chip visual en forma de cápsula
+   - Botón X para eliminar filtro
+   - Diseño Liquid Glass
+
+   **MultiSelectGenresView.swift**:
+   - Sheet con lista de géneros
+   - Checkmarks para selección múltiple
+   - Carga géneros desde API (`network.getGenres()`)
+   - Estados: loading, empty, content
+   - Toolbar con X (cancel) y checkmark (confirm)
+
+   **MultiSelectThemesView.swift**:
+   - Sheet con lista de temas
+   - Mismo patrón que géneros
+   - Carga temas desde API (`network.getThemes()`)
+
+   **MultiSelectDemographicsView.swift**:
+   - Sheet con lista de demografías
+   - Mismo patrón que géneros/temas
+   - Carga demografías desde API (`network.getDemographics()`)
+
+   **AdvancedSearchFiltersSheet.swift**:
+   - Sheet principal de filtros avanzados
+   - Secciones organizadas con Form:
+     - Autor (nombre y apellido)
+     - Géneros (botón + lista con X)
+     - Temas (botón + lista con X)
+     - Demografías (botón + lista con X)
+     - Opciones (toggle búsqueda flexible)
+   - Navegación entre sheets de selección
+
+4. ✅ **Modificación de SearchView**
+   - UI híbrida implementada:
+     - Chips horizontales para filtros activos (con botón X)
+     - Botón "Limpiar todo" para eliminar todos los filtros
+     - Botón de toolbar con badge numérico
+     - Icono multicolor cuando hay filtros activos
+     - Sheet de filtros avanzados
+   - Empty states:
+     - Estado inicial: sugerencia para usar filtros
+     - Sin resultados: mensaje específico
+   - Lista de resultados con navegación a MangaView
+   - Swipe actions para favoritos y colección
+
+5. ✅ **Correcciones Técnicas en Network Layer**
+
+   **Doble Encoding Solucionado**:
+   - Problema: `customSearch()` encodaba dos veces el body
+   - Primera encoding: `JSONEncoder().encode(search)` → Data
+   - Segunda encoding: `.post()` encodaba Data como string
+   - Resultado: servidor recibía string JSON escapado
+   - Solución: pasar objeto directamente a `.post()`
+   - Error 400 resuelto
+
+   **Métodos de Lista Simplificados**:
+   - `getGenres() -> [String]` (antes `[GenreDTO]`)
+   - `getThemes() -> [String]` (antes `[ThemeDTO]`)
+   - `getDemographics() -> [String]` (antes `[DemographicDTO]`)
+   - Razón: API devuelve arrays de strings simples
+   - MultiSelect views trabajan directamente con strings
+
+   **Paginación en CustomSearch**:
+   - `customSearch(_ search:, page:, per:)` con parámetros opcionales
+   - URL: `/search/manga?page=1&per=20`
+   - SearchViewModel usa `page: 1, per: 20` por defecto
+   - Retorna `MangaPageDTO` con `.items` y `.metadata`
+   - Preparado para scroll infinito futuro
+
+6. ✅ **Diseño Liquid Glass Aplicado**
+   - Toolbars con solo iconos (sin texto)
+   - Botón izquierdo: X con `role: .cancel`
+   - Botón derecho: checkmark azul (sin role, solo confirma)
+   - Estilo minimalista y limpio
+   - Aplicado en:
+     - MultiSelectGenresView
+     - MultiSelectThemesView
+     - MultiSelectDemographicsView
+     - EditCollectionSheet (revisado)
+
+7. ✅ **Mejoras Adicionales**
+   - Validación de volúmenes en UserCollectionViewModel
+   - Swipe actions respetan límite de volúmenes del manga
+   - EditCollectionSheet: cambios se guardan en tiempo real (no requiere botón save)
+   - Compilación exitosa sin errores ni warnings
+
+**Estructura de Archivos Creada**:
+```
+MisMangas/Search/
+├── SearchView.swift              - Vista principal con UI híbrida
+├── AdvancedSearchFiltersSheet.swift - Sheet de filtros principales
+├── FilterChip.swift              - Chip visual para filtros activos
+├── MultiSelectGenresView.swift   - Selector de géneros
+├── MultiSelectThemesView.swift   - Selector de temas
+└── MultiSelectDemographicsView.swift - Selector de demografías
+```
+
+**Endpoint CustomSearch**:
+- **URL**: `POST /search/manga?page=1&per=20`
+- **Body**: `CustomSearch` (JSON)
+  ```json
+  {
+    "searchTitle": "one piece",
+    "searchAuthorFirstName": "Eiichiro",
+    "searchAuthorLastName": "Oda",
+    "searchGenres": ["Action", "Adventure"],
+    "searchThemes": ["Pirates", "Fantasy"],
+    "searchDemographics": ["Shounen"],
+    "searchContains": true
+  }
+  ```
+- **Response**: `MangaPageDTO` con paginación
+- **Lógica**: Filtros combinados con AND
+
+**Resultado**:
+- ✅ **Búsqueda avanzada 100% funcional**
+- ✅ **6 nuevos componentes** en carpeta Search/
+- ✅ **SearchViewModel expandido** con 7+ filtros
+- ✅ **UI híbrida** con chips + sheet
+- ✅ **Diseño Liquid Glass** aplicado
+- ✅ **Paginación** integrada
+- ✅ **Error 400 resuelto** (doble encoding)
+- ✅ **BUILD SUCCEEDED** sin errores
+
+**Próximos Pasos**:
+- ⏳ Implementar scroll infinito en SearchView (usar paginación)
+- ⏳ Historial de búsquedas recientes
+- ⏳ ListByAuthors view (siguiente prioridad FASE 1)
+- ⏳ Sistema de autenticación de usuario

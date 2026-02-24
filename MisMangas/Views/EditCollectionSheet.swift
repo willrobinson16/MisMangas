@@ -37,7 +37,7 @@ struct EditCollectionSheet: View {
                 // Estadísticas
                 statisticsSection
             }
-            .onAppear {
+            .task {
                 collectionVM.setModelContext(modelContext)
                 currentReadingVolume = entry.readingVolume ?? 0
             }
@@ -45,17 +45,15 @@ struct EditCollectionSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button {
+                    Button(role: .cancel) {
                         dismiss()
                     } label: {
                         Image(systemName: "xmark")
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button {
+                    Button(role: .confirm) {
                         dismiss()
-                    } label: {
-                        Image(systemName: "checkmark")
                     }
                 }
                 ToolbarItem(placement: .keyboard) {

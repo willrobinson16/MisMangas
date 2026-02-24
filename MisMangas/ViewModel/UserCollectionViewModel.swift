@@ -125,19 +125,65 @@ final class UserCollectionViewModel {
     /// Marks the next volume as being read
     /// - Parameter mangaID: The ID of the manga
     func readNextVolume(mangaID: Int) {
-        guard let collection = getCollectionEntry(mangaID) else { return }
+        guard let context = modelContext,
+              let collection = getCollectionEntry(mangaID) else { return }
 
-        let nextVolume = (collection.readingVolume ?? 0) + 1
-        updateReadingVolume(mangaID: mangaID, volume: nextVolume)
+        // Obtener el manga para verificar el total de volúmenes
+        let fetchManga = FetchDescriptor<Manga>(predicate: #Predicate { $0.id == mangaID })
+        guard let manga = try? context.fetch(fetchManga).first else { return }
+
+        let currentVolume = collection.readingVolume ?? 0
+        let nextVolume = currentVolume + 1
+
+        // Calcular el máximo de volúmenes permitido
+        let maxVolumes: Int
+        if collection.completeCollection {
+            // Si tiene colección completa, usar el total del manga
+            maxVolumes = manga.volumes ?? Int.max
+        } else {
+            // Si no, usar el máximo entre volumesOwned y total del manga
+            let ownedMax = collection.volumesOwned.max() ?? 0
+            maxVolumes = min(ownedMax, manga.volumes ?? Int.max)
+        }
+
+        // Solo incrementar si no se ha alcanzado el máximo
+        if nextVolume <= maxVolumes {
+            updateReadingVolume(mangaID: mangaID, volume: nextVolume)
+        } else {
+            print("⚠️ Ya estás en el último volumen disponible (\(maxVolumes))")
+        }
     }
 
     /// Increments the reading volume by 1
     /// - Parameter mangaID: The ID of the manga
     func incrementReadingVolume(mangaID: Int) {
-        guard let collection = getCollectionEntry(mangaID) else { return }
+        guard let context = modelContext,
+              let collection = getCollectionEntry(mangaID) else { return }
 
-        let nextVolume = (collection.readingVolume ?? 0) + 1
-        updateReadingVolume(mangaID: mangaID, volume: nextVolume)
+        // Obtener el manga para verificar el total de volúmenes
+        let fetchManga = FetchDescriptor<Manga>(predicate: #Predicate { $0.id == mangaID })
+        guard let manga = try? context.fetch(fetchManga).first else { return }
+
+        let currentVolume = collection.readingVolume ?? 0
+        let nextVolume = currentVolume + 1
+
+        // Calcular el máximo de volúmenes permitido
+        let maxVolumes: Int
+        if collection.completeCollection {
+            // Si tiene colección completa, usar el total del manga
+            maxVolumes = manga.volumes ?? Int.max
+        } else {
+            // Si no, usar el máximo entre volumesOwned y total del manga
+            let ownedMax = collection.volumesOwned.max() ?? 0
+            maxVolumes = min(ownedMax, manga.volumes ?? Int.max)
+        }
+
+        // Solo incrementar si no se ha alcanzado el máximo
+        if nextVolume <= maxVolumes {
+            updateReadingVolume(mangaID: mangaID, volume: nextVolume)
+        } else {
+            print("⚠️ Ya estás en el último volumen disponible (\(maxVolumes))")
+        }
     }
 
     /// Decrements the reading volume by 1

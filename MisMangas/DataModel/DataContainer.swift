@@ -37,26 +37,20 @@ actor DataContainer {
     /// Número de página actual para paginación de bestMangas (persistido en UserDefaults)
     @AppStorage("bestMangasPage") private var bestMangasPage = 1
 
-    /// Carga los datos iniciales: mangas, autores y bestMangas de la primera página
+    /// Número de página actual para paginación de autores (persistido en UserDefaults)
+    @AppStorage("authorsPage") private var authorsPage = 1
+
+    /// Carga los datos iniciales: mangas y bestMangas de la primera página
+    /// Los autores se cargarán paginados cuando el usuario entre al tab de Autores
     /// - Throws: `NetworkError` si falla la petición a la API o errores de persistencia de SwiftData
     func loadInitialData() async throws {
-        async let getMangasAuthors = getMangasAndAuthors()
+        async let getMangas = network.getMangasPage(page: actualPage)
 
-        let (mangas, authors) = try await getMangasAuthors
-        try loadAuthors(authors: authors)
+        let mangas = try await getMangas
         try loadMangas(mangas: mangas.items)
 
         // Cargar bestMangas en paralelo (no bloquea la carga inicial)
         try await loadBestMangasInitial()
-    }
-
-    /// Obtiene mangas y autores de manera concurrente usando async let
-    /// - Returns: Tupla con la página de mangas y la lista de autores
-    /// - Throws: `NetworkError` si falla alguna de las peticiones
-    func getMangasAndAuthors() async throws -> (MangaPageDTO, [AuthorDTO]) {
-        async let getAuthors = network.getAuthors()
-        async let getMangas = network.getMangasPage(page: actualPage)
-        return try await (getMangas, getAuthors)
     }
 
     /// Obtiene los mejores mangas desde la API
@@ -168,5 +162,42 @@ actor DataContainer {
             bestMangasPage -= 1  // Volver a la página anterior
             throw error
         }
+    }
+
+    /// Carga la siguiente página de autores en la paginación
+    ///
+    /// Incrementa el contador de página, obtiene los autores de esa página y los persiste.
+    /// Si la página está vacía, asume que no hay más datos y revierte el contador.
+    ///
+    /// - Throws: `NetworkError` si falla la petición o errores de persistencia
+    func loadAuthorsNextPage() async throws {
+        authorsPage += 1
+
+        do {
+            let authors = try await network.getAuthorsPage(page: authorsPage)
+
+            // Si no devuelve autores, es que no hay más
+            if authors.items.isEmpty {
+                print("ℹ️ No hay más autores en la página \(authorsPage)")
+                authorsPage -= 1  // Volver a la página anterior
+                return
+            }
+
+            try loadAuthors(authors: authors.items)
+            print("✅ Cargada página \(authorsPage) de autores con \(authors.items.count) autores")
+        } catch {
+            print("❌ Error cargando página \(authorsPage) de autores: \(error)")
+            authorsPage -= 1  // Volver a la página anterior
+            throw error
+        }
+    }
+
+    /// Resetea el contador de página de autores a 0 para recargar desde el inicio
+    ///
+    /// NO elimina autores existentes (ya que tienen relaciones con mangas).
+    /// Solo reinicia el contador de paginación.
+    func resetAuthorsPage() {
+        authorsPage = 0
+        print("🔄 Contador de autores reseteado a 0")
     }
 }

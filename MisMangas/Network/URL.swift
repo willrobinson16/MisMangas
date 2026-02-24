@@ -25,6 +25,16 @@ extension URL {
     static func mangaByAuthor(id: String) -> URL {
         listBase.appending(path: "mangaByAuthor").appending(path: id)
     }
+
+    static func mangaByAuthor(id: String, page: Int, per: Int = 10) -> URL {
+        listBase
+            .appending(path: "mangaByAuthor")
+            .appending(path: id)
+            .appending(queryItems: [
+                URLQueryItem(name: "per", value: "\(per)"),
+                URLQueryItem(name: "page", value: "\(page)")
+            ])
+    }
     
     static func mangaByDemographic(demographic: Demographic) -> URL {
         listBase.appending(path: "mangaByDemographic").appending(path: "\(demographic)")
@@ -55,7 +65,14 @@ extension URL {
         searchBase.appending(path: "author").appending(path: name)
     }
     
-    static let customSearch = searchBase.appending(path: "manga")
+    static func customSearch(page: Int = 1, per: Int = 10) -> URL {
+        searchBase
+            .appending(path: "manga")
+            .appending(queryItems: [
+                URLQueryItem(name: "page", value: "\(page)"),
+                URLQueryItem(name: "per", value: "\(per)")
+            ])
+    }
     
     // MARK: - Authentication endpoints
     static let register = api.appendingPathComponent("users")
@@ -75,6 +92,15 @@ extension URL {
     static func getBestMangas(page: Int, per: Int = 10) -> URL {
         listBase
             .appending(path: "bestMangas")
+            .appending(queryItems: [
+                URLQueryItem(name: "per", value: "\(per)"),
+                URLQueryItem(name: "page", value: "\(page)")
+            ])
+    }
+
+    static func getAuthorsPaged(page: Int, per: Int = 10) -> URL {
+        listBase
+            .appending(path: "authorsPaged")
             .appending(queryItems: [
                 URLQueryItem(name: "per", value: "\(per)"),
                 URLQueryItem(name: "page", value: "\(page)")

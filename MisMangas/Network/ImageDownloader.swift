@@ -14,15 +14,16 @@ import SwiftUI
 /// y aprovecha las capacidades de actor para manejar el acceso concurrente de forma segura.
 ///
 /// ## Características principales:
-/// - Caché en memoria con seguimiento del estado de descarga
+/// - Caché en memoria con NSCache (límite automático de memoria)
 /// - Prevención de descargas duplicadas para la misma URL
 /// - Redimensionamiento automático de imágenes antes de guardarlas en disco
 /// - Persistencia en el directorio de caché del sistema
 /// - Manejo seguro de concurrencia mediante actor
+/// - Gestión automática de memoria bajo presión
 actor ImageDownloader {
     /// Instancia compartida del descargador de imágenes (Singleton)
     static let shared = ImageDownloader()
-    
+
     /// Enumeración que representa los posibles estados de una imagen en el sistema de caché.
     ///
     /// - `downloading`: La imagen está siendo descargada actualmente. Contiene la tarea asociada.
@@ -31,10 +32,27 @@ actor ImageDownloader {
         case downloading(task: Task<UIImage, any Error>)
         case downloaded(image: UIImage)
     }
-    
-    /// Diccionario que almacena la caché en memoria de las imágenes y su estado actual.
-    /// La clave es la URL de origen y el valor es el estado de la imagen (descargando o descargada).
-    private var cache: [URL: ImageStatus] = [:]
+
+    /// Wrapper class para ImageStatus para usarlo con NSCache
+    private final class ImageStatusWrapper {
+        let status: ImageStatus
+        init(status: ImageStatus) {
+            self.status = status
+        }
+    }
+
+    /// Cache en memoria con límite automático de 50 imágenes y 100 MB
+    /// NSCache automáticamente libera memoria bajo presión del sistema
+    private let cache: NSCache<NSString, ImageStatusWrapper> = {
+        let cache = NSCache<NSString, ImageStatusWrapper>()
+        cache.countLimit = 50  // Máximo 50 imágenes
+        cache.totalCostLimit = 100 * 1024 * 1024  // 100 MB
+        return cache
+    }()
+
+    /// Diccionario auxiliar para tracking de downloads en progreso
+    /// Solo contiene URLs de descargas activas
+    private var downloadingURLs: Set<String> = []
     
     /// Función privada que aisla la descarga de la imagen desde una URL.
     ///
@@ -68,28 +86,40 @@ actor ImageDownloader {
     /// - Returns: La imagen solicitada como `UIImage`.
     /// - Throws: Cualquier error que pueda ocurrir durante la descarga o procesamiento de la imagen.
     func image(for url: URL) async throws -> UIImage {
-        if let status = cache[url] {
-            return switch status {
+        let key = url.absoluteString as NSString
+
+        // Verificar cache
+        if let wrapper = cache.object(forKey: key) {
+            return switch wrapper.status {
             case .downloading(let task):
                 try await task.value
             case .downloaded(let image):
                 image
             }
         }
-        
+
         let task = Task {
             try await getImage(url: url)
         }
-        
-        cache[url] = .downloading(task: task)
-        
+
+        // Almacenar en cache como downloading
+        cache.setObject(ImageStatusWrapper(status: .downloading(task: task)), forKey: key)
+        downloadingURLs.insert(url.absoluteString)
+
         do {
             let image = try await task.value
-            cache[url] = .downloaded(image: image)
+            downloadingURLs.remove(url.absoluteString)
+
+            // Almacenar en cache como downloaded con cost estimado
+            let estimatedCost = Int(image.size.width * image.size.height * 4) // RGBA
+            let wrapper = ImageStatusWrapper(status: .downloaded(image: image))
+            cache.setObject(wrapper, forKey: key, cost: estimatedCost)
+
             try await saveImage(url: url)
             return image
         } catch {
-            cache.removeValue(forKey: url)
+            cache.removeObject(forKey: key)
+            downloadingURLs.remove(url.absoluteString)
             throw error
         }
     }
@@ -110,12 +140,14 @@ actor ImageDownloader {
     /// - Parameter url: La URL de origen que se usará para determinar el nombre del archivo en disco.
     /// - Throws: Errores de I/O si no se puede escribir en el directorio de caché.
     func saveImage(url: URL) async throws {
-        guard let imageCached = cache[url],
-              case .downloaded(let image) = imageCached else { return }
+        let key = url.absoluteString as NSString
+        guard let wrapper = cache.object(forKey: key),
+              case .downloaded(let image) = wrapper.status else { return }
+
         if let resized = await image.resize(width: 300),
            let data = resized.jpegData(compressionQuality: 1.0) {
             try data.write(to: getFileURL(url: url), options: .atomic)
-            cache.removeValue(forKey: url)
+            // Mantener en cache después de guardar (NSCache lo eliminará si hay presión de memoria)
         }
     }
     

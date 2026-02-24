@@ -297,3 +297,93 @@ var property: Type
 **Fecha de documentación**: 22 de febrero de 2026
 **Versión del proyecto**: Swift 6.2, iOS 26.1+
 **Estado**: ✅ Completo
+
+---
+
+## Actualización - Búsqueda Avanzada (24 de febrero de 2026)
+
+### 🔍 Nuevos Componentes de Búsqueda
+
+**Carpeta Search/** (6 archivos nuevos):
+
+#### ✅ SearchView.swift
+- Movido de Views/ a Search/
+- Actualizado con UI híbrida (chips + sheet)
+- Integración completa con filtros avanzados
+- Navegación y swipe actions
+
+#### ✅ AdvancedSearchFiltersSheet.swift
+- Sheet principal de filtros avanzados
+- Secciones organizadas: Autor, Géneros, Temas, Demografías, Opciones
+- Navegación entre sheets de selección
+- Diseño Liquid Glass
+
+#### ✅ MultiSelectGenresView.swift
+- Selector multi-opción de géneros
+- Carga desde API (`network.getGenres()`)
+- Checkmarks para selección
+- Estados: loading, empty, content
+
+#### ✅ MultiSelectThemesView.swift
+- Selector multi-opción de temas
+- Mismo patrón que géneros
+- Integrado con API
+
+#### ✅ MultiSelectDemographicsView.swift
+- Selector multi-opción de demografías
+- Mismo patrón que géneros/temas
+- Integrado con API
+
+#### ✅ FilterChip.swift
+- Componente visual para filtros activos
+- Diseño en cápsula con botón X
+- Reutilizable
+
+### 📝 ViewModels Actualizados
+
+#### ✅ SearchViewModel.swift (expandido)
+- Nuevos filtros:
+  - `authorFirstName`, `authorLastName`
+  - `selectedGenres: Set<String>`
+  - `selectedThemes: Set<String>`
+  - `selectedDemographics: Set<String>`
+  - `useContains: Bool`
+- Debounce de 500ms en `searchTitle`
+- Método `performSearch()` con CustomSearch POST
+- Propiedades computadas para UI (chips, contador)
+- Métodos de gestión de filtros
+
+### 🌐 Network Layer Actualizado
+
+#### ✅ Network.swift
+- `customSearch(_ search:, page:, per:)` con paginación
+- `getGenres() -> [String]` (simplificado)
+- `getThemes() -> [String]` (simplificado)
+- `getDemographics() -> [String]` (simplificado)
+- Corrección de doble encoding en POST
+
+#### ✅ URL.swift
+- `customSearch(page:, per:)` como función con query params
+
+### 📊 Estadísticas Actualizadas
+
+**Archivos Nuevos**: +6 (carpeta Search/)
+**Archivos Modificados**: +3 (SearchViewModel, Network, URL)
+**Total Componentes Búsqueda**: 7 archivos
+
+**Funcionalidades Implementadas**:
+- ✅ Búsqueda por título (con debounce)
+- ✅ Búsqueda por autor (nombre + apellido)
+- ✅ Filtro por géneros (multi-selección)
+- ✅ Filtro por temas (multi-selección)
+- ✅ Filtro por demografías (multi-selección)
+- ✅ Toggle búsqueda flexible (contains/begins with)
+- ✅ Chips visuales para filtros activos
+- ✅ Paginación integrada (page, per)
+- ✅ Diseño Liquid Glass (iconos sin texto)
+
+**Compilación**: ✅ BUILD SUCCEEDED sin errores
+
+---
+
+**Última actualización**: 24 de febrero de 2026
