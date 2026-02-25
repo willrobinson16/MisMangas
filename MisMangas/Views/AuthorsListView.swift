@@ -86,11 +86,19 @@ struct AuthorsListView: View {
             .refreshable {
                 await authorsVM.resetAndReload()
             }
-            .onAppear {
+            .task {
                 authorsVM.setModelContext(context)
-                if authors.isEmpty {
-                    Task {
-                        await authorsVM.loadNextPage()
+
+                // Cargar datos si la base de datos está vacía
+                let descriptor = FetchDescriptor<Author>()
+                if let count = try? context.fetchCount(descriptor), count == 0 {
+                    print("📦 Base de datos de autores vacía, cargando datos iniciales...")
+                    let modelContainer = DataContainer(modelContainer: context.container)
+                    do {
+                        try await modelContainer.loadInitialData()
+                        print("✅ Datos de autores cargados correctamente")
+                    } catch {
+                        print("❌ Error cargando datos de autores: \(error)")
                     }
                 }
             }

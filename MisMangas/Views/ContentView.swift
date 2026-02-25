@@ -69,17 +69,28 @@ struct ContentView: View {
                 MangaView(manga: manga, namespace: namespace)
             }
             .toolbarTitleDisplayMode(.inlineLarge)
-            .onAppear {
+            .task {
                 favoritesVM.setModelContext(context)
+
+                // Cargar datos si la base de datos está vacía
+                let descriptor = FetchDescriptor<Manga>()
+                if let count = try? context.fetchCount(descriptor), count == 0 {
+                    print("📦 Base de datos vacía, cargando datos iniciales...")
+                    let modelContainer = DataContainer(modelContainer: context.container)
+                    do {
+                        try await modelContainer.loadInitialData()
+                        print("✅ Datos iniciales cargados correctamente")
+                    } catch {
+                        print("❌ Error cargando datos: \(error)")
+                    }
+                }
             }
             .refreshable {
                 let modelContainer = DataContainer(modelContainer: context.container)
-                Task.detached {
-                    do {
-                        try await modelContainer.loadInitialData()
-                    } catch {
-                        print(error)
-                    }
+                do {
+                    try await modelContainer.loadInitialData()
+                } catch {
+                    print("❌ Error en refresh: \(error)")
                 }
             }
         }
