@@ -10,14 +10,22 @@ import SwiftData
 
 @main
 struct MisMangasApp: App {
+    @State private var authVM = AuthViewModel()
     @State private var favoritesVM = FavoritesViewModel()
     @State private var userCollectionVM = UserCollectionViewModel()
-    
+
     var body: some Scene {
         WindowGroup {
-            MainTab()
-                .environment(favoritesVM)
-                .environment(userCollectionVM)
+            Group {
+                if authVM.isAuthenticated {
+                    MainTab()
+                        .environment(favoritesVM)
+                        .environment(userCollectionVM)
+                } else {
+                    LoginView(authVM: authVM)
+                }
+            }
+            .environment(authVM)
         }
         .modelContainer(for: [FavoriteManga.self, Manga.self, UserMangaCollection.self]) { result in
             guard case .success(let container) = result else {

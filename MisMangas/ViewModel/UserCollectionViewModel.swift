@@ -20,9 +20,90 @@ import SwiftData
 final class UserCollectionViewModel {
     private var modelContext: ModelContext?
 
+    /// Estado de sincronización con el servidor
+    var isSyncing: Bool = false
+
+    /// Mensaje de error de sincronización
+    var syncError: String?
+
+    /// Indica si hay cambios pendientes de sincronizar
+    var hasPendingChanges: Bool = false
+
     /// Sets the model context for data persistence
     func setModelContext(_ context: ModelContext) {
         modelContext = context
+
+        // Verificar si hay cambios pendientes al inicializar
+        Task {
+            await checkPendingChanges()
+        }
+    }
+
+    // MARK: - Synchronization
+
+    /// Sincroniza todos los cambios pendientes con el servidor.
+    ///
+    /// Este método debe llamarse:
+    /// - Al recuperar conexión a internet
+    /// - Manualmente por el usuario (botón "Sincronizar")
+    /// - Al iniciar sesión
+    func syncPendingChanges() async {
+        guard let context = modelContext else { return }
+        guard !isSyncing else { return }
+
+        isSyncing = true
+        syncError = nil
+
+        do {
+            let (success, failed) = await SyncManager.shared.syncPendingChanges(context: context)
+
+            if failed > 0 {
+                syncError = "Sincronizados \(success) mangas. \(failed) fallaron."
+            }
+
+            // Actualizar estado de cambios pendientes
+            await checkPendingChanges()
+
+        } catch {
+            syncError = "Error al sincronizar: \(error.localizedDescription)"
+        }
+
+        isSyncing = false
+    }
+
+    /// Realiza una sincronización completa desde el servidor.
+    ///
+    /// **Importante**: Sobrescribe datos locales con los del servidor.
+    /// Solo usar si el servidor es la fuente de verdad.
+    func fullSyncFromServer() async {
+        guard let context = modelContext else { return }
+        guard !isSyncing else { return }
+
+        isSyncing = true
+        syncError = nil
+
+        do {
+            let count = try await SyncManager.shared.fullSyncFromServer(context: context)
+            print("✅ Sincronización completa: \(count) mangas descargados")
+
+            // Actualizar estado de cambios pendientes
+            await checkPendingChanges()
+
+        } catch {
+            syncError = "Error en sincronización completa: \(error.localizedDescription)"
+        }
+
+        isSyncing = false
+    }
+
+    /// Verifica si hay cambios pendientes de sincronización.
+    func checkPendingChanges() async {
+        guard let context = modelContext else {
+            hasPendingChanges = false
+            return
+        }
+
+        hasPendingChanges = await SyncManager.shared.hasPendingChanges(context: context)
     }
 
     // MARK: - Collection Management
@@ -48,8 +129,16 @@ final class UserCollectionViewModel {
             volumesOwned: volumes
         )
 
+        // Marcar como pendiente de sincronización
+        collection.markAsPendingSync(operation: .add)
+
         context.insert(collection)
         try? context.save()
+
+        // Actualizar estado de cambios pendientes
+        Task {
+            await checkPendingChanges()
+        }
     }
 
     /// Asegura que el Manga existe en la base de datos
@@ -67,8 +156,14 @@ final class UserCollectionViewModel {
         )
 
         if let collection = try? context.fetch(fetch).first {
-            context.delete(collection)
+            // Marcar como pendiente de eliminar (no eliminar localmente aún)
+            collection.markAsPendingSync(operation: .delete)
             try? context.save()
+
+            // Actualizar estado de cambios pendientes
+            Task {
+                await checkPendingChanges()
+            }
         }
     }
 
@@ -119,7 +214,15 @@ final class UserCollectionViewModel {
         collection.readingVolume = volume
         collection.lastUpdated = Date()
 
+        // Marcar como pendiente de sincronización
+        collection.markAsPendingSync(operation: .update)
+
         try? context.save()
+
+        // Actualizar estado de cambios pendientes
+        Task {
+            await checkPendingChanges()
+        }
     }
 
     /// Marks the next volume as being read
@@ -216,7 +319,13 @@ final class UserCollectionViewModel {
               let collection = getCollectionEntry(mangaID) else { return }
 
         collection.addVolume(volumeNumber)
+        collection.markAsPendingSync(operation: .update)
         try? context.save()
+
+        // Actualizar estado de cambios pendientes
+        Task {
+            await checkPendingChanges()
+        }
     }
 
     /// Removes a volume from the owned volumes list
@@ -228,7 +337,13 @@ final class UserCollectionViewModel {
               let collection = getCollectionEntry(mangaID) else { return }
 
         collection.removeVolume(volumeNumber)
+        collection.markAsPendingSync(operation: .update)
         try? context.save()
+
+        // Actualizar estado de cambios pendientes
+        Task {
+            await checkPendingChanges()
+        }
     }
 
     /// Adds multiple volumes at once
@@ -240,7 +355,13 @@ final class UserCollectionViewModel {
               let collection = getCollectionEntry(mangaID) else { return }
 
         collection.addVolumes(volumes)
+        collection.markAsPendingSync(operation: .update)
         try? context.save()
+
+        // Actualizar estado de cambios pendientes
+        Task {
+            await checkPendingChanges()
+        }
     }
 
     /// Checks if a specific volume is owned
@@ -269,8 +390,14 @@ final class UserCollectionViewModel {
 
         collection.completeCollection.toggle()
         collection.lastUpdated = Date()
+        collection.markAsPendingSync(operation: .update)
 
         try? context.save()
+
+        // Actualizar estado de cambios pendientes
+        Task {
+            await checkPendingChanges()
+        }
     }
 
     /// Sets the complete collection flag
@@ -283,8 +410,14 @@ final class UserCollectionViewModel {
 
         collection.completeCollection = isComplete
         collection.lastUpdated = Date()
+        collection.markAsPendingSync(operation: .update)
 
         try? context.save()
+
+        // Actualizar estado de cambios pendientes
+        Task {
+            await checkPendingChanges()
+        }
     }
 
     /// Checks if the user has the complete collection

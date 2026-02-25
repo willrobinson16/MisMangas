@@ -133,6 +133,10 @@ private struct iPhoneLayout: View {
             .navigationTitle("Mi Colección")
 //            .navigationBarTitleDisplayMode(.large)
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    syncButton
+                }
+
                 ToolbarItem(placement: .topBarTrailing) {
                     HStack(spacing: 16) {
                         filterMenu
@@ -264,6 +268,36 @@ private struct iPhoneLayout: View {
                 }
             }
             .padding()
+        }
+    }
+
+    // MARK: - Sync Button
+
+    private var syncButton: some View {
+        Button {
+            Task {
+                await collectionVM.syncPendingChanges()
+            }
+        } label: {
+            HStack(spacing: 4) {
+                if collectionVM.isSyncing {
+                    ProgressView()
+                        .controlSize(.small)
+                } else {
+                    Image(systemName: collectionVM.hasPendingChanges ? "arrow.triangle.2.circlepath.circle.fill" : "arrow.triangle.2.circlepath.circle")
+                        .symbolRenderingMode(collectionVM.hasPendingChanges ? .multicolor : .monochrome)
+                }
+            }
+        }
+        .disabled(collectionVM.isSyncing)
+        .alert("Error de sincronización", isPresented: .constant(collectionVM.syncError != nil)) {
+            Button("OK") {
+                collectionVM.syncError = nil
+            }
+        } message: {
+            if let error = collectionVM.syncError {
+                Text(error)
+            }
         }
     }
 
