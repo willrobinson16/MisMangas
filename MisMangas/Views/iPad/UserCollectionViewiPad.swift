@@ -22,7 +22,7 @@ struct UserCollectionViewiPad: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(UserCollectionViewModel.self) private var collectionVM
 
-    @Query(sort: \UserMangaCollection.lastUpdated, order: .reverse) private var collectionEntries: [UserMangaCollection]
+    @Query(sort: \UserMangaCollection.dateAdded, order: .reverse) private var collectionEntries: [UserMangaCollection]
 
     @Namespace private var namespace
 
