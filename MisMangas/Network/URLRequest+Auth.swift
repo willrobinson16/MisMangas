@@ -50,8 +50,6 @@ extension URLRequest {
             throw AuthError.tokenNotFound
         }
 
-        print("🔍 Token obtenido del Keychain: \(token.prefix(50))...")
-
         // Crear request manualmente sin usar .post() para evitar "Bearer" duplicado
         var request = URLRequest(url: url)
         request.httpMethod = method
@@ -60,8 +58,6 @@ extension URLRequest {
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.httpBody = try? JSONEncoder().encode(body)
-
-        print("🔍 Authorization header final: Bearer \(token.prefix(20))...")
 
         return request
     }

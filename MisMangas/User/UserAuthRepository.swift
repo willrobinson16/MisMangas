@@ -108,8 +108,6 @@ struct UserAuth: UserAuthRepository {
             // Parsear respuesta
             let jwtResponse = try JSONDecoder().decode(JWTTokenResponse.self, from: data)
             print("✅ Login successful, JWT received: \(jwtResponse.jwt.prefix(20))...")
-            print("🔍 Token type: \(jwtResponse.tokenType)")
-            print("🔍 Full token starts with: \(jwtResponse.jwt.prefix(50))")
 
             // Guardar token en Keychain (SOLO el token, SIN "Bearer")
             try await KeychainManager.shared.saveToken(jwtResponse.jwt)

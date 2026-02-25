@@ -99,21 +99,14 @@ actor SyncManager {
 
     /// Sincroniza una operación de añadir/actualizar con el servidor.
     private nonisolated func syncAddOrUpdate(_ entry: UserMangaCollection, context: ModelContext) async throws {
-        print("🔄 Sincronizando manga \(entry.mangaID)...")
-
         // Convertir a Request DTO (solo manga ID, no objeto completo)
-        print("🔄 Convirtiendo a Request DTO...")
         let collectionRequest = entry.toRequest()
 
         // Enviar al servidor
-        print("📤 Enviando al servidor: POST /collection/manga")
         do {
             try await collectionRepo.addOrUpdateCollection(collectionRequest)
-            print("✅ Manga \(entry.mangaID) sincronizado correctamente")
         } catch {
-            print("❌ Error en addOrUpdateCollection: \(error)")
-            print("   - URL: /collection/manga")
-            print("   - MangaID: \(entry.mangaID)")
+            print("❌ Error sincronizando manga \(entry.mangaID): \(error)")
             throw error
         }
 
