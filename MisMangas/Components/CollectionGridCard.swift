@@ -43,9 +43,21 @@ struct CollectionGridCard: View {
                     .font(.caption2)
                     .foregroundStyle(.orange)
 
-                Text("\(entry.completeCollection ? (manga.volumes ?? 0) : entry.volumesOwnedCount)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                if entry.completeCollection {
+                    if let totalVolumes = manga.volumes {
+                        Text("\(totalVolumes)")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    } else {
+                        Text("∞")
+                            .font(.caption)
+                            .foregroundStyle(.green)
+                    }
+                } else {
+                    Text("\(entry.volumesOwnedCount)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
             }
 
             // Barra de progreso

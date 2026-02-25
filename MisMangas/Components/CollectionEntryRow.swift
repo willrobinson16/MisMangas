@@ -67,20 +67,39 @@ struct CollectionEntryRow: View {
                 .font(.caption2)
                 .foregroundStyle(.orange)
 
-            Text("\(entry.completeCollection ? (manga.volumes ?? 0) : entry.volumesOwnedCount)")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+            if entry.completeCollection {
+                // Colección completa
+                if let totalVolumes = manga.volumes {
+                    Text("\(totalVolumes) / \(totalVolumes)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
 
-            if let totalVolumes = manga.volumes {
-                Text("/ \(totalVolumes)")
-                    .font(.caption)
-                    .foregroundStyle(.tertiary)
-
-                // Barra de progreso
-                if let progress = entry.collectionProgress(totalVolumes: totalVolumes) {
-                    ProgressView(value: progress)
+                    // Barra completa
+                    ProgressView(value: 1.0)
                         .frame(width: 40)
                         .tint(.orange)
+                } else {
+                    Text("Completa")
+                        .font(.caption)
+                        .foregroundStyle(.green)
+                }
+            } else {
+                // Colección parcial
+                Text("\(entry.volumesOwnedCount)")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                if let totalVolumes = manga.volumes {
+                    Text("/ \(totalVolumes)")
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
+
+                    // Barra de progreso
+                    if let progress = entry.collectionProgress(totalVolumes: totalVolumes) {
+                        ProgressView(value: progress)
+                            .frame(width: 40)
+                            .tint(.orange)
+                    }
                 }
             }
         }
@@ -97,7 +116,8 @@ struct CollectionEntryRow: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
-                if let totalVolumes = manga.volumes, totalVolumes > 0 {
+                // Usar totalVolumesForProgress que maneja correctamente completeCollection
+                if let totalVolumes = entry.totalVolumesForProgress(mangaTotalVolumes: manga.volumes), totalVolumes > 0 {
                     let progress = min(Double(currentVolume) / Double(totalVolumes), 1.0)
                     ProgressView(value: progress)
                         .frame(width: 40)
