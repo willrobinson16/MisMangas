@@ -90,15 +90,24 @@ struct AuthorsListView: View {
                 authorsVM.setModelContext(context)
 
                 // Cargar datos si la base de datos está vacía
-                let descriptor = FetchDescriptor<Author>()
-                if let count = try? context.fetchCount(descriptor), count == 0 {
-                    print("📦 Base de datos de autores vacía, cargando datos iniciales...")
-                    let modelContainer = DataContainer(modelContainer: context.container)
+                let descriptorMangas = FetchDescriptor<Manga>()
+                if let count = try? context.fetchCount(descriptorMangas), count == 0 {
+                    print("📦 Base de datos vacía, cargando datos desde AuthorsListView...")
                     do {
-                        try await modelContainer.loadInitialData()
-                        print("✅ Datos de autores cargados correctamente")
+                        // Cargar mangas directamente desde la API usando el context actual
+                        let network = Network()
+                        let mangasPage = try await network.getMangasPage(page: 1)
+                        let bestMangasPage = try await network.getBestMangasPage(page: 1)
+
+                        // Combinar ambos resultados
+                        let allMangas = mangasPage.items + bestMangasPage.items
+
+                        // Guardar en SwiftData usando el context de la vista
+                        try insertOrUpdateMangas(in: context, from: allMangas)
+
+                        print("✅ Datos cargados correctamente desde AuthorsListView (\(allMangas.count) mangas)")
                     } catch {
-                        print("❌ Error cargando datos de autores: \(error)")
+                        print("❌ Error cargando datos desde AuthorsListView: \(error)")
                     }
                 }
             }

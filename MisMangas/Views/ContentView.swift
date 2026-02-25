@@ -76,10 +76,19 @@ struct ContentView: View {
                 let descriptor = FetchDescriptor<Manga>()
                 if let count = try? context.fetchCount(descriptor), count == 0 {
                     print("📦 Base de datos vacía, cargando datos iniciales...")
-                    let modelContainer = DataContainer(modelContainer: context.container)
                     do {
-                        try await modelContainer.loadInitialData()
-                        print("✅ Datos iniciales cargados correctamente")
+                        // Cargar mangas directamente desde la API usando el context actual
+                        let network = Network()
+                        let mangasPage = try await network.getMangasPage(page: 1)
+                        let bestMangasPage = try await network.getBestMangasPage(page: 1)
+
+                        // Combinar ambos resultados
+                        let allMangas = mangasPage.items + bestMangasPage.items
+
+                        // Guardar en SwiftData usando el context de la vista
+                        try insertOrUpdateMangas(in: context, from: allMangas)
+
+                        print("✅ Datos iniciales cargados correctamente (\(allMangas.count) mangas)")
                     } catch {
                         print("❌ Error cargando datos: \(error)")
                     }

@@ -27,18 +27,6 @@ struct MisMangasApp: App {
             }
             .environment(authVM)
         }
-        .modelContainer(for: [FavoriteManga.self, Manga.self, UserMangaCollection.self]) { result in
-            guard case .success(let container) = result else {
-                return
-            }
-            Task.detached(priority: .high) {
-                let modelContainer = DataContainer(modelContainer: container)
-                do {
-                    try await modelContainer.loadInitialData()
-                } catch {
-                    print(error)
-                }
-            }
-        }
+        .modelContainer(for: [FavoriteManga.self, Manga.self, UserMangaCollection.self])
     }
 }
