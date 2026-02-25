@@ -22,7 +22,6 @@ import SwiftData
 /// let syncManager = SyncManager.shared
 /// await syncManager.syncPendingChanges(context: modelContext)
 /// ```
-@MainActor
 actor SyncManager {
 
     /// Instancia compartida del SyncManager

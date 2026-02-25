@@ -81,7 +81,6 @@
 		4AF79E3B2F4F895500424F93 /* UserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF79E3A2F4F895500424F93 /* UserResponse.swift */; };
 		4AF79E422F4F89D800424F93 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF79E402F4F89D800424F93 /* KeychainManager.swift */; };
 		4AF79E432F4F89D800424F93 /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF79E412F4F89D800424F93 /* SyncManager.swift */; };
-		4AF79E452F4F8BD800424F93 /* AuthenticatedRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF79E442F4F8BD800424F93 /* AuthenticatedRequest.swift */; };
 		4AF9E6472EE6CE77005801A6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF9E6442EE6CE77005801A6 /* ContentView.swift */; };
 		4AF9E6482EE6CE77005801A6 /* MisMangasApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF9E6452EE6CE77005801A6 /* MisMangasApp.swift */; };
 		4AF9E6492EE6CE77005801A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4AF9E6432EE6CE77005801A6 /* Assets.xcassets */; };
@@ -168,7 +167,6 @@
 		4AF79E3A2F4F895500424F93 /* UserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserResponse.swift; sourceTree = "<group>"; };
 		4AF79E402F4F89D800424F93 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
 		4AF79E412F4F89D800424F93 /* SyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
-		4AF79E442F4F8BD800424F93 /* AuthenticatedRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedRequest.swift; sourceTree = "<group>"; };
 		4AF9E6432EE6CE77005801A6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4AF9E6442EE6CE77005801A6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		4AF9E6452EE6CE77005801A6 /* MisMangasApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MisMangasApp.swift; sourceTree = "<group>"; };
@@ -329,7 +327,6 @@
 		4AF9E64C2EE6CE90005801A6 /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				4AF79E442F4F8BD800424F93 /* AuthenticatedRequest.swift */,
 				4AF79E2A2F4F883800424F93 /* CollectionRepository.swift */,
 				4AF79E2B2F4F883800424F93 /* NetworkError+Auth.swift */,
 				4AF79E2C2F4F883800424F93 /* URLRequest+Auth.swift */,
@@ -516,7 +513,6 @@
 				4AEE6D442F4D257600092CF2 /* AdvancedSearchFiltersSheet.swift in Sources */,
 				4AEE6D452F4D257600092CF2 /* MultiSelectGenresView.swift in Sources */,
 				4AEE6D462F4D257600092CF2 /* SearchViewModel.swift in Sources */,
-				4AF79E452F4F8BD800424F93 /* AuthenticatedRequest.swift in Sources */,
 				4AEE6D472F4D257600092CF2 /* MultiSelectThemesView.swift in Sources */,
 				4AEE6D482F4D257600092CF2 /* FilterChip.swift in Sources */,
 				4AEE6D492F4D257600092CF2 /* MultiSelectDemographicsView.swift in Sources */,
