@@ -45,7 +45,7 @@ struct CollectionEntryRow: View {
             Spacer()
 
             // Badges
-            VStack(alignment: .trailing, spacing: 4) {
+            VStack(alignment: .trailing, spacing: 8) {
                 // Mostrar badge si está marcada como completa O tiene todos los volúmenes
                 let hasCompleteCollection = entry.completeCollection || (manga.volumes != nil && entry.volumesOwnedCount == manga.volumes)
 
@@ -60,12 +60,6 @@ struct CollectionEntryRow: View {
                     Image(systemName: "heart.fill")
                         .foregroundStyle(.red)
                         .font(.title3)
-                }
-
-                if entry.hasStartedReading {
-                    Image(systemName: "book.pages.fill")
-                        .foregroundStyle(.blue)
-                        .font(.caption)
                 }
             }
         }
