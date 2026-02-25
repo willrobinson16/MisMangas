@@ -54,19 +54,14 @@ final class UserCollectionViewModel {
         isSyncing = true
         syncError = nil
 
-        do {
-            let (success, failed) = await SyncManager.shared.syncPendingChanges(context: context)
+        let (success, failed) = await SyncManager.shared.syncPendingChanges(context: context)
 
-            if failed > 0 {
-                syncError = "Sincronizados \(success) mangas. \(failed) fallaron."
-            }
-
-            // Actualizar estado de cambios pendientes
-            await checkPendingChanges()
-
-        } catch {
-            syncError = "Error al sincronizar: \(error.localizedDescription)"
+        if failed > 0 {
+            syncError = "Sincronizados \(success) mangas. \(failed) fallaron."
         }
+
+        // Actualizar estado de cambios pendientes
+        await checkPendingChanges()
 
         isSyncing = false
     }
@@ -103,7 +98,7 @@ final class UserCollectionViewModel {
             return
         }
 
-        hasPendingChanges = await SyncManager.shared.hasPendingChanges(context: context)
+        hasPendingChanges = SyncManager.shared.hasPendingChanges(context: context)
     }
 
     // MARK: - Collection Management
