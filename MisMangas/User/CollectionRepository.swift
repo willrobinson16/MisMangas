@@ -67,18 +67,45 @@ struct Collection: CollectionRepository {
     // MARK: - Add or Update Collection
 
     func addOrUpdateCollection(_ collection: UserMangaCollectionDTO) async throws {
+        print("🔐 Creando request autenticado para POST /users/jwt/collection")
         let request = try await URLRequest.postAuthenticated(url: .collection, body: collection)
 
-        let (_, response) = try await URLSession.shared.data(for: request)
+        // Debug: Mostrar headers del request
+        print("📋 Request headers:")
+        if let headers = request.allHTTPHeaderFields {
+            for (key, value) in headers {
+                if key == "Authorization" {
+                    print("   - \(key): Bearer \(value.prefix(20))...")
+                } else {
+                    print("   - \(key): \(value)")
+                }
+            }
+        }
+
+        print("📡 Enviando petición a: \(request.url?.absoluteString ?? "unknown")")
+        let (data, response) = try await URLSession.shared.data(for: request)
 
         guard let httpResponse = response as? HTTPURLResponse else {
+            print("❌ Respuesta no es HTTPURLResponse")
             throw AuthError.unauthorized
+        }
+
+        print("📊 Status code: \(httpResponse.statusCode)")
+
+        // Mostrar respuesta del servidor si hay error
+        if !(200...201).contains(httpResponse.statusCode) {
+            if let responseBody = String(data: data, encoding: .utf8) {
+                print("📄 Response body: \(responseBody)")
+            }
         }
 
         // 200 (updated) o 201 (created) son válidos
         guard (200...201).contains(httpResponse.statusCode) else {
+            print("❌ Status code no válido: \(httpResponse.statusCode)")
             throw AuthError.unauthorized
         }
+
+        print("✅ Colección actualizada/creada correctamente")
     }
 
     // MARK: - Delete Collection Manga
