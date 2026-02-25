@@ -8,8 +8,10 @@
 import Foundation
 
 //MARK: - User Response
-/// Authenticated user information
-struct UserResponse: Codable {
+/// Información del usuario autenticado.
+///
+/// Devuelto por `GET /users/jwt/me` con token JWT Bearer.
+struct UserResponse: Codable, Sendable {
     let id: UUID
     let email: String
     let role: String

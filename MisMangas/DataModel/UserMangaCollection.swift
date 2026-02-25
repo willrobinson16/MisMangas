@@ -33,12 +33,20 @@ final class UserMangaCollection {
     /// Date when this entry was last updated
     var lastUpdated: Date
 
+    /// Flag que indica si este registro tiene cambios pendientes de sincronizar con el servidor
+    var isPendingSync: Bool
+
+    /// Tipo de operación pendiente de sincronizar (add, update, delete)
+    var pendingSyncOperation: String?
+
     init(
         id: UUID = UUID(),
         mangaID: Int,
         readingVolume: Int? = nil,
         completeCollection: Bool = false,
-        volumesOwned: [Int] = []
+        volumesOwned: [Int] = [],
+        isPendingSync: Bool = false,
+        pendingSyncOperation: String? = nil
     ) {
         self.id = id
         self.mangaID = mangaID
@@ -47,6 +55,8 @@ final class UserMangaCollection {
         self.volumesOwnedData = (try? JSONEncoder().encode(volumesOwned)) ?? Data()
         self.dateAdded = Date()
         self.lastUpdated = Date()
+        self.isPendingSync = isPendingSync
+        self.pendingSyncOperation = pendingSyncOperation
     }
 }
 
@@ -156,6 +166,30 @@ extension UserMangaCollection {
     }
 }
 
+// MARK: - Sync Management
+extension UserMangaCollection {
+    /// Marca este registro como pendiente de sincronización con el servidor
+    func markAsPendingSync(operation: SyncOperation) {
+        self.isPendingSync = true
+        self.pendingSyncOperation = operation.rawValue
+        self.lastUpdated = Date()
+    }
+
+    /// Marca este registro como sincronizado con el servidor
+    func markAsSynced() {
+        self.isPendingSync = false
+        self.pendingSyncOperation = nil
+        self.lastUpdated = Date()
+    }
+}
+
+/// Tipo de operación pendiente de sincronización
+enum SyncOperation: String, Codable, Sendable {
+    case add = "add"
+    case update = "update"
+    case delete = "delete"
+}
+
 // MARK: - DTO Conversion
 extension UserMangaCollection {
     /// Converts to DTO representation (requires manga data)
@@ -189,6 +223,7 @@ extension UserMangaCollection {
         mangaID: 13,
         readingVolume: 5,
         completeCollection: false,
-        volumesOwned: [1, 2, 3, 4, 5]
+        volumesOwned: [1, 2, 3, 4, 5],
+        isPendingSync: false
     )
 }

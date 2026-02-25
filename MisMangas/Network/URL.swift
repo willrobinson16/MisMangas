@@ -74,10 +74,24 @@ extension URL {
             ])
     }
     
-    // MARK: - Authentication endpoints
+    // MARK: - JWT Authentication endpoints
+    static let jwtLogin = api.appendingPathComponent("users/jwt/login")
+    static let jwtRefresh = api.appendingPathComponent("users/jwt/refresh")
+    static let jwtMe = api.appendingPathComponent("users/jwt/me")
+
+    // MARK: - User endpoints
     static let register = api.appendingPathComponent("users")
+
+    // MARK: - Legacy Authentication endpoints (deprecated, usar JWT)
     static let login = api.appendingPathComponent("users/login")
     static let renewToken = api.appendingPathComponent("users/renew")
+
+    // MARK: - Collection endpoints
+    static let collection = api.appendingPathComponent("collection/manga")
+
+    static func collectionManga(id: Int) -> URL {
+        api.appending(path: "collection/manga").appending(path: "\(id)")
+    }
     
     // MARK: - Pagination helper
     static func getMangas(page: Int, itemsPerPage: Int = 10) -> URL {
