@@ -11,11 +11,20 @@ import Foundation
 /// Respuesta del servidor al hacer login JWT.
 ///
 /// Devuelto por `POST /users/jwt/login` con Basic Auth.
-/// El token JWT es válido por 24 horas.
+/// El token JWT es válido por 24 horas (86400 segundos).
 struct JWTTokenResponse: Codable, Sendable {
-    let jwt: String
+    let token: String
+    let tokenType: String
+    let expiresIn: Int
+
+    /// Alias para acceso directo al token JWT
+    var jwt: String {
+        token
+    }
 
     enum CodingKeys: String, CodingKey {
-        case jwt
+        case token
+        case tokenType
+        case expiresIn
     }
 }
