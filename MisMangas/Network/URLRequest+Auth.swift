@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import NetworkAPI
 
 /// Extensión de URLRequest para añadir métodos específicos de autenticación
 /// que requieren acceso al KeychainManager del proyecto.
@@ -30,7 +31,10 @@ extension URLRequest {
         guard let token = try await KeychainManager.shared.getToken() else {
             throw AuthError.tokenNotFound
         }
-        return get(url: url, token: token)
+
+        var request = get(url: url)
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        return request
     }
 
     /// Crea una petición POST autenticada con el token JWT del Keychain.
@@ -45,7 +49,10 @@ extension URLRequest {
         guard let token = try await KeychainManager.shared.getToken() else {
             throw AuthError.tokenNotFound
         }
-        return post(url: url, body: body, token: token, method: method)
+
+        var request = post(url: url, body: body, method: method)
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        return request
     }
 
     /// Crea una petición DELETE autenticada con el token JWT del Keychain.
