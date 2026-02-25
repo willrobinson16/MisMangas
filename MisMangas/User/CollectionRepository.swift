@@ -67,7 +67,7 @@ struct Collection: CollectionRepository {
     // MARK: - Add or Update Collection
 
     func addOrUpdateCollection(_ collection: UserMangaCollectionRequest) async throws {
-        print("🔐 Creando request autenticado para POST /users/jwt/collection")
+        print("🔐 Creando request autenticado para POST /collection/manga")
         let request = try await URLRequest.postAuthenticated(url: .collection, body: collection)
 
         // Debug: Mostrar headers del request

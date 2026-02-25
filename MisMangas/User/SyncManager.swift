@@ -106,13 +106,13 @@ actor SyncManager {
         let collectionRequest = entry.toRequest()
 
         // Enviar al servidor
-        print("📤 Enviando al servidor: POST /users/jwt/collection")
+        print("📤 Enviando al servidor: POST /collection/manga")
         do {
             try await collectionRepo.addOrUpdateCollection(collectionRequest)
             print("✅ Manga \(entry.mangaID) sincronizado correctamente")
         } catch {
             print("❌ Error en addOrUpdateCollection: \(error)")
-            print("   - URL: /users/jwt/collection")
+            print("   - URL: /collection/manga")
             print("   - MangaID: \(entry.mangaID)")
             throw error
         }

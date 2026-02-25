@@ -204,13 +204,13 @@ extension UserMangaCollection {
     }
 
     /// Converts to Request DTO for server (only manga ID, not full object)
+    /// Matches API spec: POST /collection/manga
     func toRequest() -> UserMangaCollectionRequest {
         UserMangaCollectionRequest(
-            id: id,
-            manga: mangaID,  // ← Solo el ID, no el objeto completo
-            readingVolume: readingVolume,
+            manga: mangaID,
+            volumesOwned: volumesOwned,
             completeCollection: completeCollection,
-            volumesOwned: volumesOwned
+            readingVolume: readingVolume
         )
     }
 

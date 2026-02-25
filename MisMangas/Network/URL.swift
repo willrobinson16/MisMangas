@@ -87,10 +87,10 @@ extension URL {
     static let renewToken = api.appendingPathComponent("users/renew")
 
     // MARK: - Collection endpoints (JWT protected)
-    static let collection = api.appendingPathComponent("users/jwt/collection")
+    static let collection = api.appendingPathComponent("collection/manga")
 
     static func collectionManga(id: Int) -> URL {
-        api.appending(path: "users/jwt/collection").appending(path: "\(id)")
+        api.appending(path: "collection/manga").appending(path: "\(id)")
     }
     
     // MARK: - Pagination helper
