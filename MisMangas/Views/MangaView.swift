@@ -165,7 +165,7 @@ struct MangaView: View {
             }
 
             Button {
-                collectionVM.toggleInCollection(manga)
+                collectionVM.toggleInCollection(mangaID: manga.id)
             } label: {
                 Label(
                     isInCollection ? "En Colección" : "Añadir a Colección",

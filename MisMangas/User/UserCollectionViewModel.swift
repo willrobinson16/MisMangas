@@ -8,11 +8,12 @@
 import Foundation
 import SwiftData
 
-// NOTA: Existen DOS tipos llamados "Manga":
-// 1. struct Manga en /Model/Manga.swift (DTO para red)
-// 2. @Model class Manga en /DataModel/Model.swift (SwiftData)
-// El parámetro de addToCollection recibe el struct DTO
-// FetchDescriptor usa automáticamente la clase SwiftData
+// NOTA: Este ViewModel trabaja con IDs de manga, no con objetos completos.
+// Esto evita acoplamiento innecesario y permite trabajar con cualquier fuente:
+// - @Model Manga desde SwiftData (@Query)
+// - MangaDTO desde API
+//
+// La persistencia en SwiftData se maneja mediante fetch del manga por ID.
 
 /// ViewModel for managing the user's manga collection
 /// Tracks ownership, reading progress, and volume possession
@@ -105,22 +106,26 @@ final class UserCollectionViewModel {
 
     /// Adds a manga to the user's collection
     /// - Parameters:
-    ///   - manga: The manga struct (DTO) to add
+    ///   - mangaID: The ID of the manga to add
     ///   - volumes: Optional array of volume numbers already owned
-    func addToCollection(manga: Manga, volumes: [Int] = []) {
+    func addToCollection(mangaID: Int, volumes: [Int] = []) {
         guard let context = modelContext else { return }
 
         // Check if already in collection
-        if isInCollection(manga.id) {
+        if isInCollection(mangaID) {
             return
         }
 
-        // Crear o encontrar el Manga SwiftData
-        ensureMangaExists(manga, in: context)
+        // Verificar que el manga existe en SwiftData
+        let fetchManga = FetchDescriptor<Manga>(predicate: #Predicate { $0.id == mangaID })
+        guard (try? context.fetch(fetchManga).first) != nil else {
+            print("⚠️ Manga \(mangaID) no encontrado en SwiftData. No se puede añadir a colección.")
+            return
+        }
 
         // Crear entrada de colección
         let collection = UserMangaCollection(
-            mangaID: manga.id,
+            mangaID: mangaID,
             volumesOwned: volumes
         )
 
@@ -134,12 +139,6 @@ final class UserCollectionViewModel {
         Task {
             await checkPendingChanges()
         }
-    }
-
-    /// Asegura que el Manga existe en la base de datos
-    private func ensureMangaExists(_ manga: Manga, in context: ModelContext) {
-        // Usar la función global para insertar/actualizar el manga
-        try? insertOrUpdateManga(in: context, manga)
     }
 
     /// Removes a manga from the user's collection
@@ -175,11 +174,11 @@ final class UserCollectionViewModel {
         return (try? context.fetch(fetch).first) != nil
     }
     
-    func toggleInCollection(_ manga: Manga) {
-        if isInCollection(manga.id) {
-            removeFromCollection(manga.id)
+    func toggleInCollection(mangaID: Int) {
+        if isInCollection(mangaID) {
+            removeFromCollection(mangaID)
         } else {
-            addToCollection(manga: manga)
+            addToCollection(mangaID: mangaID)
         }
     }
 

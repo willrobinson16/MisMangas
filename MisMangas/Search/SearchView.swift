@@ -86,6 +86,7 @@ private struct iPhoneLayout: View {
                             MangaRow(manga: mangaDTO.toManga, namespace: namespace)
                         }
                         .mangaSwipeActions(
+                            mangaID: mangaDTO.id,
                             manga: mangaDTO.toManga,
                             isFavorite: isFavorite,
                             isInCollection: isInCollection,

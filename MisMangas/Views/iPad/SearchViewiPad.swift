@@ -86,6 +86,7 @@ struct SearchViewiPad: View {
                                 }
                                 .buttonStyle(.plain)
                                 .mangaSwipeActions(
+                                    mangaID: mangaDTO.id,
                                     manga: mangaDTO.toManga,
                                     isFavorite: isFavorite,
                                     isInCollection: isInCollection,

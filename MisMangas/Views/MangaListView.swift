@@ -41,6 +41,7 @@ struct MangaListView: View {
                     MangaRow(manga: manga, namespace: namespace)
                 }
                 .mangaSwipeActions(
+                    mangaID: manga.id,
                     manga: manga,
                     isFavorite: isFavorite,
                     isInCollection: isInCollection,
