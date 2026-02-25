@@ -26,10 +26,10 @@ struct UserProfileViewiPad: View {
     @Query private var mangas: [Manga]
     @Query private var favoriteManga: [FavoriteManga]
     @Query private var userCollection: [UserMangaCollection]
-    
+
     @Namespace private var namespace
 
-    @State private var userName: String = "Usuario"
+    @Bindable var authVM: AuthViewModel
 
     var body: some View {
         NavigationStack {
@@ -67,6 +67,23 @@ struct UserProfileViewiPad: View {
                 MangaView(manga: manga, namespace: namespace)
             }
             .toolbarTitleDisplayMode(.inlineLarge)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        Task {
+                            await authVM.logout()
+                        }
+                    } label: {
+                        if authVM.isLoading {
+                            ProgressView()
+                                .controlSize(.small)
+                        } else {
+                            Label("Cerrar sesión", systemImage: "rectangle.portrait.and.arrow.right")
+                        }
+                    }
+                    .disabled(authVM.isLoading)
+                }
+            }
         }
         .onAppear {
             collectionVM.setModelContext(modelContext)
@@ -97,7 +114,7 @@ struct UserProfileViewiPad: View {
             .shadow(color: .blue.opacity(0.3), radius: 20, x: 0, y: 10)
 
             VStack(alignment: .leading, spacing: 8) {
-                Text(userName)
+                Text(authVM.currentUser?.email ?? "Usuario")
                     .font(.system(size: 32, weight: .bold))
 
                 Text("Usuario desde 2026")
@@ -667,13 +684,15 @@ private struct EnrichedReadingRow: View {
 // MARK: - Previews
 
 #Preview("With Data", traits: .sampleData) {
-    UserProfileViewiPad()
+    @Previewable @State var authVM = AuthViewModel()
+    UserProfileViewiPad(authVM: authVM)
         .environment(UserCollectionViewModel())
         .environment(FavoritesViewModel())
 }
 
 #Preview("Empty State") {
-    UserProfileViewiPad()
+    @Previewable @State var authVM = AuthViewModel()
+    UserProfileViewiPad(authVM: authVM)
         .modelContainer(for: [UserMangaCollection.self, FavoriteManga.self, Manga.self], inMemory: true)
         .environment(UserCollectionViewModel())
         .environment(FavoritesViewModel())

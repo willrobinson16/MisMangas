@@ -18,7 +18,7 @@ struct MisMangasApp: App {
         WindowGroup {
             Group {
                 if authVM.isAuthenticated {
-                    MainTab()
+                    MainTab(authVM: authVM)
                         .environment(favoritesVM)
                         .environment(userCollectionVM)
                 } else {

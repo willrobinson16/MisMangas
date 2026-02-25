@@ -121,22 +121,24 @@ private struct iPhoneLayout: View {
                         description: Text("Aún no has añadido mangas a tu colección.\nVisita la lista de mangas y añade tus favoritos.")
                     )
                 } else {
-                    switch viewMode {
-                    case .list:
-                        collectionListView
-                    case .grid:
-                        collectionGridView
+                    VStack(spacing: 0) {
+                        // Botón de sincronización dentro de la vista
+                        syncButtonInline
+                            .padding(.horizontal)
+                            .padding(.vertical, 12)
+
+                        switch viewMode {
+                        case .list:
+                            collectionListView
+                        case .grid:
+                            collectionGridView
+                        }
                     }
                 }
             }
             .animation(.default, value: viewMode)
             .navigationTitle("Mi Colección")
-//            .navigationBarTitleDisplayMode(.large)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    syncButton
-                }
-
                 ToolbarItem(placement: .topBarTrailing) {
                     HStack(spacing: 16) {
                         filterMenu
@@ -271,25 +273,37 @@ private struct iPhoneLayout: View {
         }
     }
 
-    // MARK: - Sync Button
+    // MARK: - Sync Button (Inline)
 
-    private var syncButton: some View {
+    private var syncButtonInline: some View {
         Button {
             Task {
                 await collectionVM.syncPendingChanges()
             }
         } label: {
-            HStack(spacing: 4) {
+            HStack(spacing: 8) {
                 if collectionVM.isSyncing {
                     ProgressView()
+                        .tint(.white)
                         .controlSize(.small)
                 } else {
                     Image(systemName: collectionVM.hasPendingChanges ? "arrow.triangle.2.circlepath.circle.fill" : "arrow.triangle.2.circlepath.circle")
                         .symbolRenderingMode(collectionVM.hasPendingChanges ? .multicolor : .monochrome)
                 }
+
+                Text(collectionVM.isSyncing ? "Sincronizando..." : (collectionVM.hasPendingChanges ? "Sincronizar cambios" : "Sincronizado"))
+                    .font(.subheadline.weight(.medium))
             }
+            .frame(maxWidth: .infinity)
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color.blue)
+            )
+            .foregroundStyle(.white)
         }
-        .disabled(collectionVM.isSyncing)
+        .disabled(collectionVM.isSyncing || !collectionVM.hasPendingChanges)
+        .opacity((collectionVM.isSyncing || !collectionVM.hasPendingChanges) ? 0.6 : 1.0)
         .alert("Error de sincronización", isPresented: .constant(collectionVM.syncError != nil)) {
             Button("OK") {
                 collectionVM.syncError = nil

@@ -15,6 +15,8 @@ struct MainTab: View {
     @Environment(FavoritesViewModel.self) private var favoritesVM
     @Environment(UserCollectionViewModel.self) private var userCollectionVM
 
+    @Bindable var authVM: AuthViewModel
+
     var body: some View {
         TabView {
             Tab("Mangas", systemImage: "book") {
@@ -36,9 +38,9 @@ struct MainTab: View {
             }
             Tab("Usuario", systemImage: "person.circle.fill") {
                 if !isiPhone {
-                    UserProfileViewiPad()
+                    UserProfileViewiPad(authVM: authVM)
                 } else {
-                    UserProfileView()
+                    UserProfileView(authVM: authVM)
                 }
             }
             Tab("Search", systemImage: "magnifyingglass", role: .search) {
@@ -60,7 +62,8 @@ struct MainTab: View {
 }
 
 #Preview(traits: .sampleData) {
-    MainTab()
+    @Previewable @State var authVM = AuthViewModel()
+    MainTab(authVM: authVM)
         .environment(FavoritesViewModel())
         .environment(UserCollectionViewModel())
         .modelContainer(for: [Manga.self, FavoriteManga.self, UserMangaCollection.self])

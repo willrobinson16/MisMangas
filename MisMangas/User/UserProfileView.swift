@@ -10,13 +10,15 @@ import SwiftData
 
 /// Vista de perfil del usuario con estadísticas y progreso
 struct UserProfileView: View {
+    @Bindable var authVM: AuthViewModel
+
     var body: some View {
         if UIDevice.current.userInterfaceIdiom == .pad {
             // iPad: Layout de 2 columnas
-            UserProfileViewiPad()
+            UserProfileViewiPad(authVM: authVM)
         } else {
             // iPhone: Layout vertical
-            iPhoneLayout()
+            iPhoneLayout(authVM: authVM)
         }
     }
 }
@@ -34,7 +36,7 @@ private struct iPhoneLayout: View {
 
     @Namespace private var namespace
 
-    @State private var userName: String = "Usuario"
+    @Bindable var authVM: AuthViewModel
 
     var body: some View {
         NavigationStack {
@@ -62,6 +64,23 @@ private struct iPhoneLayout: View {
                 MangaView(manga: manga, namespace: namespace)
             }
             .toolbarTitleDisplayMode(.inlineLarge)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        Task {
+                            await authVM.logout()
+                        }
+                    } label: {
+                        if authVM.isLoading {
+                            ProgressView()
+                                .controlSize(.small)
+                        } else {
+                            Label("Cerrar sesión", systemImage: "rectangle.portrait.and.arrow.right")
+                        }
+                    }
+                    .disabled(authVM.isLoading)
+                }
+            }
         }
         .onAppear {
             collectionVM.setModelContext(modelContext)
@@ -91,7 +110,7 @@ private struct iPhoneLayout: View {
             }
             .shadow(color: .blue.opacity(0.3), radius: 15, x: 0, y: 8)
 
-            Text(userName)
+            Text(authVM.currentUser?.email ?? "Usuario")
                 .font(.title2.bold())
 
             Text("Usuario desde 2026")
@@ -288,13 +307,15 @@ private struct iPhoneLayout: View {
 }
 
 #Preview("With Data", traits: .sampleData) {
-    iPhoneLayout()
+    @Previewable @State var authVM = AuthViewModel()
+    iPhoneLayout(authVM: authVM)
         .environment(UserCollectionViewModel())
         .environment(FavoritesViewModel())
 }
 
 #Preview("Empty State") {
-    iPhoneLayout()
+    @Previewable @State var authVM = AuthViewModel()
+    iPhoneLayout(authVM: authVM)
         .modelContainer(for: [UserMangaCollection.self, FavoriteManga.self, Manga.self], inMemory: true)
         .environment(UserCollectionViewModel())
         .environment(FavoritesViewModel())
