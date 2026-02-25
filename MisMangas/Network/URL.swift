@@ -86,11 +86,11 @@ extension URL {
     static let login = api.appendingPathComponent("users/login")
     static let renewToken = api.appendingPathComponent("users/renew")
 
-    // MARK: - Collection endpoints
-    static let collection = api.appendingPathComponent("collection/manga")
+    // MARK: - Collection endpoints (JWT protected)
+    static let collection = api.appendingPathComponent("users/jwt/collection")
 
     static func collectionManga(id: Int) -> URL {
-        api.appending(path: "collection/manga").appending(path: "\(id)")
+        api.appending(path: "users/jwt/collection").appending(path: "\(id)")
     }
     
     // MARK: - Pagination helper

@@ -203,6 +203,17 @@ extension UserMangaCollection {
         )
     }
 
+    /// Converts to Request DTO for server (only manga ID, not full object)
+    func toRequest() -> UserMangaCollectionRequest {
+        UserMangaCollectionRequest(
+            id: id,
+            manga: mangaID,  // ← Solo el ID, no el objeto completo
+            readingVolume: readingVolume,
+            completeCollection: completeCollection,
+            volumesOwned: volumesOwned
+        )
+    }
+
     /// Creates from DTO
     static func from(_ dto: UserMangaCollectionDTO) -> UserMangaCollection {
         UserMangaCollection(

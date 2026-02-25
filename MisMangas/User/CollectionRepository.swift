@@ -37,7 +37,7 @@ protocol CollectionRepository: Sendable, NetworkInteractor {
     ///
     /// - Parameter collection: DTO del manga a añadir/actualizar.
     /// - Throws: `AuthError.unauthorized` si el token no es válido.
-    func addOrUpdateCollection(_ collection: UserMangaCollectionDTO) async throws
+    func addOrUpdateCollection(_ collection: UserMangaCollectionRequest) async throws
 
     /// Elimina un manga de la colección del usuario en el servidor.
     ///
@@ -66,7 +66,7 @@ struct Collection: CollectionRepository {
 
     // MARK: - Add or Update Collection
 
-    func addOrUpdateCollection(_ collection: UserMangaCollectionDTO) async throws {
+    func addOrUpdateCollection(_ collection: UserMangaCollectionRequest) async throws {
         print("🔐 Creando request autenticado para POST /users/jwt/collection")
         let request = try await URLRequest.postAuthenticated(url: .collection, body: collection)
 

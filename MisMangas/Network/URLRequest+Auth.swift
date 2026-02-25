@@ -50,8 +50,15 @@ extension URLRequest {
             throw AuthError.tokenNotFound
         }
 
-        var request = post(url: url, body: body, method: method)
+        // Crear request manualmente sin usar .post() para evitar "Bearer" duplicado
+        var request = URLRequest(url: url)
+        request.httpMethod = method
+        request.timeoutInterval = 60
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.httpBody = try? JSONEncoder().encode(body)
+
         return request
     }
 
