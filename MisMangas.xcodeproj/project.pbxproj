@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		136254A37C624660BF1E76E199896750 /* AuthorRoleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CCB0E62A7B498FB5938EFDE3CF54A4 /* AuthorRoleExtension.swift */; };
-		4A4937132F3E72CB0043A186 /* MangasViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4937122F3E72CB0043A186 /* MangasViewModel.swift */; };
 		4A4937152F3FBA600043A186 /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4937142F3FBA600043A186 /* TestView.swift */; };
 		4A6497502EEC1C8100986CDF /* PreviewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A64974F2EEC1C8100986CDF /* PreviewContainer.swift */; };
 		4A6497562EF15D9E00986CDF /* DataContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A6497552EF15D9E00986CDF /* DataContainer.swift */; };
@@ -89,7 +88,6 @@
 
 /* Begin PBXFileReference section */
 		00476804D0D04DF6BDFF03E4 /* MangaSwipeActionsModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaSwipeActionsModifier.swift; sourceTree = "<group>"; };
-		4A4937122F3E72CB0043A186 /* MangasViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangasViewModel.swift; sourceTree = "<group>"; };
 		4A4937142F3FBA600043A186 /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 		4A64974F2EEC1C8100986CDF /* PreviewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewContainer.swift; sourceTree = "<group>"; };
 		4A6497552EF15D9E00986CDF /* DataContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataContainer.swift; sourceTree = "<group>"; };
@@ -328,7 +326,6 @@
 				4AEE6D372F4CC02500092CF2 /* AuthorsViewModel.swift */,
 				4A8096272F408F7C0021993F /* BestMangasViewModel.swift */,
 				4ACB65E32F0D2BA300F552FF /* FavoritesViewModel.swift */,
-				4A4937122F3E72CB0043A186 /* MangasViewModel.swift */,
 				4AF16A732F425BCD003D43BB /* UserCollectionViewModel.swift */,
 				4AEE6D422F4D257600092CF2 /* SearchViewModel.swift */,
 			);
@@ -432,7 +429,7 @@
 			mainGroup = 4A7D62032EE43963005006CE;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				4AAE82382EFAF67200B870C6 /* XCLocalSwiftPackageReference "../../Library/Mobile Documents/com~apple~CloudDocs/Swift Develope/NetworkAPI" */,
+				4AF79E232F4F576300424F93 /* XCLocalSwiftPackageReference "../NetworkAPI" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4A7D620D2EE43963005006CE /* Products */;
@@ -466,7 +463,6 @@
 				4ACB65E82F0D2E4C00F552FF /* FavoritesView.swift in Sources */,
 				4AF9E6572EE6E8F9005801A6 /* URL.swift in Sources */,
 				4AF16A742F425BCD003D43BB /* UserCollectionViewModel.swift in Sources */,
-				4A4937132F3E72CB0043A186 /* MangasViewModel.swift in Sources */,
 				4AAE82222EFADD8B00B870C6 /* MainTab.swift in Sources */,
 				4AAE82202EFAC65F00B870C6 /* MainPictureVM.swift in Sources */,
 				4AF16A782F425CFD003D43BB /* UserCollectionView.swift in Sources */,
@@ -761,9 +757,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		4AAE82382EFAF67200B870C6 /* XCLocalSwiftPackageReference "../../Library/Mobile Documents/com~apple~CloudDocs/Swift Develope/NetworkAPI" */ = {
+		4AF79E232F4F576300424F93 /* XCLocalSwiftPackageReference "../NetworkAPI" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = "../../Library/Mobile Documents/com~apple~CloudDocs/Swift Develope/NetworkAPI";
+			relativePath = ../NetworkAPI;
 		};
 /* End XCLocalSwiftPackageReference section */
 
