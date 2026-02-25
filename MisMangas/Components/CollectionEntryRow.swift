@@ -44,7 +44,10 @@ struct CollectionEntryRow: View {
 
             // Badges
             VStack(alignment: .trailing, spacing: 4) {
-                if entry.completeCollection {
+                // Mostrar badge si está marcada como completa O tiene todos los volúmenes
+                let hasCompleteCollection = entry.completeCollection || (manga.volumes != nil && entry.volumesOwnedCount == manga.volumes)
+
+                if hasCompleteCollection {
                     Image(systemName: "checkmark.seal.fill")
                         .foregroundStyle(.green)
                         .font(.title3)
@@ -67,7 +70,10 @@ struct CollectionEntryRow: View {
                 .font(.caption2)
                 .foregroundStyle(.orange)
 
-            if entry.completeCollection {
+            // Verificar si tiene colección completa (marcada O tiene todos los volúmenes)
+            let hasCompleteCollection = entry.completeCollection || (manga.volumes != nil && entry.volumesOwnedCount == manga.volumes)
+
+            if hasCompleteCollection {
                 // Colección completa
                 if let totalVolumes = manga.volumes {
                     Text("\(totalVolumes) / \(totalVolumes)")

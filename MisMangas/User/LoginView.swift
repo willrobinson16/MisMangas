@@ -54,7 +54,7 @@ struct LoginView: View {
                                 .foregroundStyle(.blue.gradient)
                                 .symbolEffect(.bounce, value: authVM.isAuthenticated)
 
-                            Text("MisMangas")
+                            Text("Mis Mangas")
                                 .font(.largeTitle.bold())
 
                             Text("Gestiona tu colección de mangas")

@@ -20,7 +20,10 @@ struct CollectionGridCard: View {
             MainPictureView(picture: manga.mainPicture, namespace: namespace)
                 .frame(width: 100, height: 150)
                 .overlay(alignment: .topTrailing) {
-                    if entry.completeCollection {
+                    // Mostrar badge si está marcada como completa O tiene todos los volúmenes
+                    let hasCompleteCollection = entry.completeCollection || (manga.volumes != nil && entry.volumesOwnedCount == manga.volumes)
+
+                    if hasCompleteCollection {
                         Image(systemName: "checkmark.seal.fill")
                             .symbolRenderingMode(.monochrome)
                             .foregroundStyle(.green)
@@ -43,7 +46,10 @@ struct CollectionGridCard: View {
                     .font(.caption2)
                     .foregroundStyle(.orange)
 
-                if entry.completeCollection {
+                // Verificar si tiene colección completa (marcada O tiene todos los volúmenes)
+                let hasCompleteCollection = entry.completeCollection || (manga.volumes != nil && entry.volumesOwnedCount == manga.volumes)
+
+                if hasCompleteCollection {
                     if let totalVolumes = manga.volumes {
                         Text("\(totalVolumes)")
                             .font(.caption)

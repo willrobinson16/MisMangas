@@ -52,7 +52,7 @@ struct RegisterView: View {
                         Text("Crear cuenta")
                             .font(.largeTitle.bold())
 
-                        Text("Únete a la comunidad de MisMangas")
+                        Text("Únete a la comunidad de Mis Mangas")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)

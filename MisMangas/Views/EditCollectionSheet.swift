@@ -20,6 +20,7 @@ struct EditCollectionSheet: View {
     @State private var newVolumeNumber: String = ""
     @State private var showValidationError: Bool = false
     @State private var localReadingVolume: Int = 0
+    @State private var isCompleteCollection: Bool = false
     @FocusState private var isTextFieldFocused: Bool
 
     var body: some View {
@@ -40,6 +41,7 @@ struct EditCollectionSheet: View {
             .task {
                 collectionVM.setModelContext(modelContext)
                 localReadingVolume = entry.readingVolume ?? 0
+                isCompleteCollection = entry.completeCollection
             }
             .navigationTitle("Editar Colección")
             .navigationBarTitleDisplayMode(.inline)
@@ -128,12 +130,12 @@ struct EditCollectionSheet: View {
 
     private var volumesOwnedSection: some View {
         Section("Volúmenes en Posesión") {
-            Toggle("Colección completa", isOn: Binding(
-                get: { entry.completeCollection },
-                set: { collectionVM.setCompleteCollection(mangaID: entry.mangaID, isComplete: $0) }
-            ))
+            Toggle("Colección completa", isOn: $isCompleteCollection)
+                .onChange(of: isCompleteCollection) { _, newValue in
+                    collectionVM.setCompleteCollection(mangaID: entry.mangaID, isComplete: newValue)
+                }
 
-            if !entry.completeCollection {
+            if !isCompleteCollection {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
                         TextField("Número de volumen", text: $newVolumeNumber)
@@ -193,7 +195,18 @@ struct EditCollectionSheet: View {
 
     private var statisticsSection: some View {
         Section("Estadísticas") {
-            LabeledContent("Volúmenes poseídos", value: entry.completeCollection ? "\(manga.volumes ?? 0)" : "\(entry.volumesOwnedCount)")
+            LabeledContent("Volúmenes poseídos") {
+                if isCompleteCollection {
+                    if let totalVolumes = manga.volumes {
+                        Text("\(totalVolumes)")
+                    } else {
+                        Text("Completa")
+                            .foregroundStyle(.green)
+                    }
+                } else {
+                    Text("\(entry.volumesOwnedCount)")
+                }
+            }
             LabeledContent("Fecha de añadido", value: entry.dateAdded.formatted(date: .abbreviated, time: .omitted))
             LabeledContent("Última actualización", value: entry.lastUpdated.formatted(date: .abbreviated, time: .omitted))
         }
@@ -217,7 +230,7 @@ struct EditCollectionSheet: View {
 
     /// Volúmenes disponibles para seleccionar en el Picker
     private var availableVolumes: [Int] {
-        if entry.completeCollection {
+        if isCompleteCollection {
             // Colección completa: todos los volúmenes del manga
             if let totalVolumes = manga.volumes {
                 return Array(1...totalVolumes)
