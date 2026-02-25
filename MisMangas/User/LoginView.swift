@@ -185,15 +185,7 @@ struct LoginView: View {
                 authVM.clearError()
             }
             .animation(.easeInOut, value: authVM.errorMessage)
-            .onTapGesture {
-                hideKeyboard()
-            }
         }
-    }
-
-    // MARK: - Keyboard Helper
-    private func hideKeyboard() {
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
 
