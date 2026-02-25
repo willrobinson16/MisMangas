@@ -10,6 +10,8 @@ import SwiftData
 
 /// Fila para mostrar una entrada de la colección del usuario
 struct CollectionEntryRow: View {
+    @Environment(FavoritesViewModel.self) private var favoritesVM
+
     let entry: UserMangaCollection
     let manga: Manga
     let namespace: Namespace.ID
@@ -50,6 +52,13 @@ struct CollectionEntryRow: View {
                 if hasCompleteCollection {
                     Image(systemName: "checkmark.seal.fill")
                         .foregroundStyle(.green)
+                        .font(.title3)
+                }
+
+                // Mostrar corazón si está en favoritos
+                if favoritesVM.isFavorite(manga.id) {
+                    Image(systemName: "heart.fill")
+                        .foregroundStyle(.red)
                         .font(.title3)
                 }
 
@@ -136,9 +145,12 @@ struct CollectionEntryRow: View {
 
 #Preview(traits: .sampleData) {
     @Previewable @Namespace var namespace
+    @Previewable @State var favoritesVM = FavoritesViewModel()
+
     CollectionEntryRow(
         entry: .test,
         manga: .test,
         namespace: namespace
     )
+    .environment(favoritesVM)
 }
