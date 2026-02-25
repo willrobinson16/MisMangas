@@ -19,6 +19,7 @@ import SwiftData
 /// - Paginación gestionada por AuthorsViewModel
 /// - Navegación a AuthorDetailView
 /// - Pull-to-refresh para recargar
+/// - **Adaptativa**: NavigationSplitView en iPad, NavigationStack en iPhone
 struct AuthorsListView: View {
     @Environment(\.modelContext) var context
 
@@ -29,7 +30,22 @@ struct AuthorsListView: View {
     /// ViewModel para gestionar la paginación
     @State private var authorsVM = AuthorsViewModel()
 
+    /// ViewModel compartido para detalles de autores (caché eficiente)
+    @State private var authorDetailVM = AuthorDetailViewModel()
+
     var body: some View {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            // iPad: NavigationSplitView
+            AuthorsListViewiPad()
+        } else {
+            // iPhone: NavigationStack
+            iPhoneLayout
+        }
+    }
+
+    // MARK: - iPhone Layout
+
+    private var iPhoneLayout: some View {
         NavigationStack {
             List {
                 ForEach(authors) { author in
@@ -38,8 +54,8 @@ struct AuthorsListView: View {
                     }
                 }
 
-                // Indicador de carga al final de la lista - carga siguiente página
-                if authors.count > 0 {
+                // Paginación
+                if !authors.isEmpty {
                     HStack {
                         Spacer()
                         ProgressView()
@@ -64,16 +80,14 @@ struct AuthorsListView: View {
             .listStyle(.plain)
             .navigationTitle("Autores")
             .navigationDestination(for: Author.self) { author in
-                AuthorDetailView(author: author)
+                AuthorDetailView(author: author, viewModel: authorDetailVM)
             }
             .toolbarTitleDisplayMode(.inlineLarge)
             .refreshable {
-                // Resetear y recargar autores desde la página 1
                 await authorsVM.resetAndReload()
             }
             .onAppear {
                 authorsVM.setModelContext(context)
-                // Cargar primera página si no hay autores
                 if authors.isEmpty {
                     Task {
                         await authorsVM.loadNextPage()

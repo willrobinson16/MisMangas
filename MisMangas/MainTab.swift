@@ -19,34 +19,34 @@ struct MainTab: View {
         TabView {
             Tab("Mangas", systemImage: "book") {
                 if !isiPhone {
-                    
+                    ContentViewiPad()
                 } else {
                     ContentView()
                 }
             }
             Tab("Mi colección", systemImage: "books.vertical.fill") {
-                if !isiPhone {
-
-                } else {
-                    UserCollectionView()
-                }
+                UserCollectionView()
             }
             Tab("Autores", systemImage: "person.2.fill") {
                 if !isiPhone {
-                    AuthorsListView()
+                    AuthorsListViewiPad()
                 } else {
                     AuthorsListView()
                 }
             }
             Tab("Usuario", systemImage: "person.circle.fill") {
                 if !isiPhone {
-                    UserProfileView()
+                    UserProfileViewiPad()
                 } else {
                     UserProfileView()
                 }
             }
             Tab("Search", systemImage: "magnifyingglass", role: .search) {
-                SearchView()
+                if !isiPhone {
+                    SearchViewiPad()
+                } else {
+                    SearchView()
+                }
             }
         }
         .tabBarMinimizeBehavior(.onScrollDown)

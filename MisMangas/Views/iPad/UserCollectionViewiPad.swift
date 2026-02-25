@@ -1,34 +1,24 @@
 //
-//  UserCollectionView.swift
+//  UserCollectionViewiPad.swift
 //  MisMangas
 //
-//  Created by Guillermo Robinson on 15/2/26.
+//  Created by Guillermo Robinson on 25/2/26.
 //
 
 import SwiftUI
 import SwiftData
 
-enum ViewMode {
-    case list
-    case grid
-}
-
-/// Vista principal de la colección del usuario
-struct UserCollectionView: View {
-    var body: some View {
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            // iPad: Vista enriquecida
-            UserCollectionViewiPad()
-        } else {
-            // iPhone: Vista estándar
-            iPhoneLayout()
-        }
-    }
-}
-
-// MARK: - iPhone Layout
-
-private struct iPhoneLayout: View {
+/// Vista de colección optimizada para iPad con diseño enriquecido.
+///
+/// Aprovecha el espacio del iPad con rows detallados que muestran
+/// toda la información relevante del manga y su estado en la colección.
+///
+/// ## Características:
+/// - Rows enriquecidos con imagen, info del manga y progreso
+/// - Grid view adaptativo para iPad
+/// - Filtros por autor, género, demografía y temas
+/// - Toggle entre vista lista y grid
+struct UserCollectionViewiPad: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(UserCollectionViewModel.self) private var collectionVM
 
@@ -123,7 +113,7 @@ private struct iPhoneLayout: View {
                 } else {
                     switch viewMode {
                     case .list:
-                        collectionListView
+                        enrichedListView
                     case .grid:
                         collectionGridView
                     }
@@ -131,7 +121,6 @@ private struct iPhoneLayout: View {
             }
             .animation(.default, value: viewMode)
             .navigationTitle("Mi Colección")
-//            .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     HStack(spacing: 16) {
@@ -185,43 +174,35 @@ private struct iPhoneLayout: View {
         print("🔄 Cache actualizado: \(cachedMangas.count) mangas")
     }
 
-    // MARK: - List View
+    // MARK: - Enriched List View (iPad)
 
     @ViewBuilder
-    private var collectionListView: some View {
-        List {
-            ForEach(filteredEntries) { entry in
-                if let manga = mangasDict[entry.mangaID] {
-                    CollectionEntryRow(
-                        entry: entry,
-                        manga: manga,
-                        namespace: namespace
-                    )
-                    .onTapGesture {
-                        selectedEntryID = entry.id
-                        showEditSheet = true
-                    }
-                    .swipeActions(edge: .trailing) {
-                        Button(role: .destructive) {
-                            collectionVM.removeFromCollection(entry.mangaID)
-                        } label: {
-                            Label("Eliminar", systemImage: "trash")
-                        }
-                    }
-                    .swipeActions(edge: .leading) {
-                        if entry.hasStartedReading {
-                            Button {
+    private var enrichedListView: some View {
+        ScrollView {
+            LazyVStack(spacing: 16) {
+                ForEach(filteredEntries) { entry in
+                    if let manga = mangasDict[entry.mangaID] {
+                        EnrichedCollectionRow(
+                            entry: entry,
+                            manga: manga,
+                            namespace: namespace,
+                            onTap: {
+                                selectedEntryID = entry.id
+                                showEditSheet = true
+                            },
+                            onDelete: {
+                                collectionVM.removeFromCollection(entry.mangaID)
+                            },
+                            onNextVolume: entry.hasStartedReading ? {
                                 collectionVM.readNextVolume(mangaID: entry.mangaID)
-                            } label: {
-                                Label("Siguiente", systemImage: "arrow.right.circle")
-                            }
-                            .tint(.blue)
-                        }
+                            } : nil
+                        )
                     }
                 }
             }
+            .padding()
         }
-        .listStyle(.plain)
+        .background(Color(.systemGroupedBackground))
     }
 
     // MARK: - Grid View
@@ -230,10 +211,8 @@ private struct iPhoneLayout: View {
     private var collectionGridView: some View {
         ScrollView {
             LazyVGrid(columns: [
-                GridItem(.flexible(), spacing: 12),
-                GridItem(.flexible(), spacing: 12),
-                GridItem(.flexible(), spacing: 12)
-            ], spacing: 16) {
+                GridItem(.adaptive(minimum: 160, maximum: 200), spacing: 16)
+            ], spacing: 20) {
                 ForEach(filteredEntries) { entry in
                     if let manga = mangasDict[entry.mangaID] {
                         CollectionGridCard(
@@ -265,6 +244,7 @@ private struct iPhoneLayout: View {
             }
             .padding()
         }
+        .background(Color(.systemGroupedBackground))
     }
 
     // MARK: - View Mode Toggle
@@ -419,15 +399,193 @@ private struct iPhoneLayout: View {
     }
 }
 
+// MARK: - Enriched Collection Row for iPad
+
+/// Row enriquecido para la colección en iPad con toda la información del manga
+private struct EnrichedCollectionRow: View {
+    let entry: UserMangaCollection
+    let manga: Manga
+    let namespace: Namespace.ID
+    let onTap: () -> Void
+    let onDelete: () -> Void
+    let onNextVolume: (() -> Void)?
+
+    var body: some View {
+        HStack(spacing: 20) {
+            // Imagen del manga
+            MainPictureView(picture: manga.mainPicture, namespace: namespace)
+                .frame(width: 90, height: 135)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .shadow(radius: 3)
+
+            // Información del manga
+            VStack(alignment: .leading, spacing: 8) {
+                // Título
+                Text(manga.title)
+                    .font(.title3.bold())
+                    .lineLimit(2)
+
+                // Título en japonés (si existe)
+                if let japaneseTitle = manga.titleJapanese, !japaneseTitle.isEmpty {
+                    Text(japaneseTitle)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
+
+                // Autor(es)
+                HStack(spacing: 4) {
+                    Image(systemName: "person.fill")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                    Text(manga.authorsString)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
+
+                // Año y valoración
+                HStack(spacing: 12) {
+                    if let year = manga.startYear {
+                        HStack(spacing: 4) {
+                            Image(systemName: "calendar")
+                                .font(.caption2)
+                            Text("\(year)")
+                                .font(.caption)
+                        }
+                        .foregroundStyle(.secondary)
+                    }
+
+                    if manga.mean > 0 {
+                        HStack(spacing: 2) {
+                            Image(systemName: "star.fill")
+                                .font(.caption2)
+                                .foregroundStyle(.yellow)
+                            Text(String(format: "%.1f", manga.mean))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+
+                Spacer()
+
+                // Estado de colección y progreso
+                HStack(spacing: 16) {
+                    // Volúmenes poseídos
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "books.vertical.fill")
+                                .font(.caption2)
+                                .foregroundStyle(.orange)
+                            Text("\(entry.completeCollection ? (manga.volumes ?? 0) : entry.volumesOwnedCount)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+
+                            if let totalVolumes = manga.volumes {
+                                Text("/ \(totalVolumes)")
+                                    .font(.caption)
+                                    .foregroundStyle(.tertiary)
+                            }
+                        }
+
+                        // Barra de progreso de colección
+                        if let totalVolumes = manga.volumes,
+                           let progress = entry.collectionProgress(totalVolumes: totalVolumes) {
+                            HStack(spacing: 6) {
+                                ProgressView(value: progress)
+                                    .tint(.orange)
+                                    .frame(width: 100)
+
+                                Text("\(Int(progress * 100))%")
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+
+                    // Progreso de lectura
+                    if entry.hasStartedReading {
+                        VStack(alignment: .leading, spacing: 4) {
+                            HStack(spacing: 4) {
+                                Image(systemName: "book.pages")
+                                    .font(.caption2)
+                                    .foregroundStyle(.blue)
+
+                                if let currentVolume = entry.readingVolume {
+                                    Text("Vol. \(currentVolume)")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+
+                            // Barra de progreso de lectura
+                            if let totalVolumes = manga.volumes,
+                               let progress = entry.readingProgress(totalVolumes: totalVolumes) {
+                                HStack(spacing: 6) {
+                                    ProgressView(value: progress)
+                                        .tint(.blue)
+                                        .frame(width: 100)
+
+                                    Text("\(Int(progress * 100))%")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            Spacer()
+
+            // Badges
+            VStack(alignment: .trailing, spacing: 8) {
+                if entry.completeCollection {
+                    Image(systemName: "checkmark.seal.fill")
+                        .foregroundStyle(.green)
+                        .font(.title2)
+                }
+
+                if entry.hasStartedReading {
+                    Image(systemName: "book.pages.fill")
+                        .foregroundStyle(.blue)
+                        .font(.title3)
+                }
+            }
+        }
+        .frame(minHeight: 135)
+        .padding(20)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color(.secondarySystemGroupedBackground))
+                .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 5)
+        )
+        .contentShape(Rectangle())
+        .onTapGesture(perform: onTap)
+        .contextMenu {
+            Button(role: .destructive, action: onDelete) {
+                Label("Eliminar", systemImage: "trash")
+            }
+
+            if let onNextVolume {
+                Button(action: onNextVolume) {
+                    Label("Siguiente volumen", systemImage: "arrow.right.circle")
+                }
+            }
+        }
+    }
+}
+
 // MARK: - Preview
 
 #Preview("With Data", traits: .sampleData) {
-    UserCollectionView()
+    UserCollectionViewiPad()
         .environment(UserCollectionViewModel())
 }
 
 #Preview("Empty State") {
-    UserCollectionView()
+    UserCollectionViewiPad()
         .modelContainer(for: UserMangaCollection.self, inMemory: true)
         .environment(UserCollectionViewModel())
 }

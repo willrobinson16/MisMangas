@@ -85,6 +85,17 @@ extension Manga {
     var authorsWithRole: String {
         authors.map { "\($0.firstName) \($0.lastName) (\($0.role))" }.joined(separator: " • ")
     }
+
+    /// Extrae el año de la fecha de inicio (si existe)
+    var startYear: Int? {
+        guard let startDate else { return nil }
+        return Int(startDate.prefix(4))
+    }
+
+    /// Retorna el score redondeado (para mostrar con estrellas)
+    var mean: Double {
+        score
+    }
     
     /// Test manga
     @MainActor static let test = Manga(

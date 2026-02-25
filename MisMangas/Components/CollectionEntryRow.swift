@@ -57,6 +57,7 @@ struct CollectionEntryRow: View {
                 }
             }
         }
+        .frame(minHeight: 90) // Asegurar que el row tenga al menos la altura de la imagen
         .padding()
     }
 

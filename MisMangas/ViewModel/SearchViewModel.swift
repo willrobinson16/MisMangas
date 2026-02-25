@@ -134,6 +134,12 @@ final class SearchViewModel {
             mangaResult = page.items
             print("✅ Búsqueda completada: \(mangaResult.count) resultados")
         } catch {
+            // Ignorar cancelaciones (son normales cuando el usuario escribe rápido)
+            if let urlError = error as? URLError, urlError.code == .cancelled {
+                return
+            }
+
+            // Solo loggear errores reales
             print("❌ Error en búsqueda avanzada: \(error)")
             mangaResult = []
         }

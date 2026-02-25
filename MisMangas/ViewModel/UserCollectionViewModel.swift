@@ -311,7 +311,27 @@ final class UserCollectionViewModel {
         let fetch = FetchDescriptor<UserMangaCollection>()
         let collections = (try? context.fetch(fetch)) ?? []
 
-        return collections.reduce(0) { $0 + $1.volumesOwnedCount }
+        // Fetchear todos los mangas de la colección
+        let mangaIDs = collections.map { $0.mangaID }
+        let mangaFetch = FetchDescriptor<Manga>(
+            predicate: #Predicate { manga in
+                mangaIDs.contains(manga.id)
+            }
+        )
+        let mangas = (try? context.fetch(mangaFetch)) ?? []
+        let mangasDict = Dictionary(uniqueKeysWithValues: mangas.map { ($0.id, $0) })
+
+        // Calcular el total considerando colecciones completas
+        return collections.reduce(0) { total, collection in
+            if collection.completeCollection {
+                // Si la colección está completa, usar el total de volúmenes del manga
+                let mangaVolumes = mangasDict[collection.mangaID]?.volumes ?? 0
+                return total + mangaVolumes
+            } else {
+                // Si no está completa, usar el count del array volumesOwned
+                return total + collection.volumesOwnedCount
+            }
+        }
     }
 
     /// Number of manga with complete collections

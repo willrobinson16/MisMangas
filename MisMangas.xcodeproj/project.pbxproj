@@ -64,6 +64,12 @@
 		4AEE6D482F4D257600092CF2 /* FilterChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEE6D3D2F4D257600092CF2 /* FilterChip.swift */; };
 		4AEE6D492F4D257600092CF2 /* MultiSelectDemographicsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEE6D3E2F4D257600092CF2 /* MultiSelectDemographicsView.swift */; };
 		4AEE6D4A2F4D257600092CF2 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEE6D412F4D257600092CF2 /* SearchView.swift */; };
+		4AEE6D4E2F4E57C700092CF2 /* ContentViewiPad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEE6D4D2F4E57C600092CF2 /* ContentViewiPad.swift */; };
+		4AEE6D522F4E5BF700092CF2 /* AuthorsListViewiPad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEE6D512F4E5BF700092CF2 /* AuthorsListViewiPad.swift */; };
+		4AEE6D542F4E65C200092CF2 /* SearchViewiPad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEE6D532F4E65C200092CF2 /* SearchViewiPad.swift */; };
+		4AEE6D562F4E674800092CF2 /* UserProfileViewiPad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEE6D552F4E674800092CF2 /* UserProfileViewiPad.swift */; };
+		4AEE6D592F4E74D200092CF2 /* UserCollectionViewiPad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEE6D582F4E74D200092CF2 /* UserCollectionViewiPad.swift */; };
+		4AEE6D5A2F4E74D200092CF2 /* AuthorDetailViewiPad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEE6D572F4E74D200092CF2 /* AuthorDetailViewiPad.swift */; };
 		4AF16A462F41FABE003D43BB /* mangas.icon in Resources */ = {isa = PBXBuildFile; fileRef = 4AF16A452F41FABE003D43BB /* mangas.icon */; };
 		4AF16A6C2F4255FC003D43BB /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A6B2F4255FC003D43BB /* StringExtensions.swift */; };
 		4AF16A722F425B9E003D43BB /* UserMangaCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF16A712F425B9E003D43BB /* UserMangaCollection.swift */; };
@@ -139,6 +145,12 @@
 		4AEE6D402F4D257600092CF2 /* MultiSelectThemesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiSelectThemesView.swift; sourceTree = "<group>"; };
 		4AEE6D412F4D257600092CF2 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		4AEE6D422F4D257600092CF2 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		4AEE6D4D2F4E57C600092CF2 /* ContentViewiPad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewiPad.swift; sourceTree = "<group>"; };
+		4AEE6D512F4E5BF700092CF2 /* AuthorsListViewiPad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorsListViewiPad.swift; sourceTree = "<group>"; };
+		4AEE6D532F4E65C200092CF2 /* SearchViewiPad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewiPad.swift; sourceTree = "<group>"; };
+		4AEE6D552F4E674800092CF2 /* UserProfileViewiPad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewiPad.swift; sourceTree = "<group>"; };
+		4AEE6D572F4E74D200092CF2 /* AuthorDetailViewiPad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorDetailViewiPad.swift; sourceTree = "<group>"; };
+		4AEE6D582F4E74D200092CF2 /* UserCollectionViewiPad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCollectionViewiPad.swift; sourceTree = "<group>"; };
 		4AF16A452F41FABE003D43BB /* mangas.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = mangas.icon; sourceTree = "<group>"; };
 		4AF16A6B2F4255FC003D43BB /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
 		4AF16A712F425B9E003D43BB /* UserMangaCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMangaCollection.swift; sourceTree = "<group>"; };
@@ -251,6 +263,12 @@
 		4AEE6D4C2F4DB33800092CF2 /* iPad */ = {
 			isa = PBXGroup;
 			children = (
+				4AEE6D572F4E74D200092CF2 /* AuthorDetailViewiPad.swift */,
+				4AEE6D582F4E74D200092CF2 /* UserCollectionViewiPad.swift */,
+				4AEE6D552F4E674800092CF2 /* UserProfileViewiPad.swift */,
+				4AEE6D532F4E65C200092CF2 /* SearchViewiPad.swift */,
+				4AEE6D512F4E5BF700092CF2 /* AuthorsListViewiPad.swift */,
+				4AEE6D4D2F4E57C600092CF2 /* ContentViewiPad.swift */,
 			);
 			path = iPad;
 			sourceTree = "<group>";
@@ -443,6 +461,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4AEE6D562F4E674800092CF2 /* UserProfileViewiPad.swift in Sources */,
 				4A4937152F3FBA600043A186 /* TestView.swift in Sources */,
 				4ACB65E82F0D2E4C00F552FF /* FavoritesView.swift in Sources */,
 				4AF9E6572EE6E8F9005801A6 /* URL.swift in Sources */,
@@ -463,6 +482,7 @@
 				4AAE822C2EFAEAFE00B870C6 /* MangaView.swift in Sources */,
 				4AA4A4012F0C0AF500835A49 /* BackgroundPictureView.swift in Sources */,
 				4AF16A722F425B9E003D43BB /* UserMangaCollection.swift in Sources */,
+				4AEE6D4E2F4E57C700092CF2 /* ContentViewiPad.swift in Sources */,
 				4AF16A7A2F425EC6003D43BB /* EditCollectionSheet.swift in Sources */,
 				4AF9E66D2EE820D7005801A6 /* Network.swift in Sources */,
 				4A8096282F408F7C0021993F /* BestMangasViewModel.swift in Sources */,
@@ -484,8 +504,11 @@
 				4AEE6CF22F4A11FF00092CF2 /* CollectionGridCard.swift in Sources */,
 				4AEE6D312F4B4CD200092CF2 /* ModelContext+MangaPersistence.swift in Sources */,
 				4AEE6D3B2F4CC09300092CF2 /* AuthorRow.swift in Sources */,
+				4AEE6D592F4E74D200092CF2 /* UserCollectionViewiPad.swift in Sources */,
+				4AEE6D5A2F4E74D200092CF2 /* AuthorDetailViewiPad.swift in Sources */,
 				8189152641EF47509F8E26B196EFF1C9 /* MangaByAuthorRow.swift in Sources */,
 				4AEE6D382F4CC02500092CF2 /* AuthorDetailViewModel.swift in Sources */,
+				4AEE6D522F4E5BF700092CF2 /* AuthorsListViewiPad.swift in Sources */,
 				4AEE6D392F4CC02500092CF2 /* AuthorsViewModel.swift in Sources */,
 				CA8AC9D70BA54AD8832C7AA6 /* MangaSwipeActionsModifier.swift in Sources */,
 				4AEE6CF32F4A11FF00092CF2 /* StatCard.swift in Sources */,
@@ -510,6 +533,7 @@
 				4AEE6D282F4A67F600092CF2 /* TokenResponse.swift in Sources */,
 				4AEE6D292F4A67F600092CF2 /* MangaStatus.swift in Sources */,
 				4AEE6D2A2F4A67F600092CF2 /* MangaDTO.swift in Sources */,
+				4AEE6D542F4E65C200092CF2 /* SearchViewiPad.swift in Sources */,
 				4AEE6D2D2F4A67F600092CF2 /* UserResponse.swift in Sources */,
 				4A8096262F3FD5180021993F /* MangaListView.swift in Sources */,
 			);

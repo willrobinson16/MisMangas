@@ -1,28 +1,24 @@
 //
-//  SearchView.swift
+//  SearchViewiPad.swift
 //  MisMangas
 //
-//  Created by Guillermo Robinson on 2/2/26.
+//  Created by Guillermo Robinson on 24/2/26.
 //
 
 import SwiftUI
 import SwiftData
 
-struct SearchView: View {
-    var body: some View {
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            // iPad: Grid layout
-            SearchViewiPad()
-        } else {
-            // iPhone: List layout
-            iPhoneLayout()
-        }
-    }
-}
-
-// MARK: - iPhone Layout
-
-private struct iPhoneLayout: View {
+/// Vista de búsqueda para iPad con grid adaptativo.
+///
+/// Muestra los resultados de búsqueda en una cuadrícula para aprovechar
+/// el espacio horizontal del iPad.
+///
+/// ## Características:
+/// - Grid adaptativo con columnas de mínimo 300pt
+/// - Filtros avanzados con chips visuales
+/// - Búsqueda con debounce (500ms)
+/// - Swipe actions para favoritos y colección
+struct SearchViewiPad: View {
     @Environment(FavoritesViewModel.self) private var favoritesVM
     @Environment(UserCollectionViewModel.self) private var collectionVM
 
@@ -78,22 +74,28 @@ private struct iPhoneLayout: View {
                 if searchVM.mangaResult.isEmpty {
                     searchView
                 } else {
-                    List(searchVM.mangaResult) { mangaDTO in
-                        let isFavorite = favoritesIDs.contains(mangaDTO.id)
-                        let isInCollection = collectionIDs.contains(mangaDTO.id)
+                    // Grid de resultados
+                    ScrollView {
+                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))], spacing: 16) {
+                            ForEach(searchVM.mangaResult) { mangaDTO in
+                                let isFavorite = favoritesIDs.contains(mangaDTO.id)
+                                let isInCollection = collectionIDs.contains(mangaDTO.id)
 
-                        NavigationLink(value: mangaDTO) {
-                            MangaRow(manga: mangaDTO.toManga, namespace: namespace)
+                                NavigationLink(value: mangaDTO) {
+                                    MangaRow(manga: mangaDTO.toManga, namespace: namespace)
+                                }
+                                .buttonStyle(.plain)
+                                .mangaSwipeActions(
+                                    manga: mangaDTO.toManga,
+                                    isFavorite: isFavorite,
+                                    isInCollection: isInCollection,
+                                    favoritesVM: favoritesVM,
+                                    collectionVM: collectionVM
+                                )
+                            }
                         }
-                        .mangaSwipeActions(
-                            manga: mangaDTO.toManga,
-                            isFavorite: isFavorite,
-                            isInCollection: isInCollection,
-                            favoritesVM: favoritesVM,
-                            collectionVM: collectionVM
-                        )
+                        .padding()
                     }
-                    .listStyle(.plain)
                 }
             }
             .navigationDestination(for: MangaDTO.self) { mangaDTO in
@@ -164,7 +166,7 @@ private struct iPhoneLayout: View {
 }
 
 #Preview {
-    iPhoneLayout()
+    SearchViewiPad()
         .environment(FavoritesViewModel())
         .environment(UserCollectionViewModel())
 }

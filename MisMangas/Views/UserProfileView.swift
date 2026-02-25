@@ -10,6 +10,20 @@ import SwiftData
 
 /// Vista de perfil del usuario con estadísticas y progreso
 struct UserProfileView: View {
+    var body: some View {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            // iPad: Layout de 2 columnas
+            UserProfileViewiPad()
+        } else {
+            // iPhone: Layout vertical
+            iPhoneLayout()
+        }
+    }
+}
+
+// MARK: - iPhone Layout
+
+private struct iPhoneLayout: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(UserCollectionViewModel.self) private var collectionVM
     @Environment(FavoritesViewModel.self) private var favoritesVM
@@ -17,7 +31,7 @@ struct UserProfileView: View {
     @Query private var mangas: [Manga]
     @Query private var favoriteManga: [FavoriteManga]
     @Query private var userCollection: [UserMangaCollection]
-    
+
     @Namespace private var namespace
 
     @State private var userName: String = "Usuario"
@@ -58,10 +72,24 @@ struct UserProfileView: View {
     // MARK: - Profile Section
 
     private var profileSection: some View {
-        VStack(spacing: 8) {
-            Image(systemName: "person.circle.fill")
-                .font(.system(size: 80))
-                .foregroundStyle(.blue)
+        VStack(spacing: 12) {
+            // Avatar con gradiente (similar a iPad)
+            ZStack {
+                Circle()
+                    .fill(
+                        LinearGradient(
+                            colors: [.blue, .purple],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 80, height: 80)
+
+                Image(systemName: "person.fill")
+                    .font(.system(size: 40))
+                    .foregroundStyle(.white)
+            }
+            .shadow(color: .blue.opacity(0.3), radius: 15, x: 0, y: 8)
 
             Text(userName)
                 .font(.title2.bold())
@@ -110,7 +138,7 @@ struct UserProfileView: View {
                     title: "Leyendo",
                     value: "\(collectionVM.currentlyReadingCount)",
                     icon: "book.pages.fill",
-                    color: .purple
+                    color: .blue
                 )
             }
         }
@@ -260,13 +288,13 @@ struct UserProfileView: View {
 }
 
 #Preview("With Data", traits: .sampleData) {
-    UserProfileView()
+    iPhoneLayout()
         .environment(UserCollectionViewModel())
         .environment(FavoritesViewModel())
 }
 
 #Preview("Empty State") {
-    UserProfileView()
+    iPhoneLayout()
         .modelContainer(for: [UserMangaCollection.self, FavoriteManga.self, Manga.self], inMemory: true)
         .environment(UserCollectionViewModel())
         .environment(FavoritesViewModel())

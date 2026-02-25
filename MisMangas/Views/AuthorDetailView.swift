@@ -18,11 +18,35 @@ import SwiftData
 /// - Lista paginada de mangas del autor
 /// - Para cada manga: título y rol del autor en ese manga
 /// - Pull-to-refresh para recargar
+/// - ViewModel compartido opcional para caché eficiente
 struct AuthorDetailView: View {
     let author: Author
+    var viewModel: AuthorDetailViewModel?
 
-    /// ViewModel para gestionar la carga de mangas del autor
-    @State private var viewModel = AuthorDetailViewModel()
+    var body: some View {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            // iPad: Grid layout
+            AuthorDetailViewiPad(author: author, viewModel: viewModel ?? AuthorDetailViewModel())
+        } else {
+            // iPhone: List layout
+            iPhoneLayout(author: author, externalViewModel: viewModel)
+        }
+    }
+}
+
+// MARK: - iPhone Layout
+
+private struct iPhoneLayout: View {
+    let author: Author
+    var externalViewModel: AuthorDetailViewModel?
+
+    /// ViewModel compartido o local para gestionar la carga de mangas del autor
+    @State private var localViewModel = AuthorDetailViewModel()
+
+    /// ViewModel efectivo (externo si existe, local si no)
+    private var viewModel: AuthorDetailViewModel {
+        externalViewModel ?? localViewModel
+    }
 
     var body: some View {
         List {
@@ -89,8 +113,8 @@ struct AuthorDetailView: View {
         .refreshable {
             await viewModel.retry()
         }
-        .task {
-            await viewModel.loadMangasByAuthor(authorID: author.id)
+        .task(id: author.id) {
+            await viewModel.switchToAuthor(author.id)
         }
     }
 }

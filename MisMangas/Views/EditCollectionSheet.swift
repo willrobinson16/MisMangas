@@ -19,7 +19,7 @@ struct EditCollectionSheet: View {
 
     @State private var newVolumeNumber: String = ""
     @State private var showValidationError: Bool = false
-    @State private var currentReadingVolume: Int = 0
+    @State private var localReadingVolume: Int = 0
     @FocusState private var isTextFieldFocused: Bool
 
     var body: some View {
@@ -39,7 +39,7 @@ struct EditCollectionSheet: View {
             }
             .task {
                 collectionVM.setModelContext(modelContext)
-                currentReadingVolume = entry.readingVolume ?? 0
+                localReadingVolume = entry.readingVolume ?? 0
             }
             .navigationTitle("Editar Colección")
             .navigationBarTitleDisplayMode(.inline)
@@ -86,13 +86,13 @@ struct EditCollectionSheet: View {
 
     private var readingProgressSection: some View {
         Section("Progreso de Lectura") {
-            Picker("Volumen actual", selection: $currentReadingVolume) {
+            Picker("Volumen actual", selection: $localReadingVolume) {
                 Text("No iniciado").tag(0)
                 ForEach(availableVolumes, id: \.self) { volume in
                     Text("Vol. \(volume)").tag(volume)
                 }
             }
-            .onChange(of: currentReadingVolume) { _, newValue in
+            .onChange(of: localReadingVolume) { _, newValue in
                 collectionVM.updateReadingVolume(mangaID: entry.mangaID, volume: newValue == 0 ? nil : newValue)
             }
 
@@ -116,11 +116,11 @@ struct EditCollectionSheet: View {
 
             Button {
                 collectionVM.updateReadingVolume(mangaID: entry.mangaID, volume: nil)
-                currentReadingVolume = 0
+                localReadingVolume = 0
             } label: {
                 Label("Reiniciar lectura", systemImage: "arrow.counterclockwise")
             }
-            .disabled(currentReadingVolume == 0)
+            .disabled(localReadingVolume == 0)
         }
     }
 
