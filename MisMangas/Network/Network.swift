@@ -118,8 +118,10 @@ struct Network: NetworkRepository {
     }
     
     /// Obtiene un manga específico por su ID.
+    /// Requiere autenticación JWT.
     func getManga(id: Int) async throws -> MangaDTO {
-        try await getJSON(.get(url: .manga(id: id)), type: MangaDTO.self)
+        let request = try await URLRequest.getAuthenticated(url: .manga(id: id))
+        return try await getJSON(request, type: MangaDTO.self)
     }
     
     /// Busca un autor por su nombre.
