@@ -90,13 +90,35 @@ struct UserAuth: UserAuthRepository {
         let request = URLRequest.postBasicAuth(url: .jwtLogin, username: email, password: password)
 
         do {
-            let jwtResponse: JWTTokenResponse = try await getJSON(request, type: JWTTokenResponse.self)
+            print("🔐 Attempting login for: \(email)")
+
+            // Debug: Obtener respuesta cruda
+            let (data, response) = try await URLSession.shared.data(for: request)
+
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw AuthError.invalidCredentials
+            }
+
+            print("📡 Response status: \(httpResponse.statusCode)")
+
+            if let jsonString = String(data: data, encoding: .utf8) {
+                print("📄 Response body: \(jsonString)")
+            }
+
+            // Parsear respuesta
+            let jwtResponse = try JSONDecoder().decode(JWTTokenResponse.self, from: data)
+            print("✅ Login successful, JWT received: \(jwtResponse.jwt.prefix(20))...")
 
             // Guardar token en Keychain
             try await KeychainManager.shared.saveToken(jwtResponse.jwt)
+            print("💾 Token saved to Keychain")
 
             return jwtResponse.jwt
+        } catch let error as DecodingError {
+            print("❌ JSON Decoding failed: \(error)")
+            throw AuthError.invalidCredentials
         } catch {
+            print("❌ Login failed: \(error)")
             throw AuthError.invalidCredentials
         }
     }

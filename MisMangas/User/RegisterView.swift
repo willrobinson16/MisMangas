@@ -241,6 +241,9 @@ struct RegisterView: View {
         .animation(.easeInOut, value: authVM.errorMessage)
         .animation(.easeInOut, value: password)
         .animation(.easeInOut, value: confirmPassword)
+        .onTapGesture {
+            hideKeyboard()
+        }
     }
 
     // MARK: - Validation
@@ -249,6 +252,11 @@ struct RegisterView: View {
         !email.isEmpty &&
         password.count >= 8 &&
         password == confirmPassword
+    }
+
+    // MARK: - Keyboard Helper
+    private func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
 
