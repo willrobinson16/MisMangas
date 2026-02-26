@@ -159,34 +159,6 @@ Endpoints principales:
 
 ---
 
-## 🧪 Testing
-
-### Tests Unitarios
-
-El proyecto incluye **5 archivos de tests** con ~100 assertions:
-
-- `AuthViewModelTests` - Validación de email, estados de auth
-- `SearchViewModelTests` - Filtros y búsqueda
-- `KeychainManagerTests` - Storage seguro de tokens
-- `UserMangaCollectionTests` - Gestión de colección
-- `StringExtensionsTests` - Sanitización y formateo
-
-**⚠️ Nota**: Los tests no están configurados en el Xcode scheme actualmente.
-
-### Ejecutar Tests
-
-```bash
-xcodebuild test -scheme MisMangas -destination 'platform=iOS Simulator,name=iPhone 16 Pro'
-```
-
----
-
-## 📱 Capturas de Pantalla
-
-> _Próximamente: capturas de pantalla de la aplicación_
-
----
-
 ## 🏗️ Arquitectura
 
 ### Patrones Implementados
@@ -216,15 +188,6 @@ xcodebuild test -scheme MisMangas -destination 'platform=iOS Simulator,name=iPho
 - ✅ Validación de email con regex
 - ✅ Contraseñas mínimo 8 caracteres
 - ✅ Refresh token automático
-
-### Pendiente
-
-- ⚠️ Mover App-Token a configuración externa (CRÍTICO)
-- ⚠️ Logger centralizado en lugar de print()
-- ⚠️ Rate limiting en peticiones
-- ⚠️ Validación exhaustiva de inputs
-
-**Ver `SECURITY_ANALYSIS.md` para análisis completo.**
 
 ---
 
