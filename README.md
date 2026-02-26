@@ -1,126 +1,315 @@
-# MisMangas
+# MisMangas 📚
 
-SwiftUI iOS application for managing manga collections using Swift 6.2 with strict concurrency.
+> Aplicación iOS nativa para gestionar tu colección de manga con sincronización en la nube
 
-## Technical Stack
+[![Swift 6.2](https://img.shields.io/badge/Swift-6.2-orange.svg)](https://swift.org)
+[![iOS 26.1+](https://img.shields.io/badge/iOS-26.1%2B-blue.svg)](https://developer.apple.com/ios/)
+[![SwiftUI](https://img.shields.io/badge/SwiftUI-100%25-green.svg)](https://developer.apple.com/xcode/swiftui/)
+[![License](https://img.shields.io/badge/license-Private-red.svg)](LICENSE)
 
-- **Platform**: iOS 26.1+
-- **Language**: Swift 6.2
-- **Architecture**: Clean Architecture with MVVM
-- **Persistence**: SwiftData
-- **Concurrency**: Complete concurrency checking (Swift 6.2)
-- **UI**: SwiftUI (no deprecated APIs)
+**MisMangas** es una aplicación moderna para iPhone y iPad que te permite explorar, buscar y gestionar tu colección personal de manga. Con sincronización en la nube, diseño adaptativo y arquitectura Swift 6.2.
 
-## Project Structure
+---
+
+## ✨ Características Principales
+
+### 📖 Exploración de Manga
+- Catálogo completo con **paginación infinita**
+- Vista detallada con diseño tipo revista
+- Información completa: sinopsis, autores, géneros, temas, demografía
+- Rating visual con estrellas
+- Estados de publicación (En emisión, Finalizado, etc.)
+
+### 🔍 Búsqueda Avanzada
+- Búsqueda por **título** (exacta o flexible)
+- Filtrado por **autor** (nombre y apellido)
+- Selección múltiple de **géneros, temas y demografías**
+- Chips visuales de filtros activos
+- Resultados en tiempo real con debounce
+
+### 📚 Gestión de Colección
+- **Tracking de volúmenes**: marca los que posees individualmente
+- **Progreso de lectura**: indica qué volumen estás leyendo
+- **Colección completa**: flag especial para series completas
+- Sincronización automática con la nube
+- Filtros por autores, géneros, temas y demografías
+- Vista lista o grid adaptativa
+
+### ⭐ Favoritos
+- Marca tus mangas favoritos
+- Almacenamiento local con SwiftData
+- Acceso rápido desde cualquier vista
+
+### 👤 Sistema de Usuario
+- **Autenticación JWT** segura
+- Login y registro con validación
+- Tokens almacenados en **Keychain**
+- Refresh token automático
+- Sincronización de colección al iniciar sesión
+
+### 📱 Optimización iPad
+- 6 vistas específicas para iPad
+- **NavigationSplitView** para autores
+- Grids adaptativos multi-columna
+- Layouts enriquecidos con más información
+- Detección automática de dispositivo
+
+---
+
+## 🛠️ Stack Tecnológico
+
+### Frontend
+- **SwiftUI** puro (sin UIKit)
+- Swift 6.2 con **strict concurrency**
+- Arquitectura **MVVM** + Repository Pattern
+- `@Observable` (sin ObservableObject deprecado)
+
+### Persistencia
+- **SwiftData** para almacenamiento local
+- Dual-model approach: DTOs → Models
+- Offline-first con sincronización cloud
+- Queue de cambios pendientes
+
+### Networking
+- NetworkAPI package personalizado
+- **JWT authentication**
+- HTTPS exclusivamente
+- Manejo de errores tipado
+
+### Seguridad
+- Tokens en **Keychain** (no UserDefaults)
+- Validación de email y contraseña
+- Basic Auth para login
+- Bearer tokens para endpoints protegidos
+
+---
+
+## 📂 Estructura del Proyecto
 
 ```
 MisMangas/
-├── System/              - App entry point and configuration
-├── DataModel/           - SwiftData models (@Model classes)
-├── DTO/                 - Data Transfer Objects for API
-├── Network/             - Network layer
-├── ViewModel/           - Observable ViewModels
-├── Views/               - Full-screen SwiftUI views
-├── Components/          - Reusable UI components
-├── Extensions/          - Swift extensions
-├── ContentView.swift    - Main manga list
-└── MainTab.swift        - TabView navigation
+├── System/           # App entry point y configuración
+├── DataModel/        # SwiftData models (@Model)
+├── DTO/              # Data Transfer Objects (API)
+├── Network/          # Network layer + repositories
+├── User/             # Autenticación y gestión de usuario
+├── ViewModel/        # ViewModels @Observable
+├── Views/            # Vistas iPhone
+│   └── iPad/         # Vistas optimizadas iPad
+├── Components/       # Componentes reutilizables
+├── Search/           # Componentes de búsqueda avanzada
+└── Extensions/       # Extensiones Swift
 ```
 
-## Features
+---
 
-### Core Functionality
-- Browse manga catalog with infinite scroll and pagination
-- Advanced search with multiple filters (title, author, genres, themes, demographics)
-- View detailed manga information with redesigned hero layout
-- Favorites management with local SwiftData persistence
-- User collection tracking (volumes owned, reading progress, complete collection flags)
-- User authentication system with JWT tokens
-- Cloud synchronization of user collection
-- Authors list with pagination and detailed author views
-- iPad-optimized layouts with NavigationSplitView
+## 🚀 Instalación
 
-### Data Models
-- **Manga**: Title, authors, score, chapters, volumes, synopsis
-- **Author**: Name and role (Story/Art)
-- **Genre/Theme/Demographic**: Categorization
-- **FavoriteManga**: User favorites with date tracking
-- **UserMangaCollection**: User's collection with volume tracking and reading progress
+### Requisitos
 
-### ViewModels
-- `SearchViewModel` - Advanced search with 7+ filters and debounce
-- `FavoritesViewModel` - Favorites management with SwiftData
-- `UserCollectionViewModel` - Collection, reading progress, and cloud sync
-- `AuthViewModel` - User authentication and session management
-- `AuthorsViewModel` - Author pagination
-- `AuthorDetailViewModel` - Author details with shared cache
-- `BestMangasViewModel` - Top mangas content management
+- **Xcode 26.2+**
+- **Swift 6.2**
+- **iOS 26.1+** (simulador o dispositivo)
+- NetworkAPI package (incluido localmente)
 
-### User Collection System
-Track your manga collection with:
-- Volume ownership tracking (individual volumes or complete collection)
-- Reading progress (current volume being read)
-- Complete collection flag (automatic or manual)
-- Progress statistics and analytics
-- Cloud synchronization with backend
-- Offline-first architecture with pending sync queue
+### Pasos
 
-### User Authentication
-Secure authentication system:
-- JWT-based authentication with token refresh
-- Keychain storage for secure token persistence
-- Login and registration views
-- Session management with automatic logout on token expiration
-- Cloud sync of user collection on login
+1. **Clonar el repositorio**
+   ```bash
+   git clone https://github.com/usuario/MisMangas.git
+   cd MisMangas
+   ```
 
-## API
+2. **Abrir en Xcode**
+   ```bash
+   open MisMangas.xcodeproj
+   ```
 
-**Base URL**: `https://mymanga-acacademy-5607149ebe3d.herokuapp.com`
+3. **Configurar certificados**
+   - Cambiar el **Development Team** en Xcode
+   - Actualizar el **Bundle ID** si es necesario
 
-The app uses a local Swift Package (NetworkAPI) for network operations.
+4. **Ejecutar**
+   - Seleccionar simulador o dispositivo
+   - Presionar `Cmd + R` para compilar y ejecutar
 
-## Development
+---
 
-### Build Commands
+## 🔐 Configuración
+
+### API Backend
+
+La aplicación se conecta a:
+```
+https://mymanga-acacademy-5607149ebe3d.herokuapp.com
+```
+
+Endpoints principales:
+- `GET /list/mangas` - Listado de mangas
+- `POST /search/manga` - Búsqueda personalizada
+- `POST /users/jwt/login` - Login con JWT
+- `GET /collection/manga` - Colección del usuario
+
+### Autenticación
+
+1. Crear cuenta desde la app (pantalla de registro)
+2. Iniciar sesión con email y contraseña
+3. El token JWT se guarda automáticamente en Keychain
+4. La colección se sincroniza al iniciar sesión
+
+---
+
+## 🧪 Testing
+
+### Tests Unitarios
+
+El proyecto incluye **5 archivos de tests** con ~100 assertions:
+
+- `AuthViewModelTests` - Validación de email, estados de auth
+- `SearchViewModelTests` - Filtros y búsqueda
+- `KeychainManagerTests` - Storage seguro de tokens
+- `UserMangaCollectionTests` - Gestión de colección
+- `StringExtensionsTests` - Sanitización y formateo
+
+**⚠️ Nota**: Los tests no están configurados en el Xcode scheme actualmente.
+
+### Ejecutar Tests
 
 ```bash
-# Build Debug
+xcodebuild test -scheme MisMangas -destination 'platform=iOS Simulator,name=iPhone 16 Pro'
+```
+
+---
+
+## 📱 Capturas de Pantalla
+
+> _Próximamente: capturas de pantalla de la aplicación_
+
+---
+
+## 🏗️ Arquitectura
+
+### Patrones Implementados
+
+1. **Repository Pattern** - Separación de lógica de datos
+2. **MVVM** - ViewModels con `@Observable`
+3. **Dependency Injection** - Environment + setModelContext()
+4. **Offline-First** - Cambios locales + sincronización background
+5. **Factory Pattern** - Conversión DTO → Model centralizada
+
+### Concurrencia Swift 6.2
+
+- ✅ **@MainActor** para UI y ViewModels
+- ✅ **async/await** en lugar de completion handlers
+- ✅ Funciones de persistencia **nonisolated**
+- ✅ ZERO data race warnings
+- ✅ Sin código deprecado
+
+---
+
+## 🔒 Seguridad
+
+### Implementado
+
+- ✅ Tokens JWT en Keychain (seguro)
+- ✅ HTTPS para todas las peticiones
+- ✅ Validación de email con regex
+- ✅ Contraseñas mínimo 8 caracteres
+- ✅ Refresh token automático
+
+### Pendiente
+
+- ⚠️ Mover App-Token a configuración externa (CRÍTICO)
+- ⚠️ Logger centralizado en lugar de print()
+- ⚠️ Rate limiting en peticiones
+- ⚠️ Validación exhaustiva de inputs
+
+**Ver `SECURITY_ANALYSIS.md` para análisis completo.**
+
+---
+
+## 📝 Documentación
+
+- **CLAUDE.md** - Guía de desarrollo para Claude Code
+- **ARQUITECTURA.md** - Arquitectura detallada del proyecto
+- **SECURITY_ANALYSIS.md** - Análisis de seguridad y vulnerabilidades
+- **DOCUMENTACION_RESUMEN.md** - Índice de toda la documentación
+
+---
+
+## 🗺️ Roadmap
+
+### ✅ Completado (MVP)
+
+- Catálogo de mangas con paginación
+- Búsqueda avanzada multi-criterio
+- Sistema de favoritos
+- Gestión de colección con sincronización
+- Autenticación JWT
+- Layouts iPad optimizados
+
+### 🔜 Próximamente
+
+- [ ] Configurar tests en Xcode scheme
+- [ ] Resolver vulnerabilidad de token hardcodeado
+- [ ] Logger centralizado (OSLog)
+- [ ] Scroll infinito en SearchView
+- [ ] Rate limiting client-side
+- [ ] Skeleton screens para loading states
+
+---
+
+## 👨‍💻 Desarrollo
+
+### Comandos Útiles
+
+```bash
+# Compilar Debug
 xcodebuild -scheme MisMangas -configuration Debug build
 
-# Build Release
+# Compilar Release
 xcodebuild -scheme MisMangas -configuration Release build
 
-# Clean
+# Limpiar build
 xcodebuild -scheme MisMangas clean
 
-# Open in Xcode
+# Abrir en Xcode
 open MisMangas.xcodeproj
 ```
 
-### Requirements
+### Versión Swift
 
-- Xcode 26.2+
-- Swift 6.2
-- iOS 26.1+ Simulator or Device
+```bash
+swift --version
+# Apple Swift version 6.2
+```
 
-### Dependencies
+---
 
-- **NetworkAPI**: Local Swift Package (~/Library/Mobile Documents/com~apple~CloudDocs/Swift Develope/NetworkAPI)
+## 📄 Licencia
 
-## Code Standards
+Este proyecto es de uso privado. Todos los derechos reservados.
 
-- ✅ No deprecated APIs
-- ✅ Swift 6.2 strict concurrency compliance
-- ✅ `@Observable` for ViewModels (not ObservableObject)
-- ✅ `#Preview` macro (not PreviewProvider)
-- ✅ `async/await` (no completion handlers)
-- ✅ SwiftData only (no CoreData)
-- ✅ `@MainActor` for UI components
+**Bundle ID**: `com.grobinson.MisMangas`
+**Development Team**: 2WATSHBXAF
 
-## Bundle Identifier
+---
 
-`com.grobinson.MisMangas`
+## 🙏 Agradecimientos
 
-## License
+- API Backend: [MyManga Academy](https://mymanga-acacademy-5607149ebe3d.herokuapp.com)
+- NetworkAPI: Package Swift personalizado
+- Iconos: SF Symbols
 
-Development Team: 2WATSHBXAF
+---
+
+## 📧 Contacto
+
+**Guillermo Robinson**
+Proyecto desarrollado como parte del portfolio iOS
+
+---
+
+<p align="center">
+  Hecho con ❤️ y SwiftUI
+</p>
