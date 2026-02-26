@@ -113,10 +113,12 @@ struct UserCollectionViewiPad: View {
                     )
                 } else {
                     VStack(spacing: 0) {
-                        // Botón de sincronización dentro de la vista
-                        syncButtonInline
-                            .padding(.horizontal, 24)
-                            .padding(.vertical, 16)
+                        // Botón de sincronización (solo visible si hay cambios pendientes)
+                        if collectionVM.hasPendingChanges {
+                            syncButtonInline
+                                .padding(.horizontal, 24)
+                                .padding(.vertical, 16)
+                        }
 
                         switch viewMode {
                         case .list:
@@ -271,23 +273,22 @@ struct UserCollectionViewiPad: View {
                         .tint(.white)
                         .controlSize(.small)
                 } else {
-                    Image(systemName: collectionVM.hasPendingChanges ? "arrow.triangle.2.circlepath.circle.fill" : "arrow.triangle.2.circlepath.circle")
-                        .symbolRenderingMode(collectionVM.hasPendingChanges ? .multicolor : .monochrome)
+                    Image(systemName: "arrow.triangle.2.circlepath.circle.fill")
+                        .symbolRenderingMode(.multicolor)
                 }
 
-                Text(collectionVM.isSyncing ? "Sincronizando..." : (collectionVM.hasPendingChanges ? "Sincronizar cambios" : "Sincronizado"))
+                Text(collectionVM.isSyncing ? "Sincronizando..." : "Sincronizar cambios pendientes")
                     .font(.subheadline.weight(.medium))
             }
             .frame(maxWidth: .infinity)
             .padding()
             .background(
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(Color.blue)
+                    .fill(Color.orange)
             )
             .foregroundStyle(.white)
         }
-        .disabled(collectionVM.isSyncing || !collectionVM.hasPendingChanges)
-        .opacity((collectionVM.isSyncing || !collectionVM.hasPendingChanges) ? 0.6 : 1.0)
+        .disabled(collectionVM.isSyncing)
         .alert("Error de sincronización", isPresented: .constant(collectionVM.syncError != nil)) {
             Button("OK") {
                 collectionVM.syncError = nil
