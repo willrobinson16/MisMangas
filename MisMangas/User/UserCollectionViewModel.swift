@@ -159,12 +159,9 @@ final class UserCollectionViewModel {
                 do {
                     let repo = Collection()
                     try await repo.deleteCollectionManga(mangaID: mangaID)
-                    print("✅ Manga \(mangaID) eliminado del servidor")
                 } catch {
-                    print("❌ Error eliminando manga \(mangaID) del servidor: \(error)")
-                    // TODO: Si falla, podríamos re-añadir el manga localmente
+                    print("❌ Error eliminando del servidor: \(error)")
                 }
-                await checkPendingChanges()
             }
         }
     }
