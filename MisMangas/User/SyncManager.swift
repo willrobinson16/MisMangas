@@ -63,13 +63,23 @@ actor SyncManager {
             do {
                 try await syncEntry(entry, context: context)
                 successCount += 1
+                #if DEBUG
+                print("✅ Sincronizado manga \(entry.mangaID)")
+                #endif
             } catch {
                 failedCount += 1
+                #if DEBUG
+                print("❌ Error sincronizando manga \(entry.mangaID): \(error)")
+                #endif
             }
         }
 
         // Guardar cambios en SwiftData
         try? context.save()
+
+        #if DEBUG
+        print("📊 Sincronización completada: \(successCount) exitosos, \(failedCount) fallidos")
+        #endif
 
         return (successCount, failedCount)
     }

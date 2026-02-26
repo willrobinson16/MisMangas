@@ -114,18 +114,30 @@ final class AuthViewModel {
         do {
             // Login y guardar token
             _ = try await authRepo.login(email: email, password: password)
+            #if DEBUG
+            print("✅ Login exitoso")
+            #endif
 
             // Obtener info del usuario
             let user = try await authRepo.getMe()
             self.currentUser = user
             self.isAuthenticated = true
+            #if DEBUG
+            print("✅ Usuario autenticado: \(user.email)")
+            #endif
 
             // Sincronizar colección del servidor
             await syncCollectionFromServer()
 
         } catch let error as AuthError {
+            #if DEBUG
+            print("❌ Error de autenticación: \(error)")
+            #endif
             self.errorMessage = error.localizedDescription
         } catch {
+            #if DEBUG
+            print("❌ Error inesperado en login: \(error)")
+            #endif
             self.errorMessage = "Error al iniciar sesión. Intenta nuevamente."
         }
 
@@ -249,8 +261,14 @@ final class AuthViewModel {
         }
 
         do {
-            _ = try await SyncManager.shared.fullSyncFromServer(context: context)
+            let count = try await SyncManager.shared.fullSyncFromServer(context: context)
+            #if DEBUG
+            print("✅ Colección sincronizada: \(count) mangas descargados del servidor")
+            #endif
         } catch {
+            #if DEBUG
+            print("❌ Error sincronizando colección: \(error)")
+            #endif
         }
     }
 

@@ -136,7 +136,13 @@ final class UserCollectionViewModel {
                 let repo = Collection()
                 let request = collection.toRequest()
                 try await repo.addOrUpdateCollection(request)
+                #if DEBUG
+                print("✅ Manga \(mangaID) añadido al servidor")
+                #endif
             } catch {
+                #if DEBUG
+                print("❌ Error añadiendo al servidor: \(error)")
+                #endif
                 // Marcar como pendiente para sincronizar después
                 collection.markAsPendingSync(operation: .add)
                 try? context.save()
@@ -162,7 +168,13 @@ final class UserCollectionViewModel {
                 do {
                     let repo = Collection()
                     try await repo.deleteCollectionManga(mangaID: mangaID)
+                    #if DEBUG
+                    print("✅ Manga \(mangaID) eliminado del servidor")
+                    #endif
                 } catch {
+                    #if DEBUG
+                    print("❌ Error eliminando del servidor: \(error)")
+                    #endif
                 }
             }
         }
