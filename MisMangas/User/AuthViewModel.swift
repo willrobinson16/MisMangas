@@ -249,7 +249,7 @@ final class AuthViewModel {
         }
 
         do {
-            let count = try await SyncManager.shared.fullSyncFromServer(context: context)
+            _ = try await SyncManager.shared.fullSyncFromServer(context: context)
         } catch {
         }
     }

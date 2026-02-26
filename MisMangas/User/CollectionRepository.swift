@@ -77,7 +77,7 @@ struct Collection: CollectionRepository {
         // 200 (updated) o 201 (created) son válidos
         guard (200...201).contains(httpResponse.statusCode) else {
             // Mostrar respuesta del servidor si hay error
-            if let responseBody = String(data: data, encoding: .utf8) {
+            if String(data: data, encoding: .utf8) != nil {
             }
             throw AuthError.unauthorized
         }

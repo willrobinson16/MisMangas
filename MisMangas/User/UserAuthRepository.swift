@@ -94,12 +94,12 @@ struct UserAuth: UserAuthRepository {
             // Debug: Obtener respuesta cruda
             let (data, response) = try await URLSession.shared.data(for: request)
 
-            guard let httpResponse = response as? HTTPURLResponse else {
+            guard response is HTTPURLResponse else {
                 throw AuthError.invalidCredentials
             }
 
 
-            if let jsonString = String(data: data, encoding: .utf8) {
+            if String(data: data, encoding: .utf8) != nil {
             }
 
             // Parsear respuesta
@@ -109,7 +109,7 @@ struct UserAuth: UserAuthRepository {
             try await KeychainManager.shared.saveToken(jwtResponse.jwt)
 
             return jwtResponse.jwt
-        } catch let error as DecodingError {
+        } catch _ as DecodingError {
             throw AuthError.invalidCredentials
         } catch {
             throw AuthError.invalidCredentials

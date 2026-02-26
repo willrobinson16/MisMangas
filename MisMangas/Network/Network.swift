@@ -133,36 +133,6 @@ struct Network: NetworkRepository {
     func customSearch(_ search: CustomSearch, page: Int = 1, per: Int = 10) async throws -> MangaPageDTO {
         return try await getJSON(.post(url: .customSearch(page: page, per: per), body: search), type: MangaPageDTO.self)
     }
-    
-//    // MARK: - Authentication Endpoints
-//    
-//    /// Registra un nuevo usuario.
-//    /// - Parameter userData: Los datos del usuario a registrar.
-//    func register(userData: Data) async throws {
-//        var request = URLRequest.post(url: .register)
-//        request.httpBody = userData
-//        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-//        try await postJSON(request, status: 201)
-//    }
-//    
-//    /// Inicia sesión con las credenciales del usuario.
-//    /// - Parameter credentials: Las credenciales de acceso.
-//    /// - Returns: El token de autenticación u otra respuesta del servidor.
-//    func login<T: Codable>(credentials: Data) async throws -> T {
-//        var request = URLRequest.post(url: .login)
-//        request.httpBody = credentials
-//        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-//        return try await getJSON(request, type: T.self)
-//    }
-//    
-//    /// Renueva el token de autenticación.
-//    /// - Parameter token: El token actual a renovar.
-//    /// - Returns: El nuevo token de autenticación.
-//    func renewToken<T: Codable>(token: String) async throws -> T {
-//        var request = URLRequest.post(url: .renewToken)
-//        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-//        return try await getJSON(request, type: T.self)
-//    }
 }
 
 // MARK: - Test Repository

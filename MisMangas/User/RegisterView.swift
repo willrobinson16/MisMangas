@@ -22,8 +22,6 @@ import SwiftUI
 struct RegisterView: View {
     @Environment(\.dismiss) private var dismiss
     @Bindable var authVM: AuthViewModel
-
-    @FocusState private var focusedField: Field?
     
     @State private var email = ""
     @State private var password = ""

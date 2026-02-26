@@ -79,7 +79,7 @@ final class UserCollectionViewModel {
         syncError = nil
 
         do {
-            let count = try await SyncManager.shared.fullSyncFromServer(context: context)
+            _ = try await SyncManager.shared.fullSyncFromServer(context: context)
 
             // Actualizar estado de cambios pendientes
             await checkPendingChanges()
