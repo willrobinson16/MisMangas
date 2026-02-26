@@ -59,10 +59,8 @@ final class AuthorsViewModel {
         do {
             let container = DataContainer(modelContainer: context.container)
             try await container.loadAuthorsNextPage()
-            print("✅ Página de autores cargada correctamente")
         } catch {
             errorMessage = "No se pudo cargar más autores"
-            print("❌ Error loading next page of authors: \(error)")
         }
 
         isLoading = false

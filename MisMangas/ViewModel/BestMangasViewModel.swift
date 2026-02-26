@@ -59,10 +59,8 @@ final class BestMangasViewModel {
         do {
             let container = DataContainer(modelContainer: context.container)
             try await container.loadBestMangasNextPage()
-            print("✅ Página de bestMangas cargada correctamente")
         } catch {
             errorMessage = "No se pudo cargar más bestMangas"
-            print("❌ Error loading next page of bestMangas: \(error)")
         }
 
         isLoading = false

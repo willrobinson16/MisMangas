@@ -83,7 +83,6 @@ struct MultiSelectThemesView: View {
             themes = try await network.getThemes()
             isLoading = false
         } catch {
-            print("❌ Error cargando temas: \(error)")
             isLoading = false
         }
     }

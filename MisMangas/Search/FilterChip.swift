@@ -41,11 +41,9 @@ struct FilterChip: View {
 #Preview {
     HStack {
         FilterChip(text: "Género: Acción") {
-            print("Eliminar filtro")
         }
         
         FilterChip(text: "Autor: Oda") {
-            print("Eliminar filtro")
         }
     }
     .padding()

@@ -181,7 +181,6 @@ struct UserCollectionViewiPad: View {
         cachedMangas = (try? modelContext.fetch(descriptor)) ?? []
         cachedMangasDict = Dictionary(uniqueKeysWithValues: cachedMangas.map { ($0.id, $0) })
 
-        print("🔄 Cache actualizado: \(cachedMangas.count) mangas")
     }
 
     // MARK: - Enriched List View (iPad)

@@ -83,7 +83,6 @@ struct MultiSelectDemographicsView: View {
             demographics = try await network.getDemographics()
             isLoading = false
         } catch {
-            print("❌ Error cargando demografías: \(error)")
             isLoading = false
         }
     }

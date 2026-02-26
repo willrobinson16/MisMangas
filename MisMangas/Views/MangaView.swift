@@ -469,21 +469,6 @@ private struct InfoCard: View {
 
 /// Layout personalizado que organiza vistas en múltiples líneas (flow layout)
 ///
-/// Similar a cómo se comportan las palabras en un párrafo: cuando una vista no cabe
-/// en la línea actual, automáticamente baja a la siguiente línea.
-///
-/// ## Uso:
-/// ```swift
-/// FlowLayout(spacing: 8) {
-///     ForEach(items) { item in
-///         Text(item.name)
-///             .padding()
-///             .background(Color.blue)
-///             .clipShape(Capsule())
-///     }
-/// }
-/// ```
-///
 /// ## Características:
 /// - Las vistas se colocan de izquierda a derecha
 /// - Cuando no hay espacio, saltan a la siguiente línea

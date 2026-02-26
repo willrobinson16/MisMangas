@@ -132,7 +132,6 @@ final class SearchViewModel {
         do {
             let page = try await network.customSearch(searchRequest, page: 1, per: 20)
             mangaResult = page.items
-            print("✅ Búsqueda completada: \(mangaResult.count) resultados")
         } catch {
             // Ignorar cancelaciones (son normales cuando el usuario escribe rápido)
             if let urlError = error as? URLError, urlError.code == .cancelled {
@@ -140,7 +139,6 @@ final class SearchViewModel {
             }
 
             // Solo loggear errores reales
-            print("❌ Error en búsqueda avanzada: \(error)")
             mangaResult = []
         }
     }

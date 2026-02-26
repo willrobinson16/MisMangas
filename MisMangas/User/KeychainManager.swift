@@ -9,26 +9,6 @@ import Foundation
 import Security
 
 /// Actor que gestiona el almacenamiento seguro de tokens JWT en el Keychain de iOS.
-///
-/// Compatible con Swift 6 concurrency. Utiliza el framework Security de Apple
-/// sin dependencias externas. Todas las operaciones son thread-safe gracias al
-/// aislamiento del actor.
-///
-/// ## Uso:
-/// ```swift
-/// let keychain = KeychainManager.shared
-///
-/// // Guardar token
-/// try await keychain.saveToken("jwt_token_string")
-///
-/// // Leer token
-/// if let token = try await keychain.getToken() {
-///     print("Token: \(token)")
-/// }
-///
-/// // Eliminar token
-/// try await keychain.deleteToken()
-/// ```
 actor KeychainManager {
 
     /// Instancia compartida del KeychainManager

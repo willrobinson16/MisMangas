@@ -92,7 +92,6 @@ struct AuthorsListView: View {
                 // Cargar datos si la base de datos está vacía
                 let descriptorMangas = FetchDescriptor<Manga>()
                 if let count = try? context.fetchCount(descriptorMangas), count == 0 {
-                    print("📦 Base de datos vacía, cargando datos desde AuthorsListView...")
                     do {
                         // Cargar mangas directamente desde la API usando el context actual
                         let network = Network()
@@ -105,9 +104,7 @@ struct AuthorsListView: View {
                         // Guardar en SwiftData usando el context de la vista
                         try insertOrUpdateMangas(in: context, from: allMangas)
 
-                        print("✅ Datos cargados correctamente desde AuthorsListView (\(allMangas.count) mangas)")
                     } catch {
-                        print("❌ Error cargando datos desde AuthorsListView: \(error)")
                     }
                 }
             }

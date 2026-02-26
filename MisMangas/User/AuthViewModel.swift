@@ -245,15 +245,12 @@ final class AuthViewModel {
     /// Descarga la colección completa y la guarda en SwiftData local.
     private func syncCollectionFromServer() async {
         guard let context = modelContext else {
-            print("⚠️ ModelContext no disponible, no se puede sincronizar colección")
             return
         }
 
         do {
             let count = try await SyncManager.shared.fullSyncFromServer(context: context)
-            print("✅ Colección sincronizada: \(count) mangas descargados del servidor")
         } catch {
-            print("❌ Error sincronizando colección desde servidor: \(error)")
         }
     }
 

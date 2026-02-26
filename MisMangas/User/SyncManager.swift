@@ -64,7 +64,6 @@ actor SyncManager {
                 try await syncEntry(entry, context: context)
                 successCount += 1
             } catch {
-                print("❌ Error sincronizando manga \(entry.mangaID): \(error)")
                 failedCount += 1
             }
         }
@@ -106,7 +105,6 @@ actor SyncManager {
         do {
             try await collectionRepo.addOrUpdateCollection(collectionRequest)
         } catch {
-            print("❌ Error sincronizando manga \(entry.mangaID): \(error)")
             throw error
         }
 

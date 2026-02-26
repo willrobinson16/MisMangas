@@ -102,15 +102,12 @@ actor DataContainer {
 
             // Si no devuelve mangas, es que no hay más
             if mangas.items.isEmpty {
-                print("ℹ️ No hay más mangas en la página \(actualPage)")
                 actualPage -= 1  // Volver a la página anterior
                 return
             }
 
             try loadMangas(mangas: mangas.items)
-            print("✅ Cargada página \(actualPage) con \(mangas.items.count) mangas")
         } catch {
-            print("❌ Error cargando página \(actualPage): \(error)")
             actualPage -= 1  // Volver a la página anterior
             throw error
         }
@@ -120,18 +117,14 @@ actor DataContainer {
     /// - Throws: `NetworkError` si falla la petición o errores de persistencia
     func loadBestMangasInitial() async throws {
         do {
-            print("🏆 Cargando bestMangas página \(bestMangasPage)...")
             let bestMangas = try await network.getBestMangasPage(page: bestMangasPage)
 
             if bestMangas.items.isEmpty {
-                print("⚠️ No se recibieron bestMangas")
                 return
             }
 
             try loadMangas(mangas: bestMangas.items)
-            print("✅ Cargados \(bestMangas.items.count) bestMangas (página \(bestMangasPage))")
         } catch {
-            print("❌ Error cargando bestMangas: \(error)")
             throw error
         }
     }
@@ -150,15 +143,12 @@ actor DataContainer {
 
             // Si no devuelve mangas, es que no hay más
             if bestMangas.items.isEmpty {
-                print("ℹ️ No hay más bestMangas en la página \(bestMangasPage)")
                 bestMangasPage -= 1  // Volver a la página anterior
                 return
             }
 
             try loadMangas(mangas: bestMangas.items)
-            print("✅ Cargada página \(bestMangasPage) de bestMangas con \(bestMangas.items.count) mangas")
         } catch {
-            print("❌ Error cargando página \(bestMangasPage) de bestMangas: \(error)")
             bestMangasPage -= 1  // Volver a la página anterior
             throw error
         }
@@ -178,15 +168,12 @@ actor DataContainer {
 
             // Si no devuelve autores, es que no hay más
             if authors.items.isEmpty {
-                print("ℹ️ No hay más autores en la página \(authorsPage)")
                 authorsPage -= 1  // Volver a la página anterior
                 return
             }
 
             try loadAuthors(authors: authors.items)
-            print("✅ Cargada página \(authorsPage) de autores con \(authors.items.count) autores")
         } catch {
-            print("❌ Error cargando página \(authorsPage) de autores: \(error)")
             authorsPage -= 1  // Volver a la página anterior
             throw error
         }
@@ -198,6 +185,5 @@ actor DataContainer {
     /// Solo reinicia el contador de paginación.
     func resetAuthorsPage() {
         authorsPage = 0
-        print("🔄 Contador de autores reseteado a 0")
     }
 }

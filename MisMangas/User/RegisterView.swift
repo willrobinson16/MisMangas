@@ -23,6 +23,8 @@ struct RegisterView: View {
     @Environment(\.dismiss) private var dismiss
     @Bindable var authVM: AuthViewModel
 
+    @FocusState private var focusedField: Field?
+    
     @State private var email = ""
     @State private var password = ""
     @State private var confirmPassword = ""
@@ -241,9 +243,6 @@ struct RegisterView: View {
         .animation(.easeInOut, value: authVM.errorMessage)
         .animation(.easeInOut, value: password)
         .animation(.easeInOut, value: confirmPassword)
-        .onTapGesture {
-            hideKeyboard()
-        }
     }
 
     // MARK: - Validation
@@ -252,11 +251,6 @@ struct RegisterView: View {
         !email.isEmpty &&
         password.count >= 8 &&
         password == confirmPassword
-    }
-
-    // MARK: - Keyboard Helper
-    private func hideKeyboard() {
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
 

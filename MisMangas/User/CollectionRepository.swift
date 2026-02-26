@@ -78,8 +78,6 @@ struct Collection: CollectionRepository {
         guard (200...201).contains(httpResponse.statusCode) else {
             // Mostrar respuesta del servidor si hay error
             if let responseBody = String(data: data, encoding: .utf8) {
-                print("❌ Error POST /collection/manga - Status: \(httpResponse.statusCode)")
-                print("📄 Response: \(responseBody)")
             }
             throw AuthError.unauthorized
         }

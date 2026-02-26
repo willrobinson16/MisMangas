@@ -80,7 +80,6 @@ final class UserCollectionViewModel {
 
         do {
             let count = try await SyncManager.shared.fullSyncFromServer(context: context)
-            print("✅ Sincronización completa: \(count) mangas descargados")
 
             // Actualizar estado de cambios pendientes
             await checkPendingChanges()
@@ -119,7 +118,6 @@ final class UserCollectionViewModel {
         // Verificar que el manga existe en SwiftData
         let fetchManga = FetchDescriptor<Manga>(predicate: #Predicate { $0.id == mangaID })
         guard (try? context.fetch(fetchManga).first) != nil else {
-            print("⚠️ Manga \(mangaID) no encontrado en SwiftData. No se puede añadir a colección.")
             return
         }
 
@@ -138,9 +136,7 @@ final class UserCollectionViewModel {
                 let repo = Collection()
                 let request = collection.toRequest()
                 try await repo.addOrUpdateCollection(request)
-                print("✅ Manga \(mangaID) añadido al servidor")
             } catch {
-                print("❌ Error añadiendo al servidor: \(error)")
                 // Marcar como pendiente para sincronizar después
                 collection.markAsPendingSync(operation: .add)
                 try? context.save()
@@ -167,7 +163,6 @@ final class UserCollectionViewModel {
                     let repo = Collection()
                     try await repo.deleteCollectionManga(mangaID: mangaID)
                 } catch {
-                    print("❌ Error eliminando del servidor: \(error)")
                 }
             }
         }
@@ -259,7 +254,6 @@ final class UserCollectionViewModel {
         if nextVolume <= maxVolumes {
             updateReadingVolume(mangaID: mangaID, volume: nextVolume)
         } else {
-            print("⚠️ Ya estás en el último volumen disponible (\(maxVolumes))")
         }
     }
 
@@ -291,7 +285,6 @@ final class UserCollectionViewModel {
         if nextVolume <= maxVolumes {
             updateReadingVolume(mangaID: mangaID, volume: nextVolume)
         } else {
-            print("⚠️ Ya estás en el último volumen disponible (\(maxVolumes))")
         }
     }
 

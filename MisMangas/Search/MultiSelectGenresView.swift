@@ -83,7 +83,6 @@ struct MultiSelectGenresView: View {
             genres = try await network.getGenres()
             isLoading = false
         } catch {
-            print("❌ Error cargando géneros: \(error)")
             isLoading = false
         }
     }

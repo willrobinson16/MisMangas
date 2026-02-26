@@ -15,17 +15,9 @@ struct TestView: View {
                     let network = Network()
                     do {
                         let mangas = try await network.getMangas()
-                        print("Funciona! Mangas: \(mangas.items.count)")
-                        print("---")
                         mangas.items.forEach { manga in
-                            print("\(manga.title)")
-                            print("Director: \(manga.authors)")
-                            print("Año: \(manga.startDate ?? "")")
-                            print("Puntuación: \(manga.score)")
-                            print("")
                         }
                     } catch {
-                        print("Error al obtener mangas: \(error.localizedDescription)")
                     }
                 }
             }

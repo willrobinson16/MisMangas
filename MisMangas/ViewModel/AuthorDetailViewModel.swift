@@ -86,7 +86,6 @@ final class AuthorDetailViewModel {
             mangas = cachedMangas
             currentPage = Self.pageCache[authorIDString] ?? 1
             hasMorePages = Self.hasMoreCache[authorIDString] ?? true
-            print("💾 Cargados \(cachedMangas.count) mangas desde caché para autor \(authorIDString)")
             return
         }
 
@@ -116,7 +115,6 @@ final class AuthorDetailViewModel {
         errorMessage = nil
 
         do {
-            print("🌐 Cargando mangas del autor desde red (página \(currentPage))...")
             let result = try await network.getMangaByAuthorPage(
                 id: authorIDString,
                 page: currentPage,
@@ -125,7 +123,6 @@ final class AuthorDetailViewModel {
 
             if result.items.isEmpty {
                 hasMorePages = false
-                print("ℹ️ No hay más mangas para este autor")
             } else {
                 // Filtrar duplicados antes de agregar
                 let existingIDs = Set(mangas.map { $0.id })
@@ -141,14 +138,11 @@ final class AuthorDetailViewModel {
                 // Limitar mangas en memoria para evitar saturación
                 if mangas.count >= maxMangasInMemory {
                     hasMorePages = false
-                    print("⚠️ Límite de \(maxMangasInMemory) mangas alcanzado. No se cargarán más páginas.")
                 }
 
-                print("✅ Cargados \(newMangas.count) mangas únicos del autor (total: \(mangas.count))")
             }
         } catch {
             errorMessage = "No se pudieron cargar los mangas del autor"
-            print("❌ Error loading author mangas: \(error)")
         }
 
         isLoading = false
@@ -166,7 +160,6 @@ final class AuthorDetailViewModel {
         errorMessage = nil
 
         do {
-            print("🌐 Cargando página \(currentPage) de mangas del autor...")
             let result = try await network.getMangaByAuthorPage(
                 id: authorID,
                 page: currentPage,
@@ -176,7 +169,6 @@ final class AuthorDetailViewModel {
             if result.items.isEmpty {
                 hasMorePages = false
                 currentPage -= 1  // Revertir incremento
-                print("ℹ️ No hay más mangas para este autor")
             } else {
                 // Filtrar duplicados antes de agregar
                 let existingIDs = Set(mangas.map { $0.id })
@@ -192,15 +184,12 @@ final class AuthorDetailViewModel {
                 // Limitar mangas en memoria para evitar saturación
                 if mangas.count >= maxMangasInMemory {
                     hasMorePages = false
-                    print("⚠️ Límite de \(maxMangasInMemory) mangas alcanzado. No se cargarán más páginas.")
                 }
 
-                print("✅ Cargados \(newMangas.count) mangas únicos del autor (página \(currentPage), total: \(mangas.count))")
             }
         } catch {
             errorMessage = "No se pudo cargar más mangas"
             currentPage -= 1  // Revertir incremento en caso de error
-            print("❌ Error loading next page of author mangas: \(error)")
         }
 
         isLoading = false

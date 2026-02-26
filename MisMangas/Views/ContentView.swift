@@ -11,12 +11,18 @@ import SwiftData
 struct ContentView: View {
     @Environment(\.modelContext) var context
     @Environment(FavoritesViewModel.self) private var favoritesVM
+    @Environment(UserCollectionViewModel.self) private var collectionVM
 
     @Query private var mangas: [Manga]
     @Query private var favoritesMangas: [FavoriteManga]
+    @Query private var userCollection: [UserMangaCollection]
 
     private var favoritesIDs: Set<Int> {
         Set(favoritesMangas.map { $0.id })
+    }
+
+    private var collectionIDs: Set<Int> {
+        Set(userCollection.map { $0.mangaID })
     }
 
     var mangasSorted: [Manga] {
@@ -26,18 +32,6 @@ struct ContentView: View {
     @Namespace private var namespace
 
     var body: some View {
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            // iPad: Grid layout
-            ContentViewiPad()
-        } else {
-            // iPhone: List layout
-            iPhoneLayout
-        }
-    }
-
-    // MARK: - iPhone Layout
-
-    private var iPhoneLayout: some View {
         NavigationStack {
             List {
                 // Section 1: Mejores mangas
@@ -75,7 +69,6 @@ struct ContentView: View {
                 // Cargar datos si la base de datos está vacía
                 let descriptor = FetchDescriptor<Manga>()
                 if let count = try? context.fetchCount(descriptor), count == 0 {
-                    print("📦 Base de datos vacía, cargando datos iniciales...")
                     do {
                         // Cargar mangas directamente desde la API usando el context actual
                         let network = Network()
@@ -88,9 +81,7 @@ struct ContentView: View {
                         // Guardar en SwiftData usando el context de la vista
                         try insertOrUpdateMangas(in: context, from: allMangas)
 
-                        print("✅ Datos iniciales cargados correctamente (\(allMangas.count) mangas)")
                     } catch {
-                        print("❌ Error cargando datos: \(error)")
                     }
                 }
             }
@@ -99,7 +90,6 @@ struct ContentView: View {
                 do {
                     try await modelContainer.loadInitialData()
                 } catch {
-                    print("❌ Error en refresh: \(error)")
                 }
             }
         }
@@ -109,5 +99,6 @@ struct ContentView: View {
 #Preview(traits: .sampleData) {
     ContentView()
         .environment(FavoritesViewModel())
+        .environment(UserCollectionViewModel())
         .modelContainer(for: [Manga.self, FavoriteManga.self])
 }

@@ -46,62 +46,27 @@ struct ContentViewiPad: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     // Section 1: Top Mangas
-                    VStack(alignment: .leading, spacing: 12) {
+                    Section {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            BestMangasGridView(namespace: namespace)
+                        }
+                    } header: {
                         Text("Top Mangas")
                             .font(.title2)
                             .bold()
                             .foregroundStyle(.secondary)
                             .padding(.horizontal)
-
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            BestMangasGridView(namespace: namespace)
-                        }
                     }
 
                     // Section 2: Todos los Mangas (Grid)
-                    VStack(alignment: .leading, spacing: 12) {
+                    Section {
+                        MangaGridViewiPad(namespace: namespace)
+                    } header: {
                         Text("Todos los Mangas")
                             .font(.title2)
                             .bold()
                             .foregroundStyle(.secondary)
                             .padding(.horizontal)
-
-                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))], spacing: 16) {
-                            ForEach(mangasSorted) { manga in
-                                let isFavorite = favoritesIDs.contains(manga.id)
-                                let isInCollection = collectionIDs.contains(manga.id)
-
-                                NavigationLink(value: manga) {
-                                    MangaRow(manga: manga, namespace: namespace)
-                                }
-                                .buttonStyle(.plain)
-                                .mangaSwipeActions(
-                                    mangaID: manga.id,
-                                    manga: manga,
-                                    isFavorite: isFavorite,
-                                    isInCollection: isInCollection,
-                                    favoritesVM: favoritesVM,
-                                    collectionVM: collectionVM
-                                )
-                            }
-
-                            // Paginación
-                            if mangasSorted.count > 1 {
-                                ProgressView()
-                                    .gridCellColumns(2)
-                                    .onAppear {
-                                        let modelContainer = DataContainer(modelContainer: context.container)
-                                        Task {
-                                            do {
-                                                try await modelContainer.loadNextPage()
-                                            } catch {
-                                                print(error)
-                                            }
-                                        }
-                                    }
-                            }
-                        }
-                        .padding(.horizontal)
                     }
                 }
                 .padding(.vertical)
@@ -120,7 +85,6 @@ struct ContentViewiPad: View {
                     do {
                         try await modelContainer.loadInitialData()
                     } catch {
-                        print(error)
                     }
                 }
             }

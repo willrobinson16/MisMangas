@@ -24,12 +24,10 @@ final class MainPictureVM {
                     do {
                         image = try await ImageDownloader.shared.image(for: mainPicture)
                     } catch {
-                        print(error)
                     }
                 }
             }
         } catch {
-            print(error)
         }
     }
 }

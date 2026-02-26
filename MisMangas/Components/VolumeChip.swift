@@ -34,6 +34,5 @@ struct VolumeChip: View {
 
 #Preview {
     VolumeChip(volumeNumber: 5) {
-        print("Removed volume 5")
     }
 }
