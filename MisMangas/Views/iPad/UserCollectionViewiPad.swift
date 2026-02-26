@@ -29,7 +29,7 @@ struct UserCollectionViewiPad: View {
 
     @State private var selectedEntryID: UUID?
     @State private var showEditSheet = false
-    @State private var viewMode: ViewMode = .list
+    @State private var viewMode: ViewMode = .grid
     @State private var selectedAuthors: Set<String> = []
     @State private var selectedDemographics: Set<String> = []
     @State private var selectedThemes: Set<String> = []
@@ -455,6 +455,8 @@ struct UserCollectionViewiPad: View {
 
 /// Row enriquecido para la colección en iPad con toda la información del manga
 private struct EnrichedCollectionRow: View {
+    @Environment(FavoritesViewModel.self) private var favoritesVM
+
     let entry: UserMangaCollection
     let manga: Manga
     let namespace: Namespace.ID
@@ -593,9 +595,19 @@ private struct EnrichedCollectionRow: View {
 
             // Badges
             VStack(alignment: .trailing, spacing: 8) {
-                if entry.completeCollection {
+                // Mostrar badge si está marcada como completa O tiene todos los volúmenes
+                let hasCompleteCollection = entry.completeCollection || (manga.volumes != nil && entry.volumesOwnedCount == manga.volumes)
+
+                if hasCompleteCollection {
                     Image(systemName: "checkmark.seal.fill")
                         .foregroundStyle(.green)
+                        .font(.title2)
+                }
+
+                // Mostrar corazón si está en favoritos
+                if favoritesVM.isFavorite(manga.id) {
+                    Image(systemName: "heart.fill")
+                        .foregroundStyle(.red)
                         .font(.title2)
                 }
 
@@ -634,10 +646,12 @@ private struct EnrichedCollectionRow: View {
 #Preview("With Data", traits: .sampleData) {
     UserCollectionViewiPad()
         .environment(UserCollectionViewModel())
+        .environment(FavoritesViewModel())
 }
 
 #Preview("Empty State") {
     UserCollectionViewiPad()
         .modelContainer(for: UserMangaCollection.self, inMemory: true)
         .environment(UserCollectionViewModel())
+        .environment(FavoritesViewModel())
 }

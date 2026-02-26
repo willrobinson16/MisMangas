@@ -10,27 +10,40 @@ import SwiftData
 
 /// Tarjeta de colección para vista grid
 struct CollectionGridCard: View {
+    @Environment(FavoritesViewModel.self) private var favoritesVM
+
     let entry: UserMangaCollection
     let manga: Manga
     let namespace: Namespace.ID
 
     var body: some View {
         VStack(spacing: 4) {
-            // Imagen con badge verde encima (como CompleteMangaCard)
+            // Imagen con badges encima
             MainPictureView(picture: manga.mainPicture, namespace: namespace)
                 .frame(width: 100, height: 150)
                 .overlay(alignment: .topTrailing) {
-                    // Mostrar badge si está marcada como completa O tiene todos los volúmenes
-                    let hasCompleteCollection = entry.completeCollection || (manga.volumes != nil && entry.volumesOwnedCount == manga.volumes)
+                    VStack(alignment: .trailing, spacing: 4) {
+                        // Badge de colección completa
+                        let hasCompleteCollection = entry.completeCollection || (manga.volumes != nil && entry.volumesOwnedCount == manga.volumes)
 
-                    if hasCompleteCollection {
-                        Image(systemName: "checkmark.seal.fill")
-                            .symbolRenderingMode(.monochrome)
-                            .foregroundStyle(.green)
-                            .font(.title3)
-                            .shadow(radius: 2)
-                            .padding(6)
+                        if hasCompleteCollection {
+                            Image(systemName: "checkmark.seal.fill")
+                                .symbolRenderingMode(.monochrome)
+                                .foregroundStyle(.green)
+                                .font(.title3)
+                                .shadow(radius: 2)
+                        }
+
+                        // Badge de favorito
+                        if favoritesVM.isFavorite(manga.id) {
+                            Image(systemName: "heart.fill")
+                                .symbolRenderingMode(.monochrome)
+                                .foregroundStyle(.red)
+                                .font(.title3)
+                                .shadow(radius: 2)
+                        }
                     }
+                    .padding(6)
                 }
 
             // Título
@@ -86,10 +99,13 @@ struct CollectionGridCard: View {
 
 #Preview(traits: .sampleData) {
     @Previewable @Namespace var namespace
+    @Previewable @State var favoritesVM = FavoritesViewModel()
+
     CollectionGridCard(
         entry: .test,
         manga: .test,
         namespace: namespace
     )
+    .environment(favoritesVM)
     .padding()
 }
