@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import SwiftData
 
 /// ViewModel para gestionar la autenticación y sesión del usuario.
 ///
@@ -50,6 +51,14 @@ final class AuthViewModel {
     /// Repositorio de colección para sincronización
     private let collectionRepo: CollectionRepository = Collection()
 
+    /// ModelContext para persistencia (inyectado desde la vista)
+    private var modelContext: ModelContext?
+
+    /// Sets the model context for data persistence
+    func setModelContext(_ context: ModelContext) {
+        modelContext = context
+    }
+
     // MARK: - Initialization
 
     init() {
@@ -70,6 +79,9 @@ final class AuthViewModel {
             let user = try await authRepo.getMe()
             self.currentUser = user
             self.isAuthenticated = true
+
+            // Sincronizar colección del servidor
+            await syncCollectionFromServer()
         } catch {
             // No hay token o es inválido
             self.isAuthenticated = false
@@ -107,6 +119,9 @@ final class AuthViewModel {
             let user = try await authRepo.getMe()
             self.currentUser = user
             self.isAuthenticated = true
+
+            // Sincronizar colección del servidor
+            await syncCollectionFromServer()
 
         } catch let error as AuthError {
             self.errorMessage = error.localizedDescription
@@ -224,6 +239,23 @@ final class AuthViewModel {
     }
 
     // MARK: - Private Helpers
+
+    /// Sincroniza la colección del usuario desde el servidor.
+    ///
+    /// Descarga la colección completa y la guarda en SwiftData local.
+    private func syncCollectionFromServer() async {
+        guard let context = modelContext else {
+            print("⚠️ ModelContext no disponible, no se puede sincronizar colección")
+            return
+        }
+
+        do {
+            let count = try await SyncManager.shared.fullSyncFromServer(context: context)
+            print("✅ Colección sincronizada: \(count) mangas descargados del servidor")
+        } catch {
+            print("❌ Error sincronizando colección desde servidor: \(error)")
+        }
+    }
 
     /// Valida formato de email.
     private func isValidEmail(_ email: String) -> Bool {

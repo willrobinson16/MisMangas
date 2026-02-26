@@ -129,15 +129,22 @@ final class UserCollectionViewModel {
             volumesOwned: volumes
         )
 
-        // Marcar como pendiente de sincronización
-        collection.markAsPendingSync(operation: .add)
-
         context.insert(collection)
         try? context.save()
 
-        // Actualizar estado de cambios pendientes
+        // Sincronizar con servidor en background
         Task {
-            await checkPendingChanges()
+            do {
+                let repo = Collection()
+                let request = collection.toRequest()
+                try await repo.addOrUpdateCollection(request)
+                print("✅ Manga \(mangaID) añadido al servidor")
+            } catch {
+                print("❌ Error añadiendo al servidor: \(error)")
+                // Marcar como pendiente para sincronizar después
+                collection.markAsPendingSync(operation: .add)
+                try? context.save()
+            }
         }
     }
 
