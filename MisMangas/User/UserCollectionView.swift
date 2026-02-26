@@ -31,6 +31,7 @@ struct UserCollectionView: View {
 private struct iPhoneLayout: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(UserCollectionViewModel.self) private var collectionVM
+    @Environment(FavoritesViewModel.self) private var favoritesVM
 
     @Query(sort: \UserMangaCollection.dateAdded, order: .reverse) private var collectionEntries: [UserMangaCollection]
 
@@ -215,14 +216,16 @@ private struct iPhoneLayout: View {
                         }
                     }
                     .swipeActions(edge: .leading) {
-                        if entry.hasStartedReading {
-                            Button {
-                                collectionVM.readNextVolume(mangaID: entry.mangaID)
-                            } label: {
-                                Label("Siguiente", systemImage: "arrow.right.circle")
+                        Button {
+                            favoritesVM.toggleFavorite(manga)
+                        } label: {
+                            if favoritesVM.isFavorite(manga.id) {
+                                Label("Quitar favorito", systemImage: "heart.slash.fill")
+                            } else {
+                                Label("Favorito", systemImage: "heart.fill")
                             }
-                            .tint(.blue)
                         }
+                        .tint(.red)
                     }
                 }
             }
@@ -252,18 +255,20 @@ private struct iPhoneLayout: View {
                             showEditSheet = true
                         }
                         .contextMenu {
+                            Button {
+                                favoritesVM.toggleFavorite(manga)
+                            } label: {
+                                if favoritesVM.isFavorite(manga.id) {
+                                    Label("Quitar de favoritos", systemImage: "heart.slash.fill")
+                                } else {
+                                    Label("Añadir a favoritos", systemImage: "heart.fill")
+                                }
+                            }
+
                             Button(role: .destructive) {
                                 collectionVM.removeFromCollection(entry.mangaID)
                             } label: {
-                                Label("Eliminar", systemImage: "trash")
-                            }
-
-                            if entry.hasStartedReading {
-                                Button {
-                                    collectionVM.readNextVolume(mangaID: entry.mangaID)
-                                } label: {
-                                    Label("Siguiente volumen", systemImage: "arrow.right.circle")
-                                }
+                                Label("Eliminar de colección", systemImage: "trash")
                             }
                         }
                     }

@@ -150,12 +150,20 @@ final class UserCollectionViewModel {
         )
 
         if let collection = try? context.fetch(fetch).first {
-            // Marcar como pendiente de eliminar (no eliminar localmente aún)
-            collection.markAsPendingSync(operation: .delete)
+            // Eliminar inmediatamente de SwiftData local
+            context.delete(collection)
             try? context.save()
 
-            // Actualizar estado de cambios pendientes
+            // Sincronizar eliminación con el servidor en background
             Task {
+                do {
+                    let repo = Collection()
+                    try await repo.deleteCollectionManga(mangaID: mangaID)
+                    print("✅ Manga \(mangaID) eliminado del servidor")
+                } catch {
+                    print("❌ Error eliminando manga \(mangaID) del servidor: \(error)")
+                    // TODO: Si falla, podríamos re-añadir el manga localmente
+                }
                 await checkPendingChanges()
             }
         }
