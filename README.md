@@ -260,6 +260,7 @@ Este proyecto es de uso privado. Todos los derechos reservados.
 
 ## 🙏 Agradecimientos
 
+- Apple Coding Academy
 - API Backend: [MyManga Academy](https://mymanga-acacademy-5607149ebe3d.herokuapp.com)
 - NetworkAPI: Package Swift personalizado
 - Iconos: SF Symbols
