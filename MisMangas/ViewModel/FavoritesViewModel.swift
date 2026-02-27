@@ -58,31 +58,6 @@ final class FavoritesViewModel {
         context.insert(favorite)
         try? context.save()
         
-        
-        
-        // Cargar datos completos en background
-//        Task {
-//            let mangaID = manga.id
-//            let fetchManga = FetchDescriptor<Manga>(predicate: #Predicate { m in
-//                m.id == mangaID
-//            })
-//            
-//            if (try? context.fetch(fetchManga).first) == nil {
-//                do {
-//                    print("📥 Cargando manga completo desde API: \(manga.title)")
-//                    
-//                    let network = Network()
-//                    let mangaDTO = try await network.getManga(id: manga.id)
-//                    
-//                    let dataContainer = DataContainer(modelContainer: context.container)
-//                    try await dataContainer.loadMangas(mangas: [mangaDTO])
-//                    
-//                    print("✅ Manga cargado y guardado correctamente")
-//                } catch {
-//                    print("❌ Error cargando manga: \(error)")
-//                }
-//            }
-//        }
     }
 
     /// Elimina un manga de la lista de favoritos
