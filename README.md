@@ -261,7 +261,7 @@ Este proyecto es de uso privado. Todos los derechos reservados.
 ## 🙏 Agradecimientos
 
 - Apple Coding Academy
-- API Backend: [MyManga Academy](https://mymanga-acacademy-5607149ebe3d.herokuapp.com)
+- API Backend: [Saotome Manga API](https://mymanga-acacademy-5607149ebe3d.herokuapp.com/docs#/)
 - NetworkAPI: Package Swift personalizado
 - Iconos: SF Symbols
 
